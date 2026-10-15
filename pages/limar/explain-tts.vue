@@ -72,7 +72,7 @@
         </div>
       </div>
 
-      <details class="card p-5">
+      <details v-if="hasil" class="card p-5">
         <summary class="font-display font-bold text-slate-700 cursor-pointer">🔑 Kunci Jawaban dan Pembahasan</summary>
         <ul class="text-sm font-semibold text-slate-600 mt-3 space-y-1.5">
           <li><b>1. Isi</b> — bagian pantun yang memuat pesan atau maksud.</li>

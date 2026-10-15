@@ -42,7 +42,7 @@
       </div>
     </div>
 
-    <div class="card p-5 bg-emerald-50/60">
+    <div v-if="hasil" class="card p-5 bg-emerald-50/60">
       <p class="font-display font-bold text-slate-700 mb-2">🔑 Kunci Jawaban dan Pembahasan</p>
       <p class="text-sm font-semibold text-slate-600"><b>Kata yang memiliki bunyi akhir serupa:</b></p>
       <ul class="text-sm font-semibold text-slate-600 list-disc list-inside mt-1">

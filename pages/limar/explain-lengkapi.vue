@@ -52,7 +52,7 @@
         </div>
         <p class="text-xs font-bold text-slate-400 mt-3">Bagian rumpang aktif: <b class="text-violet-600">baris {{ blankAktif + 1 }}</b></p>
       </div>
-      <div class="card p-5 bg-sky-50/60">
+      <div v-if="hasil" class="card p-5 bg-sky-50/60">
         <p class="font-display font-bold text-slate-700 mb-1">🔑 Kunci Jawaban dan Pembahasan</p>
         <p class="text-sm font-semibold text-slate-600"><b>Jawaban:</b> 1. angsa, 2. pakaian, 3. bangsa, 4. zaman.</p>
         <p class="text-sm font-semibold text-slate-600 mt-1"><b>Pembahasan:</b> Kata yang tepat harus sesuai makna dan memperhatikan rima (angsa–bangsa, pakaian–zaman).</p>

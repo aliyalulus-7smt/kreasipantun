@@ -48,7 +48,7 @@
           {{ hasil.pesan }}
         </p>
       </div>
-      <details class="card mt-3 p-5 text-left">
+      <details v-if="hasil" class="card mt-3 p-5 text-left">
         <summary class="font-display font-bold text-slate-700 cursor-pointer">🔑 Kunci Jawaban dan Pembahasan</summary>
         <ol class="text-sm font-semibold text-slate-600 mt-3 space-y-1 list-decimal list-inside">
           <li v-for="(b, i) in benar" :key="i">{{ b }}</li>
