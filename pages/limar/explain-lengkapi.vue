@@ -12,29 +12,16 @@
   <div class="grid md:grid-cols-2 gap-6 max-w-4xl mx-auto items-start">
     <div class="card p-6">
       <div class="bg-amber-50 rounded-2xl p-6 space-y-2">
-        <p class="font-display text-xl font-semibold text-slate-700">Pergi ke taman memetik melati,</p>
-        <p class="font-display text-xl font-semibold text-slate-700">Singgah sebentar membeli jamu.</p>
-        <p class="font-display text-xl font-semibold text-slate-700">
-          Jagalah kelas sepenuh
-          <button @click="blankAktif = 0"
+        <p v-for="(b, i) in baris" :key="i" class="font-display text-xl font-semibold text-slate-700">
+          {{ b.depan }}
+          <button @click="blankAktif = i"
             class="inline-block min-w-[110px] rounded-xl px-3 py-0.5 font-extrabold border-b-4 transition"
             :class="[
-              blankAktif === 0 ? 'border-violet-400 bg-violet-100' : 'border-amber-300 bg-white',
-              hasil && jawaban[0] ? (jawaban[0] === kunci[0] ? '!border-emerald-400 !bg-emerald-100' : '!border-rose-400 !bg-rose-100') : ''
+              blankAktif === i ? 'border-violet-400 bg-violet-100' : 'border-amber-300 bg-white',
+              hasil && jawaban[i] ? (jawaban[i] === b.kunci ? '!border-emerald-400 !bg-emerald-100' : '!border-rose-400 !bg-rose-100') : ''
             ]">
-            {{ jawaban[0] || '______' }}
-          </button>,
-        </p>
-        <p class="font-display text-xl font-semibold text-slate-700">
-          Agar nyaman menuntut
-          <button @click="blankAktif = 1"
-            class="inline-block min-w-[110px] rounded-xl px-3 py-0.5 font-extrabold border-b-4 transition"
-            :class="[
-              blankAktif === 1 ? 'border-violet-400 bg-violet-100' : 'border-amber-300 bg-white',
-              hasil && jawaban[1] ? (jawaban[1] === kunci[1] ? '!border-emerald-400 !bg-emerald-100' : '!border-rose-400 !bg-rose-100') : ''
-            ]">
-            {{ jawaban[1] || '______' }}
-          </button>.
+            {{ jawaban[i] || '______' }}
+          </button>{{ b.belakang }}
         </p>
       </div>
       <div class="flex justify-center gap-3 mt-5">
@@ -60,12 +47,12 @@
             {{ k }}
           </button>
         </div>
-        <p class="text-xs font-bold text-slate-400 mt-3">Bagian rumpang aktif: <b class="text-violet-600">baris {{ blankAktif + 3 }}</b></p>
+        <p class="text-xs font-bold text-slate-400 mt-3">Bagian rumpang aktif: <b class="text-violet-600">baris {{ blankAktif + 1 }}</b></p>
       </div>
       <div class="card p-5 bg-sky-50/60">
         <p class="font-display font-bold text-slate-700 mb-1">🔑 Kunci Jawaban dan Pembahasan</p>
-        <p class="text-sm font-semibold text-slate-600"><b>Jawaban:</b> 1. hati, 2. ilmu.</p>
-        <p class="text-sm font-semibold text-slate-600 mt-1"><b>Pembahasan:</b> Kata yang tepat harus sesuai makna dan memperhatikan rima (hati–melati, jamu–ilmu).</p>
+        <p class="text-sm font-semibold text-slate-600"><b>Jawaban:</b> 1. angsa, 2. pakaian, 3. bangsa, 4. zaman.</p>
+        <p class="text-sm font-semibold text-slate-600 mt-1"><b>Pembahasan:</b> Kata yang tepat harus sesuai makna dan memperhatikan rima (angsa–bangsa, pakaian–zaman).</p>
       </div>
     </div>
   </div>
@@ -74,9 +61,25 @@
 <script setup lang="ts">
 definePageMeta({ layout: 'app', middleware: 'auth' })
 
-const pilihan = ['hati', 'ilmu', 'pagi', 'buku']
-const kunci = ['hati', 'ilmu']
-const jawaban = ref<string[]>(['', ''])
+const baris = [
+  { depan: 'Kain batik bermotif', kunci: 'angsa', belakang: '' },
+  { depan: 'Dijahit dijadikan', kunci: 'pakaian', belakang: '' },
+  { depan: 'Mari lestarikan budaya', kunci: 'bangsa', belakang: '' },
+  { depan: 'Agar tak hilang ditelan', kunci: 'zaman', belakang: '' },
+]
+
+function acak<T>(arr: T[]): T[] {
+  const a = [...arr]
+  for (let i = a.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1))
+    ;[a[i], a[j]] = [a[j], a[i]]
+  }
+  return a
+}
+
+// 4 kunci + 4 pengecoh yang berima mirip
+const pilihan = ref(acak(['angsa', 'pakaian', 'bangsa', 'zaman', 'rusa', 'makanan', 'biasa', 'taman']))
+const jawaban = ref<string[]>(['', '', '', ''])
 const blankAktif = ref(0)
 const hasil = ref<{ benar: boolean; pesan: string } | null>(null)
 
@@ -84,16 +87,20 @@ const lengkap = computed(() => jawaban.value.every(j => j))
 
 function pilihKata(k: string) {
   // hapus dari posisi lain bila kata dipakai dua kali
-  const lain = blankAktif.value === 0 ? 1 : 0
-  if (jawaban.value[lain] === k) jawaban.value[lain] = ''
+  jawaban.value.forEach((j, i) => {
+    if (i !== blankAktif.value && j === k) jawaban.value[i] = ''
+  })
   jawaban.value[blankAktif.value] = k
   hasil.value = null
+  // pindah otomatis ke rumpang berikutnya yang masih kosong
+  const berikutnya = jawaban.value.findIndex((j, i) => !j && i !== blankAktif.value)
+  if (berikutnya !== -1) blankAktif.value = berikutnya
 }
 
 const sfx = useSound()
 
 function periksa() {
-  const ok = jawaban.value.every((j, i) => j === kunci[i])
+  const ok = jawaban.value.every((j, i) => j === baris[i].kunci)
   hasil.value = ok
     ? { benar: true, pesan: '🎉 Tepat sekali! Rima dan maknanya pas!' }
     : { benar: false, pesan: '💪 Belum tepat. Perhatikan rima akhir barisnya!' }
@@ -101,7 +108,9 @@ function periksa() {
 }
 
 function ulangi() {
-  jawaban.value = ['', '']
+  jawaban.value = ['', '', '', '']
+  blankAktif.value = 0
   hasil.value = null
+  pilihan.value = acak(pilihan.value)
 }
 </script>

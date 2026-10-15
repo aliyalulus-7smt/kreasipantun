@@ -53,11 +53,17 @@
 </template>
 
 <script setup lang="ts">
-import { pantunContoh } from '~/data/konten'
+import { ref, computed } from 'vue'
 
 definePageMeta({ layout: 'app', middleware: 'auth' })
 
-const baris = pantunContoh
+// Pantun khusus halaman ini
+const baris = [
+  'Pergi ke pasar membeli ketan',
+  'Pulangnya membawa buah delima',
+  'Rajin membaca menambah wawasan',
+  'Ilmu bertambah tergapai cita-cita',
+]
 const kunci = ['sampiran', 'sampiran', 'isi', 'isi']
 const jawaban = ref<string[]>(['', '', '', ''])
 const hasil = ref<{ benar: boolean; pesan: string } | null>(null)
