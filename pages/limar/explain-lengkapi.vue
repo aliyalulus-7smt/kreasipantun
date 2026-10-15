@@ -1,7 +1,7 @@
 <template>
   <div class="mb-6 flex items-center justify-between">
     <NuxtLink to="/limar/explain" class="btn-soft !px-4 !py-2 text-sm">← Menu Explain</NuxtLink>
-    <span class="pill bg-violet-100 text-violet-700">Permainan 4 dari 5</span>
+    <span class="pill bg-violet-100 text-violet-700">Permainan 4 dari 6</span>
   </div>
 
   <div class="text-center mb-6">
@@ -32,6 +32,9 @@
         <p class="font-display text-xl font-extrabold" :class="hasil.benar ? 'text-emerald-600' : 'text-amber-600'">
           {{ hasil.pesan }}
         </p>
+        <NuxtLink v-if="hasil.benar" to="/limar/explain-evaluasi" class="btn-primary mt-3">
+          Lanjut ke Evaluasi Pantun →
+        </NuxtLink>
       </div>
     </div>
 

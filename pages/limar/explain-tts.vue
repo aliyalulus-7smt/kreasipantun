@@ -1,7 +1,7 @@
 <template>
   <div class="mb-6 flex items-center justify-between">
     <NuxtLink to="/limar/explain" class="btn-soft !px-4 !py-2 text-sm">← Menu Explain</NuxtLink>
-    <span class="pill bg-violet-100 text-violet-700">Permainan 1 dari 5</span>
+    <span class="pill bg-violet-100 text-violet-700">Permainan 1 dari 6</span>
   </div>
 
   <div class="text-center mb-6">
