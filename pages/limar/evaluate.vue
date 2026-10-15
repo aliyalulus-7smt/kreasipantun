@@ -5,168 +5,183 @@
 
   <div class="text-center mb-8">
     <h1 class="page-title">🏆 Evaluasi Karya</h1>
-    <p class="page-sub">Periksa, sempurnakan, refleksikan, dan simpan karya pantunmu!</p>
+    <p class="page-sub">Periksa kedua pantunmu, revisi bila perlu, lalu simpan sebagai karya akhir!</p>
   </div>
 
-  <div class="grid lg:grid-cols-2 gap-6 max-w-5xl mx-auto items-start">
-    <!-- Checklist penilaian mandiri -->
-    <div class="card p-6">
-      <p class="font-display font-bold text-lg text-slate-700 mb-1">✅ Checklist Penilaian</p>
-      <p class="text-sm font-semibold text-slate-500 mb-4">Nilai pantun yang kamu buat dengan jujur!</p>
-      <div class="space-y-2.5">
-        <label v-for="(k, i) in kriteria" :key="i"
-          class="flex items-start gap-2.5 text-sm font-semibold text-slate-600 cursor-pointer bg-slate-50 rounded-xl px-3 py-2.5">
-          <input type="checkbox" v-model="k.cek" class="w-5 h-5 mt-0.5 accent-rose-500 shrink-0" />
-          {{ k.teks }}
-        </label>
-      </div>
-      <div class="mt-4 text-center">
-        <span class="pill text-base" :class="skorKriteria === kriteria.length ? 'bg-emerald-100 text-emerald-700' : 'bg-amber-100 text-amber-700'">
-          {{ skorKriteria }} / {{ kriteria.length }} kriteria terpenuhi
-        </span>
-      </div>
-    </div>
+  <!-- 1. Periksa kedua pantun -->
+  <div class="max-w-5xl mx-auto mb-6">
+    <p class="font-display font-bold text-lg text-slate-700 mb-4 text-center">1️⃣ Periksa Kedua Pantun</p>
+    <div class="grid md:grid-cols-2 gap-6 items-start">
+      <div v-for="(p, pi) in pantuns" :key="pi" class="card p-6">
+        <p class="font-display font-bold text-slate-700 mb-3">
+          {{ pi === 0 ? '📜 Pantun Pertama' : '🎡 Pantun Kedua (Tantangan)' }}
+        </p>
 
-    <!-- Refleksi -->
-    <div class="card p-6">
-      <p class="font-display font-bold text-lg text-slate-700 mb-1">🪞 Refleksi Pembelajaran</p>
-      <p class="text-sm font-semibold text-slate-500 mb-4">Ceritakan pengalaman belajarmu hari ini.</p>
-      <div class="space-y-4">
-        <div v-for="(t, i) in pertanyaanRefleksi" :key="i">
-          <label class="block text-sm font-bold text-slate-700 mb-1.5">{{ i + 1 }}. {{ t }}</label>
-          <textarea v-model="jawaban[i]" rows="2" class="input-cute" maxlength="300"
-            placeholder="Tulis jawabanmu di sini..."></textarea>
+        <div v-if="p">
+          <!-- Tampilan pantun -->
+          <div v-if="!p.merevisi" class="bg-amber-50 rounded-2xl p-5 mb-4">
+            <p v-for="(b, bi) in p.baris" :key="bi"
+              class="font-display font-semibold text-slate-700 leading-relaxed">
+              {{ b }}
+            </p>
+            <p v-if="p.pola" class="text-xs font-bold text-slate-400 mt-2">{{ p.pola }}</p>
+          </div>
+
+          <!-- Kolom penyuntingan (revisi) -->
+          <div v-else class="space-y-2 mb-4">
+            <input v-for="bi in 4" :key="bi" v-model="p.editBaris[bi - 1]"
+              class="input-cute !py-2.5" :placeholder="`Baris ${bi}...`" maxlength="120" />
+            <button class="btn-primary w-full !py-2.5" @click="selesaiRevisi(pi)">✅ Selesai Revisi</button>
+          </div>
+
+          <!-- Checklist -->
+          <p class="text-sm font-bold text-slate-500 mb-2">Checklist pemeriksaan:</p>
+          <div class="space-y-2">
+            <label v-for="(k, ki) in p.checklist" :key="ki"
+              class="flex items-start gap-2.5 text-sm font-semibold text-slate-600 cursor-pointer bg-slate-50 rounded-xl px-3 py-2">
+              <input type="checkbox" v-model="k.cek" class="w-5 h-5 mt-0.5 accent-rose-500 shrink-0" />
+              {{ k.teks }}
+            </label>
+          </div>
+          <div class="mt-3 text-center">
+            <span class="pill text-sm" :class="skorChecklist(p) === 6 ? 'bg-emerald-100 text-emerald-700' : 'bg-amber-100 text-amber-700'">
+              {{ skorChecklist(p) }} / 6 kriteria terpenuhi
+            </span>
+          </div>
+
+          <button v-if="!p.merevisi" class="btn-soft w-full mt-4 !py-2.5" @click="p.merevisi = true">
+            ✏️ Revisi Pantun
+          </button>
+        </div>
+
+        <div v-else class="text-center text-slate-400 font-semibold py-8">
+          <div class="text-5xl mb-2">🪶</div>
+          <p>Belum ada {{ pi === 0 ? 'pantun pertama' : 'pantun kedua' }}.</p>
+          <NuxtLink :to="pi === 0 ? '/limar/elaborate' : '/limar/tantangan'" class="btn-primary mt-3">
+            {{ pi === 0 ? '✍️ Buat di Elaborate' : '🎡 Buat di Tantangan' }}
+          </NuxtLink>
         </div>
       </div>
-      <button class="btn-warm w-full mt-4" :disabled="menyimpan" @click="simpanRefleksi">
-        {{ menyimpan ? 'Menyimpan...' : tersimpan ? '✅ Refleksi Tersimpan' : '💾 Simpan Refleksi' }}
+    </div>
+  </div>
+
+  <!-- 2 & 3. Simpan karya akhir -->
+  <div class="max-w-3xl mx-auto">
+    <div class="card p-6 text-center bg-gradient-to-br from-rose-50 to-amber-50">
+      <p class="font-display font-bold text-lg text-slate-700 mb-1">2️⃣ Simpan Karya Akhir</p>
+      <p class="text-sm font-semibold text-slate-500 mb-4">
+        Pastikan kedua pantun sudah diperiksa dan direvisi, lalu simpan sebagai hasil akhirmu.
+      </p>
+      <button class="btn-primary text-lg" :disabled="!bisaSimpanAkhir || menyimpan" @click="simpanAkhir">
+        {{ menyimpan ? 'Menyimpan...' : tersimpanAkhir ? '✅ Karya Akhir Tersimpan' : '💾 Simpan Karya Akhir' }}
       </button>
       <p v-if="error" class="text-rose-500 text-sm font-bold mt-2">{{ error }}</p>
-    </div>
-  </div>
-
-  <!-- Galeri karya -->
-  <div class="max-w-5xl mx-auto mt-8">
-    <div class="card p-6">
-      <div class="flex items-center justify-between mb-4">
-        <p class="font-display font-bold text-lg text-slate-700">🖼️ Galeri Pantun</p>
-        <button class="btn-soft !px-4 !py-1.5 text-xs" @click="muatGaleri" :disabled="memuat">
-          {{ memuat ? 'Memuat...' : '🔄 Muat Ulang' }}
-        </button>
-      </div>
-      <div v-if="!supabaseReady" class="text-center text-slate-400 font-semibold py-6">
-        Galeri membutuhkan koneksi Supabase.<br />Karya tersimpan lokal tetap bisa dilihat di halaman hasil.
-      </div>
-      <div v-else-if="galeri.length" class="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
-        <div v-for="k in galeri" :key="k.id" class="bg-amber-50/70 rounded-2xl p-4 border border-amber-100">
-          <p class="pill mb-2" :class="k.app === 'kotak' ? 'bg-amber-100 text-amber-700' : 'bg-emerald-100 text-emerald-700'">
-            {{ k.app === 'kotak' ? '📦 Kotak Kreasi' : '🌟 5E' }}
-          </p>
-          <p class="italic font-display font-semibold text-slate-700 text-sm leading-relaxed">
-            {{ k.baris1 }}<br />{{ k.baris2 }}<br />{{ k.baris3 }}<br />{{ k.baris4 }}
-          </p>
-          <p class="text-xs font-bold text-slate-400 mt-2">— {{ k.siswa?.nama_lengkap ?? 'karya siswa' }}{{ k.siswa?.kelas ? ` • ${k.siswa.kelas}` : '' }} • {{ formatTanggal(k.created_at) }}</p>
-        </div>
-      </div>
-      <div v-else-if="memuat" class="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
-        <div v-for="i in 6" :key="i" class="bg-amber-50/70 rounded-2xl p-4 border border-amber-100 space-y-2">
-          <SkeletonBlock height="1.5rem" width="6rem" borderRadius="9999px" />
-          <SkeletonBlock height="1rem" />
-          <SkeletonBlock height="1rem" />
-          <SkeletonBlock height="1rem" />
-          <SkeletonBlock height="1rem" width="70%" />
-        </div>
-      </div>
-      <p v-else class="text-center text-slate-400 font-semibold py-6">
-        Belum ada karya tersimpan. Jadilah yang pertama! ✨
+      <p v-if="tersimpanAkhir" class="text-emerald-600 font-bold text-sm mt-3">
+        🎉 Kedua pantunmu tersimpan sebagai karya akhir. Kerja bagus!
       </p>
-    </div>
-  </div>
-
-  <!-- Buku karyaku -->
-  <div class="max-w-5xl mx-auto mt-6">
-    <div class="card p-6 bg-gradient-to-br from-amber-50 to-emerald-50 text-center">
-      <div class="text-5xl mb-2">📖</div>
-      <p class="font-display font-bold text-lg text-slate-700">Buku Karyaku</p>
-      <p class="text-sm font-semibold text-slate-500 mb-4">Kumpulan pantun terbaikmu tersimpan di sini.</p>
-      <div class="flex flex-wrap justify-center gap-3">
-        <NuxtLink v-if="karyaTerakhir" to="/kotak/hasil" class="btn-primary">📜 Lihat Karya Terakhir</NuxtLink>
-        <NuxtLink to="/pilih" class="btn-soft">🏠 Kembali ke Menu Utama</NuxtLink>
+      <div v-if="tersimpanAkhir" class="flex flex-wrap justify-center gap-3 mt-4">
+        <NuxtLink to="/karyaku" class="btn-primary">📖 Lihat di Buku Karyaku</NuxtLink>
+        <NuxtLink to="/pilih" class="btn-soft">🏠 Kembali ke Menu</NuxtLink>
       </div>
     </div>
   </div>
 </template>
 
 <script setup lang="ts">
-import { kriteriaEvaluasi, pertanyaanRefleksi } from '~/data/konten'
-
 definePageMeta({ layout: 'app', middleware: 'auth' })
 
-const { siswaId, karyaTerakhir } = useSession()
+const { siswaId, karyaTerakhir, karyaKedua } = useSession()
 const supabase = useSupabase()
-const supabaseReady = useSupabaseReady()
 const sync = useSync()
-
-const kriteria = ref(kriteriaEvaluasi.map(teks => ({ teks, cek: false })))
-const skorKriteria = computed(() => kriteria.value.filter(k => k.cek).length)
-
-const jawaban = ref<string[]>(pertanyaanRefleksi.map(() => ''))
-const menyimpan = ref(false)
-const tersimpan = ref(false)
-const error = ref('')
-
-const galeri = ref<any[]>([])
-const memuat = ref(false)
-
 const sfx = useSound()
 
-async function simpanRefleksi() {
-  menyimpan.value = true
-  error.value = ''
-  const data: Record<string, string> = {}
-  pertanyaanRefleksi.forEach((t, i) => { data[`p${i + 1}`] = jawaban.value[i].trim() })
-  if (supabase) {
-    // Offline → diantrekan (tempId siswa di-remap saat sinkronisasi)
-    const res = await sync.tulisTertunda('refleksi', 'insert', {
-      siswa_id: siswaId.value || null,
-      jawaban: data
-    })
-    if (!res.ok && !res.queued) {
-      console.error(res.error)
-      error.value = 'Gagal menyimpan ke database.'
-      menyimpan.value = false
-      return
-    }
+const kriteriaTeks = [
+  'Terdiri atas empat baris.',
+  'Baris pertama dan kedua merupakan sampiran.',
+  'Baris ketiga dan keempat merupakan isi.',
+  'Memiliki pola rima yang sesuai.',
+  'Isi pantun menyampaikan gagasan dan pesan yang jelas.',
+  'Pilihan kata sesuai dengan gagasan dan pesan.',
+]
+
+interface PantunState {
+  sumber: any
+  baris: string[]
+  editBaris: string[]
+  checklist: { teks: string; cek: boolean }[]
+  merevisi: boolean
+  pola?: string
+}
+
+function buatState(sumber: any): PantunState | null {
+  if (!sumber) return null
+  const baris = [...(sumber.baris ?? [])]
+  while (baris.length < 4) baris.push('')
+  return {
+    sumber,
+    baris,
+    editBaris: [...baris],
+    checklist: kriteriaTeks.map(teks => ({ teks, cek: false })),
+    merevisi: false,
+    pola: sumber.pola,
   }
-  menyimpan.value = false
-  tersimpan.value = true
+}
+
+const pantuns = ref<(PantunState | null)[]>([
+  buatState(karyaTerakhir.value),
+  buatState(karyaKedua.value),
+])
+
+const menyimpan = ref(false)
+const tersimpanAkhir = ref(false)
+const error = ref('')
+
+function skorChecklist(p: PantunState) {
+  return p.checklist.filter(k => k.cek).length
+}
+
+function selesaiRevisi(pi: number) {
+  const p = pantuns.value[pi]
+  if (!p) return
+  if (p.editBaris.some(b => !b.trim())) return
+  p.baris = p.editBaris.map(b => b.trim())
+  p.sumber.baris = [...p.baris]
+  p.merevisi = false
   sfx.success()
 }
 
-async function muatGaleri() {
-  if (!supabase) return
-  memuat.value = true
+const bisaSimpanAkhir = computed(() =>
+  pantuns.value.every(p => p && p.baris.every(b => b.trim()))
+)
+
+async function simpanAkhir() {
+  if (!bisaSimpanAkhir.value) return
+  menyimpan.value = true
+  error.value = ''
   try {
-    // Cache-first saat offline: tampilkan galeri terakhir yang tersimpan
-    const { data } = await sync.bacaCacheAtauJaringan('galeri', async () => {
-      const { data, error: err } = await supabase
-        .from('karya')
-        .select('id, app, baris1, baris2, baris3, baris4, created_at, siswa:siswa_id(nama_lengkap, kelas)')
-        .order('created_at', { ascending: false })
-        .limit(12)
-      if (err) throw err
-      return data ?? []
-    })
-    galeri.value = data ?? []
+    for (const p of pantuns.value) {
+      if (!p) continue
+      // Perbarui state sesi dengan hasil revisi
+      p.sumber.baris = [...p.baris]
+      p.sumber.final = true
+      // Perbarui record database bila sudah punya id asli (bukan lokal)
+      const id = p.sumber.id
+      if (supabase && id && !String(id).startsWith('lokal-')) {
+        const res = await sync.tulisTertunda('karya', 'update', {
+          baris1: p.baris[0], baris2: p.baris[1], baris3: p.baris[2], baris4: p.baris[3],
+        }, { id })
+        if (!res.ok && !res.queued) console.error(res.error)
+      }
+    }
+    // Sinkronkan kembali ke session agar /karyaku menampilkan versi final
+    karyaTerakhir.value = pantuns.value[0]?.sumber ?? karyaTerakhir.value
+    karyaKedua.value = pantuns.value[1]?.sumber ?? karyaKedua.value
+    tersimpanAkhir.value = true
+    sfx.success()
   } catch (e) {
     console.error(e)
+    error.value = 'Gagal menyimpan karya akhir.'
   }
-  memuat.value = false
+  menyimpan.value = false
 }
-
-function formatTanggal(s: string) {
-  return new Date(s).toLocaleDateString('id-ID', { day: 'numeric', month: 'short', year: 'numeric' })
-}
-
-onMounted(muatGaleri)
 </script>

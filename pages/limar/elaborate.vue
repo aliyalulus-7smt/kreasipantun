@@ -18,7 +18,7 @@
     </div>
 
     <!-- Form -->
-    <div class="card p-5">
+    <div class="card p-5 lg:col-span-2">
       <p class="font-display font-bold text-slate-700 mb-3">📝 Pantunmu</p>
       <div class="space-y-3">
         <div>
@@ -36,30 +36,14 @@
         {{ menyimpan ? 'Menyimpan...' : '💾 Selesaikan Pantun' }}
       </button>
       <p v-if="error" class="text-rose-500 text-sm font-bold mt-2">{{ error }}</p>
-      <p v-if="tersimpan" class="text-emerald-600 font-bold text-sm mt-2 text-center">🎉 Pantunmu tersimpan! Lanjut ke Evaluate ya!</p>
+      <p v-if="tersimpan" class="text-emerald-600 font-bold text-sm mt-2 text-center">🎉 Pantun pertamamu tersimpan! Lanjut ke tantangan berikutnya ya!</p>
     </div>
 
-    <!-- Bantuan rima: pohon rima per akhiran, atau ketik rima sendiri di kolom pantun -->
-    <div class="card p-5">
-      <p class="font-display font-bold text-slate-700 mb-2">🌳 Pohon Rima</p>
-      <p class="text-xs font-semibold text-slate-500 mb-3">Pilih rima dari pohon ini, atau ketik rima buatanmu sendiri langsung di kolom pantun. Klik kata untuk menyalinnya ke baris terakhir yang kosong.</p>
-      <div class="space-y-3 max-h-64 overflow-y-auto">
-        <div v-for="(words, akhiran) in rimaByAkhiran" :key="akhiran">
-          <p class="text-xs font-bold text-emerald-700 mb-1.5">🍃 Rima {{ akhiran }}</p>
-          <div class="flex flex-wrap gap-1.5">
-            <button v-for="k in words" :key="k.kata" @click="pakaiKata(k.kata)"
-              class="pill bg-emerald-50 text-emerald-700 border border-emerald-200 hover:bg-emerald-100 transition">
-              {{ k.kata }}
-            </button>
-          </div>
-        </div>
-      </div>
-    </div>
   </div>
 
   <div class="text-center mt-8 flex justify-center gap-3">
     <NuxtLink to="/limar/explain" class="btn-soft">← Explain</NuxtLink>
-    <NuxtLink to="/limar/evaluate" class="btn-primary text-lg">Lanjut ke Evaluate →</NuxtLink>
+    <NuxtLink to="/limar/tantangan" class="btn-primary text-lg">Lanjut →</NuxtLink>
   </div>
 
   <!-- Referensi rima opsional (dari /kotak/rima): tersembunyi, muncul saat diklik -->
@@ -114,7 +98,6 @@
 </template>
 
 <script setup lang="ts">
-import { kataRima } from '~/data/konten'
 import { rhymeSuffixes, rhymeWords, kategoriLabel } from '~/data/kotak'
 
 definePageMeta({ layout: 'app', middleware: 'auth' })
@@ -140,15 +123,6 @@ const rimaPilihan = ref({
 })
 
 const bisaSimpan = computed(() => baris.value.every(b => b.trim()))
-
-/** Kata rima dikelompokkan per akhiran menjadi "pohon rima". */
-const rimaByAkhiran = computed(() => {
-  const groups: Record<string, typeof kataRima> = {}
-  for (const k of kataRima) {
-    ;(groups[k.akhiran] ||= []).push(k)
-  }
-  return groups
-})
 
 function pakaiKata(kata: string) {
   // tempel ke baris kosong terakhir, atau baris 4 bila semua terisi

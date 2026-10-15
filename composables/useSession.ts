@@ -57,6 +57,7 @@ export function useSession() {
 
   // Karya terakhir (untuk halaman hasil)
   const karyaTerakhir = useState<any>('karya_terakhir', () => null)
+  const karyaKedua = useState<any>('karya_kedua', () => null)
 
   function resetKotak() {
     kotakFenomena.value = null
@@ -85,6 +86,7 @@ export function useSession() {
         petaPesan: petaPesan.value,
         petaKata: petaKata.value,
         karyaTerakhir: karyaTerakhir.value,
+        karyaKedua: karyaKedua.value,
       }))
     } catch { /* abaikan: storage penuh / tidak tersedia */ }
   }
@@ -109,6 +111,7 @@ export function useSession() {
       if (typeof d.petaPesan === 'string') petaPesan.value = d.petaPesan
       if (typeof d.petaKata === 'string') petaKata.value = d.petaKata
       if (d.karyaTerakhir) karyaTerakhir.value = d.karyaTerakhir
+      if (d.karyaKedua) karyaKedua.value = d.karyaKedua
     } catch { /* abaikan: data korup */ }
   }
 
@@ -124,6 +127,7 @@ export function useSession() {
     petaPesan.value = ''
     petaKata.value = ''
     karyaTerakhir.value = null
+    karyaKedua.value = null
     if (import.meta.client) {
       try { localStorage.removeItem(STORAGE_KEY) } catch { /* abaikan */ }
     }
@@ -139,7 +143,7 @@ export function useSession() {
     namaLengkap, noAbsen, kelas, siswaId, guruAuthed, datangKembali,
     kotakFenomena, kotakPola, kotakRima,
     limarFenomena, petaGagasan, petaPesan, petaKata,
-    karyaTerakhir, resetKotak,
+    karyaTerakhir, karyaKedua, resetKotak,
     save, restore, logout, logoutGuru,
   }
 }
