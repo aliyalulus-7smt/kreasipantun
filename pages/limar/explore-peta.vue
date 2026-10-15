@@ -96,8 +96,8 @@ async function simpan() {
       siswa_id: siswaId.value || null,
       fenomena_id: limarFenomena.value!.id,
       gagasan: petaGagasan.value,
-      pesan: petaPesan.value,
-      kata_kunci: petaKata.value
+      pesan: petaPesan.value
+      // kata_kunci disimpan di sesi lokal; kolom DB belum ada (lihat supabase/migrasi)
     })
     if (!res.ok && !res.queued) {
       console.error(res.error)

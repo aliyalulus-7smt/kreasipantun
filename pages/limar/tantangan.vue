@@ -196,10 +196,8 @@ async function simpan() {
     baris2: baris.value[1].trim(),
     baris3: baris.value[2].trim(),
     baris4: baris.value[3].trim(),
-    rima_dipilih: [] as string[],
-    tantangan: tantanganTerpilih.value!.judul,
-    gagasan: gagasan.value.trim(),
-    pesan: pesan.value.trim()
+    rima_dipilih: [] as string[]
+    // tantangan/gagasan/pesan disimpan di sesi lokal; kolom DB belum ada (lihat supabase/migrasi)
   }
   let id = 'lokal-' + Date.now().toString(36)
   if (supabase) {
