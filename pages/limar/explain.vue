@@ -29,7 +29,8 @@
 definePageMeta({ layout: 'app', middleware: 'auth' })
 
 const games = [
-  { to: '/limar/explain-tts', icon: '🧩', judul: 'TTS Pantun', deskripsi: 'Lengkapi teka-teki silang tentang istilah dan unsur pantun.', bg: 'bg-amber-100' },
+  // TTS disembunyikan sementara (komen)
+  // { to: '/limar/explain-tts', icon: '🧩', judul: 'TTS Pantun', deskripsi: 'Lengkapi teka-teki silang tentang istilah dan unsur pantun.', bg: 'bg-amber-100' },
   { to: '/limar/explain-susun', icon: '🔀', judul: 'Bongkar Susun Pantun', deskripsi: 'Susun baris pantun yang acak menjadi pantun yang utuh.', bg: 'bg-emerald-100' },
   { to: '/limar/explain-garis', icon: '🔗', judul: 'Tarik Garis Sampiran dan Isi', deskripsi: 'Hubungkan setiap baris pantun dengan kategori yang tepat.', bg: 'bg-sky-100' },
   { to: '/limar/explain-lengkapi', icon: '✏️', judul: 'Melengkapi Pantun', deskripsi: 'Pilih kata yang sesuai untuk melengkapi pantun.', bg: 'bg-rose-100' },
