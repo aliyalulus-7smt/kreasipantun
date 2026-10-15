@@ -6,29 +6,41 @@
 
   <div class="text-center mb-6">
     <h1 class="page-title">🔍 Amati Fenomenanya!</h1>
-    <p class="page-sub">Setiap fenomena dapat menjadi inspirasi untuk menciptakan pantun. Yuk, amati contoh berikut!</p>
+    <p class="page-sub">Perhatikan gambar berikut dengan saksama, lalu jawab pertanyaan pemantiknya.</p>
   </div>
 
-  <div class="grid md:grid-cols-2 gap-6 max-w-4xl mx-auto items-start">
+  <div class="max-w-2xl mx-auto space-y-5">
+    <!-- Gambar fenomena -->
     <div class="card p-6 text-center">
-      <div class="text-8xl mb-4">🏫🧹</div>
-      <p class="font-display font-bold text-lg text-slate-700">Ruang kelas yang kotor</p>
-      <p class="text-slate-500 font-semibold text-sm mt-1">Sampah berserakan di mana-mana...</p>
+      <img src="/img/bersih-sekolah.png" alt="Siswa bergotong royong membersihkan lingkungan sekolah"
+        class="rounded-2xl w-full object-cover" />
     </div>
 
-    <div class="space-y-4">
+    <!-- Pertanyaan pemantik -->
+    <div class="card p-6 border-l-8 !border-l-amber-400">
+      <p class="pill bg-amber-100 text-amber-700 mb-3">❓ Pertanyaan Pemantik</p>
+      <ol class="list-decimal list-inside space-y-2 font-semibold text-slate-700 text-left">
+        <li>Apa yang terjadi pada gambar tersebut?</li>
+        <li>Apa yang dapat kita pelajari dari kejadian tersebut?</li>
+      </ol>
+    </div>
+
+    <!-- Tombol penjelasan -->
+    <div class="text-center">
+      <button v-if="!tampilPenjelasan" class="btn-primary text-lg" @click="lihatPenjelasan">
+        👁️ Klik untuk Melihat Penjelasan
+      </button>
+    </div>
+
+    <!-- Penjelasan (muncul setelah tombol ditekan) -->
+    <div v-if="tampilPenjelasan" class="space-y-4">
       <div class="card p-5 border-l-8 !border-l-emerald-400">
-        <p class="pill bg-emerald-100 text-emerald-700 mb-2">🌿 Fenomena</p>
-        <p class="font-bold text-slate-800">{{ f.judul }}</p>
-        <p class="text-slate-500 font-semibold text-sm">{{ f.deskripsi }}</p>
-      </div>
-      <div class="card p-5 border-l-8 !border-l-amber-400">
-        <p class="pill bg-amber-100 text-amber-700 mb-2">💡 Pesan</p>
-        <p class="font-semibold text-slate-600 text-sm">{{ f.pesan }}</p>
+        <p class="pill bg-emerald-100 text-emerald-700 mb-2">💡 Gagasan</p>
+        <p class="font-bold text-slate-800">Menjaga kebersihan lingkungan sekolah.</p>
       </div>
       <div class="card p-5 border-l-8 !border-l-violet-400">
-        <p class="pill bg-violet-100 text-violet-700 mb-2">📜 Contoh Pantun</p>
-        <PantunCard :baris="f.pantun" />
+        <p class="pill bg-violet-100 text-violet-700 mb-2">📜 Pesan</p>
+        <p class="font-semibold text-slate-600 text-sm">Jagalah kebersihan lingkungan sekolah agar dapat belajar dengan nyaman.</p>
       </div>
     </div>
   </div>
@@ -40,8 +52,13 @@
 </template>
 
 <script setup lang="ts">
-import { engageFenomena } from '~/data/konten'
-
 definePageMeta({ layout: 'app', middleware: 'auth' })
-const f = engageFenomena
+
+const tampilPenjelasan = ref(false)
+const sfx = useSound()
+
+function lihatPenjelasan() {
+  tampilPenjelasan.value = true
+  sfx.success()
+}
 </script>

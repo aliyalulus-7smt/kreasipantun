@@ -22,7 +22,7 @@
         <span class="text-emerald-600">Kreasi Pantun</span>
       </h1>
       <p class="mt-3 inline-block bg-amber-100 text-amber-800 font-bold text-sm rounded-full px-4 py-1.5">
-        Jelajahi Ide, Rangkai Kata, Ciptakan Pantunmu!
+        Ciptakan pantunmu dengan berKREASI!
       </p>
       <p class="text-slate-500 font-semibold mt-4 mb-6">
         Isi identitasmu dulu ya, baru kita mulai berkreasi! 🎨
