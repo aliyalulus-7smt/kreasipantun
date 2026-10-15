@@ -73,8 +73,18 @@
     <!-- Tabel karya -->
     <div class="card p-4 md:p-6 mb-6 overflow-hidden">
       <p class="font-display font-bold text-lg text-slate-700 mb-4">📜 Daftar Karya</p>
-      <div v-if="!karyaTampil.length" class="text-center text-slate-400 font-bold py-8">
-        {{ memuat ? 'Memuat...' : 'Belum ada karya yang cocok dengan filter.' }}
+      <div v-if="memuat && !karyaTampil.length" class="space-y-3">
+        <div v-for="i in 4" :key="i" class="flex items-center gap-4 py-2">
+          <SkeletonBlock height="2.5rem" width="2.5rem" borderRadius="9999px" />
+          <div class="flex-1 space-y-2">
+            <SkeletonBlock height="1rem" width="40%" />
+            <SkeletonBlock height="0.75rem" width="70%" />
+          </div>
+          <SkeletonBlock height="1.5rem" width="4rem" borderRadius="9999px" />
+        </div>
+      </div>
+      <div v-else-if="!karyaTampil.length" class="text-center text-slate-400 font-bold py-8">
+        Belum ada karya yang cocok dengan filter.
       </div>
       <div v-else>
         <!-- Desktop: tabel -->
@@ -141,8 +151,17 @@
     <!-- Tabel siswa -->
     <div class="card p-4 md:p-6">
       <p class="font-display font-bold text-lg text-slate-700 mb-4">🧑‍🎓 Daftar Siswa</p>
-      <div v-if="!siswaTampil.length" class="text-center text-slate-400 font-bold py-8">
-        {{ memuat ? 'Memuat...' : 'Belum ada siswa terdaftar.' }}
+      <div v-if="memuat && !siswaTampil.length" class="space-y-3">
+        <div v-for="i in 4" :key="i" class="flex items-center gap-4 py-2">
+          <SkeletonBlock height="2.5rem" width="2.5rem" borderRadius="9999px" />
+          <div class="flex-1 space-y-2">
+            <SkeletonBlock height="1rem" width="35%" />
+            <SkeletonBlock height="0.75rem" width="55%" />
+          </div>
+        </div>
+      </div>
+      <div v-else-if="!siswaTampil.length" class="text-center text-slate-400 font-bold py-8">
+        Belum ada siswa terdaftar.
       </div>
       <div v-else>
         <!-- Desktop: tabel -->

@@ -18,8 +18,17 @@
       </button>
     </div>
 
-    <div v-if="memuat && !daftar.length" class="text-center text-slate-400 font-bold py-10">
-      Memuat karyamu...
+    <div v-if="memuat && !daftar.length" class="space-y-5">
+      <div v-for="i in 3" :key="i" class="card p-6 space-y-3">
+        <SkeletonBlock height="1.25rem" width="60%" />
+        <SkeletonBlock height="1rem" />
+        <SkeletonBlock height="1rem" />
+        <SkeletonBlock height="1rem" width="80%" />
+        <div class="flex gap-2 pt-1">
+          <SkeletonBlock height="1.5rem" width="5rem" borderRadius="9999px" />
+          <SkeletonBlock height="1.5rem" width="6rem" borderRadius="9999px" />
+        </div>
+      </div>
     </div>
     <div v-else-if="!daftar.length" class="card p-10 text-center">
       <div class="text-6xl mb-3">🪶</div>

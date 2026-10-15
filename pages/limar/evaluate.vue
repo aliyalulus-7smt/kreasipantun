@@ -68,8 +68,17 @@
           <p class="text-xs font-bold text-slate-400 mt-2">— {{ k.siswa?.nama_lengkap ?? 'karya siswa' }}{{ k.siswa?.kelas ? ` • ${k.siswa.kelas}` : '' }} • {{ formatTanggal(k.created_at) }}</p>
         </div>
       </div>
+      <div v-else-if="memuat" class="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
+        <div v-for="i in 6" :key="i" class="bg-amber-50/70 rounded-2xl p-4 border border-amber-100 space-y-2">
+          <SkeletonBlock height="1.5rem" width="6rem" borderRadius="9999px" />
+          <SkeletonBlock height="1rem" />
+          <SkeletonBlock height="1rem" />
+          <SkeletonBlock height="1rem" />
+          <SkeletonBlock height="1rem" width="70%" />
+        </div>
+      </div>
       <p v-else class="text-center text-slate-400 font-semibold py-6">
-        {{ memuat ? 'Memuat karya...' : 'Belum ada karya tersimpan. Jadilah yang pertama! ✨' }}
+        Belum ada karya tersimpan. Jadilah yang pertama! ✨
       </p>
     </div>
   </div>

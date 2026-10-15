@@ -10,9 +10,11 @@
 
   <div class="grid grid-cols-2 md:grid-cols-4 gap-3 md:gap-4 max-w-4xl mx-auto">
     <button v-for="f in fenomena5e" :key="f.id" @click="pilih(f)"
-      class="card p-5 text-center transition hover:scale-[1.03] hover:shadow-lg"
+      class="card p-4 text-center transition hover:scale-[1.03] hover:shadow-lg overflow-hidden"
       :class="dipilih?.id === f.id ? '!border-amber-400 !ring-4 !ring-amber-100 !bg-amber-50/70' : ''">
-      <div class="text-5xl mb-2">{{ f.icon }}</div>
+      <img v-if="f.gambar" :src="f.gambar" :alt="f.nama" loading="lazy"
+        class="rounded-xl w-full aspect-[4/3] object-cover mb-2" />
+      <div v-else class="text-5xl mb-2 rounded-xl bg-slate-50 py-6">{{ f.icon }}</div>
       <p class="font-bold text-sm text-slate-700">{{ f.nama }}</p>
     </button>
   </div>

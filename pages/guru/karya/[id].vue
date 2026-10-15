@@ -4,8 +4,16 @@
       ← Kembali ke Dashboard
     </NuxtLink>
 
-    <div v-if="memuat" class="card p-10 text-center max-w-xl mx-auto">
-      <p class="font-bold text-slate-400">Memuat karya...</p>
+    <div v-if="memuat" class="card p-6 max-w-xl mx-auto space-y-3">
+      <SkeletonBlock height="1.5rem" width="50%" />
+      <SkeletonBlock height="1rem" />
+      <SkeletonBlock height="1rem" />
+      <SkeletonBlock height="1rem" width="85%" />
+      <SkeletonBlock height="1rem" width="70%" />
+      <div class="flex gap-2 pt-2">
+        <SkeletonBlock height="1.5rem" width="5rem" borderRadius="9999px" />
+        <SkeletonBlock height="1.5rem" width="7rem" borderRadius="9999px" />
+      </div>
     </div>
 
     <div v-else-if="!karya" class="card p-10 text-center max-w-xl mx-auto">

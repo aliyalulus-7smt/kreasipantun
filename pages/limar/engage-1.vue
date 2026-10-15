@@ -12,7 +12,7 @@
   <div class="max-w-2xl mx-auto space-y-5">
     <!-- Gambar fenomena -->
     <div class="card p-6 text-center">
-      <img src="/img/bersih-sekolah.png" alt="Siswa bergotong royong membersihkan lingkungan sekolah"
+      <img src="/img/bersih-sekolah.png" alt="Siswa bergotong royong membersihkan lingkungan sekolah" loading="lazy"
         class="rounded-2xl w-full object-cover" />
     </div>
 

@@ -7,6 +7,7 @@ export interface Fenomena {
   deskripsi: string
   icon: string
   app: 'kotak' | '5e'
+  gambar?: string
 }
 
 export interface Pola {
@@ -38,14 +39,14 @@ export const fenomenaKotak: Fenomena[] = [
 ]
 
 export const fenomena5e: Fenomena[] = [
-  { id: 101, nama: 'Kebersihan kelas', deskripsi: 'Sampah yang berserakan membuat ruang kelas terlihat kurang nyaman.', icon: '🧹', app: '5e' },
-  { id: 102, nama: 'Membantu teman', deskripsi: 'Seorang teman kesulitan membawa buku yang banyak.', icon: '📚', app: '5e' },
-  { id: 103, nama: 'Penggunaan gawai', deskripsi: 'Bermain gawai terus-menerus hingga lupa waktu belajar.', icon: '📱', app: '5e' },
-  { id: 104, nama: 'Menunda tugas', deskripsi: 'Pekerjaan sekolah dikerjakan mepet tenggat waktu.', icon: '⏳', app: '5e' },
-  { id: 105, nama: 'Menjaga lingkungan', deskripsi: 'Menanam pohon dan merawat kebersihan sekitar rumah.', icon: '🌳', app: '5e' },
-  { id: 106, nama: 'Menghargai teman', deskripsi: 'Mendengarkan pendapat teman dengan sopan dan terbuka.', icon: '💛', app: '5e' },
-  { id: 107, nama: 'Disiplin waktu', deskripsi: 'Datang tepat waktu dan mengatur jadwal dengan baik.', icon: '⏰', app: '5e' },
-  { id: 108, nama: 'Kerja sama', deskripsi: 'Bekerja dalam kelompok untuk mencapai tujuan bersama.', icon: '👥', app: '5e' }
+  { id: 101, nama: 'Bijak Berteknologi', deskripsi: 'Menggunakan gawai dan internet dengan bijak untuk belajar dan hal positif.', icon: '📱', app: '5e', gambar: '/img/fenomena-bijak-berteknologi.png' },
+  { id: 102, nama: 'Cinta Lingkungan', deskripsi: 'Menjaga kebersihan dan kelestarian lingkungan sekitar kita.', icon: '🌳', app: '5e', gambar: '/img/fenomena-cinta-lingkungan.png' },
+  { id: 103, nama: 'Indahnya Tolong-Menolong', deskripsi: 'Membantu teman yang kesulitan dengan tulus dan ikhlas.', icon: '🤝', app: '5e', gambar: '/img/fenomena-tolong-menolong.png' },
+  { id: 104, nama: 'Stop Perundungan', deskripsi: 'Perkataan dan tindakan kita dapat menyakiti perasaan orang lain. Ciptakan lingkungan yang aman.', icon: '🛡️', app: '5e', gambar: '/img/fenomena-stop-perundungan.png' },
+  { id: 105, nama: 'Semangat Belajar', deskripsi: 'Belajar dengan tekun dan pantang menyerah meraih cita-cita.', icon: '📚', app: '5e', gambar: '/img/fenomena-semangat-belajar.jpg' },
+  { id: 106, nama: 'Lestarikan Budaya', deskripsi: 'Melestarikan budaya bangsa agar tidak hilang ditelan zaman.', icon: '🎭', app: '5e', gambar: '/img/fenomena-lestarikan-budaya.jpg' },
+  { id: 107, nama: 'Berbeda Itu Istimewa', deskripsi: 'Perbedaan suku dan budaya bukan penghalang untuk berteman dan rukun.', icon: '🌈', app: '5e', gambar: '/img/fenomena-berbeda-istimewa.png' },
+  { id: 108, nama: 'Hidup Sehat', deskripsi: 'Makan bergizi dan rajin berolahraga agar tubuh sehat.', icon: '💪', app: '5e', gambar: '/img/fenomena-hidup-sehat.png' }
 ]
 
 export const daftarPola: Pola[] = [

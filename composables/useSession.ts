@@ -53,6 +53,7 @@ export function useSession() {
   const limarFenomena = useState<Fenomena | null>('limar_fenomena', () => null)
   const petaGagasan = useState<string>('peta_gagasan', () => '')
   const petaPesan = useState<string>('peta_pesan', () => '')
+  const petaKata = useState<string>('peta_kata', () => '')
 
   // Karya terakhir (untuk halaman hasil)
   const karyaTerakhir = useState<any>('karya_terakhir', () => null)
@@ -82,6 +83,7 @@ export function useSession() {
         limarFenomena: limarFenomena.value,
         petaGagasan: petaGagasan.value,
         petaPesan: petaPesan.value,
+        petaKata: petaKata.value,
         karyaTerakhir: karyaTerakhir.value,
       }))
     } catch { /* abaikan: storage penuh / tidak tersedia */ }
@@ -105,6 +107,7 @@ export function useSession() {
       if (d.limarFenomena) limarFenomena.value = d.limarFenomena
       if (typeof d.petaGagasan === 'string') petaGagasan.value = d.petaGagasan
       if (typeof d.petaPesan === 'string') petaPesan.value = d.petaPesan
+      if (typeof d.petaKata === 'string') petaKata.value = d.petaKata
       if (d.karyaTerakhir) karyaTerakhir.value = d.karyaTerakhir
     } catch { /* abaikan: data korup */ }
   }
@@ -119,6 +122,7 @@ export function useSession() {
     limarFenomena.value = null
     petaGagasan.value = ''
     petaPesan.value = ''
+    petaKata.value = ''
     karyaTerakhir.value = null
     if (import.meta.client) {
       try { localStorage.removeItem(STORAGE_KEY) } catch { /* abaikan */ }
@@ -134,7 +138,7 @@ export function useSession() {
   return {
     namaLengkap, noAbsen, kelas, siswaId, guruAuthed, datangKembali,
     kotakFenomena, kotakPola, kotakRima,
-    limarFenomena, petaGagasan, petaPesan,
+    limarFenomena, petaGagasan, petaPesan, petaKata,
     karyaTerakhir, resetKotak,
     save, restore, logout, logoutGuru,
   }
