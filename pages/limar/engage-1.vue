@@ -1,7 +1,7 @@
 <template>
   <div class="mb-6">
     <span class="pill bg-emerald-100 text-emerald-700">ENGAGE — Kenali Fenomena</span>
-    <span class="float-right pill bg-amber-100 text-amber-700">1 dari 2</span>
+    <span class="float-right pill bg-amber-100 text-amber-700">1 dari 3</span>
   </div>
 
   <div class="text-center mb-6">
@@ -47,7 +47,7 @@
 
   <div class="text-center mt-8 flex justify-center gap-3">
     <NuxtLink to="/pilih" class="btn-soft">← Menu</NuxtLink>
-    <NuxtLink to="/limar/engage-2" class="btn-primary text-lg">Lanjutkan →</NuxtLink>
+    <NuxtLink to="/limar/engage-tanggapan" class="btn-primary text-lg">Lanjutkan →</NuxtLink>
   </div>
 </template>
 
