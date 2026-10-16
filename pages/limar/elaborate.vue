@@ -1,6 +1,6 @@
 <template>
   <div class="mb-6">
-    <span class="pill bg-sky-100 text-sky-700">ELABORATE — Asah Kreativitas</span>
+    <span class="pill bg-sky-100 text-sky-700">Asah Kreativitas</span>
   </div>
 
   <div class="text-center mb-6">

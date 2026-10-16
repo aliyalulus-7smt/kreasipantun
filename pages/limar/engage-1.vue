@@ -1,6 +1,6 @@
 <template>
   <div class="mb-6">
-    <span class="pill bg-emerald-100 text-emerald-700">ENGAGE — Kenali Fenomena</span>
+    <span class="pill bg-emerald-100 text-emerald-700">Kenali Fenomena</span>
     <span class="float-right pill bg-amber-100 text-amber-700">1 dari 3</span>
   </div>
 

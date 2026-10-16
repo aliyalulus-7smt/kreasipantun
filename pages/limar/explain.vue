@@ -1,6 +1,6 @@
 <template>
   <div class="mb-6">
-    <span class="pill bg-violet-100 text-violet-700">EXPLAIN — Eksplorasi Pengetahuan</span>
+    <span class="pill bg-violet-100 text-violet-700">Eksplorasi Pengetahuan</span>
   </div>
 
   <div class="text-center mb-8">

@@ -1,6 +1,6 @@
 <template>
   <div class="mb-6">
-    <span class="pill bg-rose-100 text-rose-700">EVALUATE — Evaluasi Karya</span>
+    <span class="pill bg-rose-100 text-rose-700">Evaluasi Karya</span>
   </div>
 
   <div class="text-center mb-8">

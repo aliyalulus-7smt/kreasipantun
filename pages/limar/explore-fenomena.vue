@@ -1,6 +1,6 @@
 <template>
   <div class="mb-6">
-    <span class="pill bg-amber-100 text-amber-700">EXPLORE — Ekspresikan Gagasan dan Pesan</span>
+    <span class="pill bg-amber-100 text-amber-700">Ekspresikan Gagasan dan Pesan</span>
   </div>
 
   <div class="text-center mb-6">
