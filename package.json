@@ -1,0 +1,17 @@
+{
+  "name": "kreasi-pantun-local-prototype",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "node server.js",
+    "start": "node server.js",
+    "test": "node --test tests/store.test.js",
+    "test:e2e": "playwright test",
+    "check": "node --check src/app.js && node --check src/store.js && node --check server.js && node --check sw.js"
+  },
+  "devDependencies": {
+    "@playwright/test": "^1.56.0",
+    "fake-indexeddb": "^6.2.4"
+  }
+}

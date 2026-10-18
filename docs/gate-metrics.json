@@ -1,0 +1,33 @@
+{
+  "environment": "Playwright Chromium desktop, localhost:4173; server sinkron simulasi IndexedDB, tanpa backend/network throttle",
+  "offline": {
+    "cycles": 100,
+    "types": 5,
+    "cyclesPerType": 20,
+    "lostAcknowledged": 0,
+    "duplicateKeys": 0,
+    "wrongDemoDevice": 0,
+    "limitation": "Satu browser context, A/B simulasi, reload bukan penghentian OS atau tutup profil; bukan backend nyata."
+  },
+  "writeFailure": {
+    "injected": "QuotaExceededError pada IDBObjectStore.put",
+    "falseSuccess": false,
+    "previousDataIntact": true,
+    "limitation": "Fault injection; bukan kuota disk/OS penuh sungguhan."
+  },
+  "feedbackAndQueue": {
+    "localFeedbackMs": 41.22799699999814,
+    "localThresholdMs": 1000,
+    "mockQueueCount": 100,
+    "textBytesEach": 9000,
+    "mockSyncMs": 16.69999998807907,
+    "mockThresholdMs": 30000,
+    "limitation": "Tanpa RTT150ms/5Mbps/1Mbps karena tidak ada backend; bukan pengesahan performa sinkron jaringan."
+  },
+  "navigation": {
+    "samples": 30,
+    "p95Ms": 33.280415000001085,
+    "thresholdMs": 2000,
+    "limitation": "Desktop/headless localhost; bukan perangkat minimum, uji beban atau profil media."
+  }
+}
