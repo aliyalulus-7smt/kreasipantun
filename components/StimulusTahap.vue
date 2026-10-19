@@ -1,0 +1,58 @@
+<!-- Stimulus: artikel / video / gambar + pertanyaan pemantik + respons -->
+<template>
+  <div class="space-y-5">
+    <div v-if="tipe === 'video'" class="aspect-video rounded-2xl overflow-hidden bg-slate-900">
+      <iframe :src="embedUrl" class="w-full h-full" frameborder="0" allowfullscreen
+        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" />
+    </div>
+    <div v-else-if="tipe === 'gambar'" class="rounded-2xl overflow-hidden bg-slate-100">
+      <p class="p-6 text-center text-slate-500 font-semibold">
+        🖼️ {{ data.catatan || 'Lihat gambar pada tautan:' }}<br />
+        <a :href="data.gambarUrl" target="_blank" class="text-sky-600 underline break-all">{{ data.gambarUrl }}</a>
+      </p>
+    </div>
+    <div v-else class="card p-5 bg-amber-50/60">
+      <p v-if="data.artikel" class="text-slate-700 leading-relaxed whitespace-pre-line">{{ data.artikel }}</p>
+      <p v-else class="text-slate-500 font-semibold italic">📄 {{ data.catatan || 'Materi artikel menyusul.' }}</p>
+    </div>
+
+    <div class="card p-5">
+      <p class="font-display font-bold text-slate-700 mb-3">❓ Pertanyaan Pemantik</p>
+      <ol class="list-decimal list-inside space-y-2 text-sm font-semibold text-slate-600 mb-4">
+        <li v-for="(t, i) in data.pertanyaan" :key="i">{{ t }}</li>
+      </ol>
+      <label class="block font-bold text-slate-700 mb-1.5 text-sm">✏️ Tanggapanmu</label>
+      <textarea v-model="respons" rows="3" class="input-cute" placeholder="Tulis tanggapanmu di sini..." />
+    </div>
+
+    <button class="btn-primary w-full" :disabled="!bisaSimpan" @click="simpan">
+      {{ tersimpan ? '✓ Tersimpan' : '💾 Simpan Tanggapan' }}
+    </button>
+  </div>
+</template>
+
+<script setup lang="ts">
+const props = defineProps<{ tipe: string; data: Record<string, any>; fenomenaId: string }>()
+const emit = defineEmits(['selesai'])
+const { antrekan } = useOutbox()
+
+const respons = ref('')
+const tersimpan = ref(false)
+const bisaSimpan = computed(() => respons.value.trim().length > 0 && !tersimpan.value)
+
+const embedUrl = computed(() => {
+  if (props.tipe !== 'video' || !props.data.videoUrl) return ''
+  return props.data.videoUrl.replace('youtu.be/', 'www.youtube.com/embed/').replace('watch?v=', 'embed/').split('?')[0]
+})
+
+function simpan() {
+  if (!bisaSimpan.value) return
+  antrekan({
+    phenomenon_id: props.fenomenaId, stage_id: 'kenali', content_version: 'v1', base_version: 0,
+    response_payload: { tanggapan: respons.value.trim() },
+    context: { activity_id: `${props.fenomenaId}-kenali`, activity_version: 'v1' },
+  })
+  tersimpan.value = true
+  emit('selesai')
+}
+</script>
