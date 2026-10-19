@@ -1,95 +1,228 @@
 <template>
-  <div class="mb-6 flex items-center justify-between">
-    <div>
-      <h1 class="page-title">👩🏫 Dashboard Guru</h1>
-      <p class="page-sub">Halo, {{ user?.nama_lengkap }}! Pantau progres siswamu di sini.</p>
-    </div>
-    <button class="btn-soft !px-4 !py-2 text-sm" @click="keluar">Keluar</button>
-  </div>
+  <div class="min-h-screen bg-slate-100 flex">
+    <!-- Sidebar -->
+    <aside class="w-64 bg-slate-900 text-white flex-col hidden md:flex shrink-0 min-h-screen sticky top-0 h-screen">
+      <div class="p-6">
+        <p class="text-lg font-extrabold tracking-tight">Kreasi Pantun</p>
+        <p class="text-xs text-slate-400 mt-0.5">Panel Guru</p>
+      </div>
+      <nav class="flex-1 px-3 space-y-1">
+        <button v-for="m in menu" :key="m.id" @click="tab = m.id"
+          :class="['w-full text-left px-4 py-2.5 rounded-lg text-sm font-semibold transition flex items-center gap-3',
+            tab === m.id ? 'bg-indigo-600 text-white' : 'text-slate-300 hover:bg-slate-800']">
+          <span class="w-5 text-center">{{ m.icon }}</span>{{ m.label }}
+        </button>
+      </nav>
+      <div class="p-4 border-t border-slate-800">
+        <p class="text-sm font-bold truncate">{{ user?.nama_lengkap }}</p>
+        <p class="text-xs text-slate-400">@{{ user?.username }}</p>
+        <button @click="keluar" class="mt-3 w-full text-left px-4 py-2 rounded-lg text-sm font-semibold text-slate-300 hover:bg-slate-800 transition">
+          ⎋ Keluar
+        </button>
+      </div>
+    </aside>
 
-  <!-- Kelola kelas -->
-  <div class="card p-5 mb-6 max-w-4xl mx-auto">
-    <div class="flex items-center justify-between mb-4">
-      <p class="font-display font-bold text-slate-700">🏫 Kelasku</p>
-      <button class="btn-primary !px-4 !py-2 text-sm" @click="tampilBuat = !tampilBuat">+ Buat Kelas</button>
+    <!-- Mobile top bar -->
+    <div class="md:hidden fixed top-0 inset-x-0 z-40 bg-slate-900 text-white px-4 py-3 flex items-center justify-between">
+      <p class="font-extrabold">Kreasi Pantun</p>
+      <div class="flex gap-1">
+        <button v-for="m in menu" :key="m.id" @click="tab = m.id"
+          :class="['px-3 py-1.5 rounded-lg text-xs font-bold', tab === m.id ? 'bg-indigo-600' : 'text-slate-300']">{{ m.label }}</button>
+      </div>
     </div>
-    <div v-if="tampilBuat" class="flex gap-2 mb-4">
-      <input v-model="namaKelas" class="input-cute" placeholder="Nama kelas, contoh: VII-A" />
-      <button class="btn-primary !px-5" :disabled="!namaKelas.trim() || membuat" @click="buatKelas">Buat</button>
-    </div>
-    <div v-if="!daftarKelas.length" class="text-center text-slate-400 font-semibold py-4">
-      Belum ada kelas. Buat kelas dulu untuk mendapatkan kode.
-    </div>
-    <div v-for="k in daftarKelas" :key="k.kelas.id" class="border-2 border-slate-100 rounded-2xl p-4 mb-3">
-      <div class="flex items-center justify-between flex-wrap gap-2">
-        <div>
-          <p class="font-display font-bold text-slate-700">{{ k.kelas.nama }}</p>
-          <p class="text-sm font-bold text-slate-500">Kode: <span class="font-mono text-lg text-emerald-600 tracking-widest">{{ k.kelas.kode }}</span></p>
-          <p class="text-xs font-semibold text-slate-400">{{ k.siswa.length }} siswa</p>
+
+    <!-- Main -->
+    <main class="flex-1 min-w-0 p-4 md:p-8 pt-16 md:pt-8 max-w-6xl mx-auto w-full">
+      <!-- ===== OVERVIEW ===== -->
+      <div v-if="tab === 'dash'">
+        <div class="flex items-center justify-between mb-6">
+          <div>
+            <h1 class="text-2xl font-extrabold text-slate-900">Dashboard</h1>
+            <p class="text-sm text-slate-500">{{ tanggalHariIni }}</p>
+          </div>
         </div>
+
+        <!-- Stats -->
+        <div class="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
+          <div v-for="s in stats" :key="s.label" class="bg-white rounded-xl p-5 shadow-sm border border-slate-200">
+            <p class="text-xs font-bold text-slate-400 uppercase tracking-wide">{{ s.label }}</p>
+            <p class="text-3xl font-extrabold text-slate-900 mt-1">{{ s.nilai }}</p>
+            <p class="text-xs text-slate-400 mt-1">{{ s.sub }}</p>
+          </div>
+        </div>
+
+        <div class="grid lg:grid-cols-2 gap-4 mb-6">
+          <!-- Progres per fenomena -->
+          <div class="bg-white rounded-xl p-5 shadow-sm border border-slate-200">
+            <p class="font-bold text-slate-800 mb-1">Progres per Fenomena</p>
+            <p class="text-xs text-slate-400 mb-4">Rata-rata tahap selesai per siswa (%)</p>
+            <div class="space-y-3">
+              <div v-for="f in progresFenomena" :key="f.id">
+                <div class="flex justify-between text-xs font-semibold mb-1">
+                  <span class="text-slate-600">{{ f.nama }}</span>
+                  <span class="text-slate-400">{{ f.persen }}%</span>
+                </div>
+                <div class="h-2 rounded-full bg-slate-100 overflow-hidden">
+                  <div class="h-full rounded-full bg-indigo-500 transition-all" :style="{ width: f.persen + '%' }" />
+                </div>
+              </div>
+            </div>
+          </div>
+          <!-- Distribusi rekomendasi -->
+          <div class="bg-white rounded-xl p-5 shadow-sm border border-slate-200">
+            <p class="font-bold text-slate-800 mb-1">Kategori Siswa</p>
+            <p class="text-xs text-slate-400 mb-4">Berdasarkan progres pengerjaan</p>
+            <div class="space-y-3">
+              <div v-for="k in distribusi" :key="k.label" class="flex items-center gap-3">
+                <span :class="['w-3 h-3 rounded-full', k.warna]"></span>
+                <span class="text-sm font-semibold text-slate-600 flex-1">{{ k.label }}</span>
+                <span class="text-sm font-extrabold text-slate-900">{{ k.jumlah }}</span>
+              </div>
+            </div>
+            <div class="mt-4 pt-4 border-t border-slate-100">
+              <p class="text-xs text-slate-400 leading-relaxed">Kategori dihitung otomatis dari jumlah tahap yang dikerjakan. Bukan penilaian akademik final.</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Kelas ringkas -->
+        <div class="bg-white rounded-xl p-5 shadow-sm border border-slate-200">
+          <div class="flex items-center justify-between mb-4">
+            <p class="font-bold text-slate-800">Kelas Saya</p>
+            <button @click="tab = 'kelas'" class="text-sm font-bold text-indigo-600 hover:underline">Kelola →</button>
+          </div>
+          <div v-if="!daftarKelas.length" class="text-sm text-slate-400">Belum ada kelas.</div>
+          <div class="grid sm:grid-cols-2 lg:grid-cols-3 gap-3">
+            <div v-for="k in daftarKelas" :key="k.kelas.id" class="border border-slate-200 rounded-xl p-4">
+              <p class="font-bold text-slate-800">{{ k.kelas.nama }}</p>
+              <p class="text-xs text-slate-400 mt-0.5">{{ k.siswa.length }} siswa · {{ rataKelas(k) }}% rata-rata</p>
+              <p class="font-mono text-lg font-bold text-indigo-600 tracking-widest mt-2">{{ k.kelas.kode }}</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ===== KELAS ===== -->
+      <div v-if="tab === 'kelas'">
+        <div class="flex items-center justify-between mb-6">
+          <h1 class="text-2xl font-extrabold text-slate-900">Kelas</h1>
+          <button @click="tampilBuat = !tampilBuat" class="bg-indigo-600 text-white px-4 py-2 rounded-lg text-sm font-bold hover:bg-indigo-700 transition">+ Buat Kelas</button>
+        </div>
+        <div v-if="tampilBuat" class="bg-white rounded-xl p-5 shadow-sm border border-slate-200 mb-4 flex gap-2">
+          <input v-model="namaKelas" class="flex-1 border border-slate-200 rounded-lg px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500" placeholder="Nama kelas, contoh: VII-A" />
+          <button @click="buatKelas" :disabled="!namaKelas.trim() || membuat" class="bg-indigo-600 text-white px-5 rounded-lg text-sm font-bold hover:bg-indigo-700 disabled:opacity-40">Buat</button>
+        </div>
+        <div class="bg-white rounded-xl shadow-sm border border-slate-200 overflow-hidden">
+          <table class="w-full text-sm">
+            <thead class="bg-slate-50 text-slate-500 text-xs uppercase">
+              <tr>
+                <th class="text-left px-5 py-3 font-bold">Kelas</th>
+                <th class="text-left px-5 py-3 font-bold">Kode</th>
+                <th class="text-left px-5 py-3 font-bold">Siswa</th>
+                <th class="text-left px-5 py-3 font-bold">Rata-rata</th>
+                <th class="text-right px-5 py-3 font-bold">Aksi</th>
+              </tr>
+            </thead>
+            <tbody class="divide-y divide-slate-100">
+              <tr v-for="k in daftarKelas" :key="k.kelas.id" class="hover:bg-slate-50">
+                <td class="px-5 py-3.5 font-bold text-slate-800">{{ k.kelas.nama }}</td>
+                <td class="px-5 py-3.5"><span class="font-mono font-bold text-indigo-600 tracking-widest">{{ k.kelas.kode }}</span></td>
+                <td class="px-5 py-3.5 text-slate-600">{{ k.siswa.length }}</td>
+                <td class="px-5 py-3.5 text-slate-600">{{ rataKelas(k) }}%</td>
+                <td class="px-5 py-3.5 text-right space-x-2">
+                  <button @click="salinKode(k.kelas.kode)" class="text-xs font-bold text-slate-500 hover:text-indigo-600">Salin</button>
+                  <button @click="resetKode(k.kelas.id)" class="text-xs font-bold text-slate-500 hover:text-amber-600">Reset</button>
+                </td>
+              </tr>
+              <tr v-if="!daftarKelas.length"><td colspan="5" class="px-5 py-8 text-center text-slate-400">Belum ada kelas.</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- ===== SISWA ===== -->
+      <div v-if="tab === 'siswa'">
+        <h1 class="text-2xl font-extrabold text-slate-900 mb-6">Siswa</h1>
+        <div class="bg-white rounded-xl p-4 shadow-sm border border-slate-200 mb-4 flex flex-wrap gap-3">
+          <input v-model="cari" class="flex-1 min-w-[200px] border border-slate-200 rounded-lg px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500" placeholder="Cari nama atau username..." />
+          <select v-model="filterKelas" class="border border-slate-200 rounded-lg px-4 py-2.5 text-sm font-semibold text-slate-600">
+            <option value="">Semua kelas</option>
+            <option v-for="k in daftarKelas" :key="k.kelas.id" :value="k.kelas.id">{{ k.kelas.nama }}</option>
+          </select>
+        </div>
+        <div class="bg-white rounded-xl shadow-sm border border-slate-200 overflow-hidden">
+          <div class="overflow-x-auto">
+            <table class="w-full text-sm min-w-[640px]">
+              <thead class="bg-slate-50 text-slate-500 text-xs uppercase">
+                <tr>
+                  <th class="text-left px-5 py-3 font-bold">Siswa</th>
+                  <th class="text-left px-5 py-3 font-bold">Kelas</th>
+                  <th class="text-left px-5 py-3 font-bold">Progres</th>
+                  <th class="text-left px-5 py-3 font-bold">Kategori</th>
+                  <th class="text-right px-5 py-3 font-bold">Aksi</th>
+                </tr>
+              </thead>
+              <tbody class="divide-y divide-slate-100">
+                <tr v-for="s in siswaTampil" :key="s.id" class="hover:bg-slate-50">
+                  <td class="px-5 py-3.5">
+                    <p class="font-bold text-slate-800">{{ s.nama_lengkap }}</p>
+                    <p class="text-xs text-slate-400">@{{ s.username }} · No. {{ s.no_absen || '—' }}</p>
+                  </td>
+                  <td class="px-5 py-3.5 text-slate-600">{{ s.namaKelas }}</td>
+                  <td class="px-5 py-3.5">
+                    <div class="flex items-center gap-2">
+                      <div class="w-24 h-2 rounded-full bg-slate-100 overflow-hidden">
+                        <div class="h-full bg-indigo-500 rounded-full" :style="{ width: persen(s) + '%' }" />
+                      </div>
+                      <span class="text-xs font-bold text-slate-500">{{ totalTahap(s) }}/40</span>
+                    </div>
+                  </td>
+                  <td class="px-5 py-3.5"><span :class="['text-xs font-bold px-2.5 py-1 rounded-full', warnaRekom(rekom(s).k)]">{{ rekom(s).label }}</span></td>
+                  <td class="px-5 py-3.5 text-right space-x-2 whitespace-nowrap">
+                    <button @click="lihatKarya(s)" class="text-xs font-bold text-slate-500 hover:text-indigo-600">Karya</button>
+                    <button @click="siswaDinilai = s" class="text-xs font-bold text-slate-500 hover:text-indigo-600">Nilai</button>
+                  </td>
+                </tr>
+                <tr v-if="!siswaTampil.length"><td colspan="5" class="px-5 py-8 text-center text-slate-400">Tidak ada siswa.</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <!-- Karya tampil inline -->
+        <div v-if="karyaAktif" class="bg-white rounded-xl p-5 shadow-sm border border-slate-200 mt-4">
+          <div class="flex items-center justify-between mb-3">
+            <p class="font-bold text-slate-800">Karya — {{ karyaAktif.nama }}</p>
+            <button @click="karyaAktif = null" class="text-xs font-bold text-slate-400">Tutup ✕</button>
+          </div>
+          <div v-if="!karyaAktif.list.length" class="text-sm text-slate-400">Belum ada karya.</div>
+          <div class="grid md:grid-cols-2 gap-3">
+            <div v-for="w in karyaAktif.list" :key="w.id" class="border border-slate-100 rounded-xl p-4 bg-slate-50">
+              <p class="text-xs font-bold text-indigo-600 mb-2">{{ namaFenomena(w.phenomenon_id) }}</p>
+              <p v-for="i in 4" :key="i" class="font-semibold text-slate-700 text-sm">{{ w['larik' + i] }}</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </main>
+
+    <!-- Modal penilaian -->
+    <div v-if="siswaDinilai" class="fixed inset-0 bg-slate-900/50 flex items-center justify-center p-4 z-50" @click.self="siswaDinilai = null">
+      <div class="bg-white rounded-2xl p-6 max-w-md w-full shadow-xl">
+        <p class="font-extrabold text-slate-900 mb-1">Penilaian — {{ siswaDinilai.nama_lengkap }}</p>
+        <p class="text-xs text-slate-400 mb-4">Tersimpan terpisah, tidak mengubah karya siswa.</p>
+        <label class="block text-xs font-bold text-slate-500 mb-1">Fenomena</label>
+        <select v-model="formFenomena" class="w-full border border-slate-200 rounded-lg px-3 py-2.5 text-sm mb-3">
+          <option v-for="f in FENOMENA" :key="f.id" :value="f.id">{{ f.nama }}</option>
+        </select>
+        <label class="block text-xs font-bold text-slate-500 mb-1">Nilai</label>
+        <input v-model="formNilai" class="w-full border border-slate-200 rounded-lg px-3 py-2.5 text-sm mb-3" placeholder="Contoh: 85 / Baik Sekali" />
+        <label class="block text-xs font-bold text-slate-500 mb-1">Komentar</label>
+        <textarea v-model="formKomentar" rows="3" class="w-full border border-slate-200 rounded-lg px-3 py-2.5 text-sm mb-4" placeholder="Masukan untuk siswa..." />
         <div class="flex gap-2">
-          <button class="btn-soft !px-3 !py-1.5 text-xs" @click="salinKode(k.kelas.kode)">📋 Salin Kode</button>
-          <button class="btn-soft !px-3 !py-1.5 text-xs" @click="resetKode(k.kelas.id)">🔄 Reset</button>
-          <button class="btn-soft !px-3 !py-1.5 text-xs" @click="kelasAktif = kelasAktif === k.kelas.id ? '' : k.kelas.id">
-            {{ kelasAktif === k.kelas.id ? 'Tutup' : 'Lihat Siswa' }}
-          </button>
+          <button @click="siswaDinilai = null" class="flex-1 border border-slate-200 rounded-lg py-2.5 text-sm font-bold text-slate-600">Batal</button>
+          <button @click="kirimNilai" :disabled="menyimpan" class="flex-1 bg-indigo-600 text-white rounded-lg py-2.5 text-sm font-bold hover:bg-indigo-700">Simpan</button>
         </div>
-      </div>
-
-      <!-- Daftar siswa -->
-      <div v-if="kelasAktif === k.kelas.id" class="mt-4 space-y-2.5">
-        <div v-if="!k.siswa.length" class="text-sm text-slate-400 font-semibold">Belum ada siswa.</div>
-        <div v-for="s in k.siswa" :key="s.id" class="bg-slate-50 rounded-xl p-3.5">
-          <div class="flex items-center justify-between flex-wrap gap-2">
-            <div>
-              <p class="font-bold text-slate-700 text-sm">{{ s.nama_lengkap }}</p>
-              <p class="text-xs font-semibold text-slate-400">@{{ s.username }} · No. {{ s.no_absen || '—' }}</p>
-            </div>
-            <span :class="['pill !px-3 !py-1 text-xs font-bold', warnaRekom(rekom(s).k)]">{{ rekom(s).label }}</span>
-          </div>
-          <div class="mt-2.5">
-            <div class="flex justify-between text-xs font-bold text-slate-400 mb-1">
-              <span>Progres: {{ totalTahap(s) }}/40 tahap</span>
-              <span>{{ persen(s) }}%</span>
-            </div>
-            <div class="h-2 rounded-full bg-slate-200 overflow-hidden">
-              <div class="h-full bg-emerald-400 rounded-full transition-all" :style="{ width: persen(s) + '%' }" />
-            </div>
-          </div>
-          <p class="text-xs font-semibold text-slate-500 mt-2">💡 {{ rekom(s).alasan }}</p>
-          <div class="flex gap-2 mt-2.5">
-            <button class="btn-soft !px-3 !py-1.5 text-xs" @click="lihatKarya(s)">🖼️ Karya</button>
-            <button class="btn-soft !px-3 !py-1.5 text-xs" @click="siswaDinilai = s">⭐ Nilai</button>
-          </div>
-          <!-- Karya siswa -->
-          <div v-if="karyaTampil[s.id]" class="mt-3 space-y-2">
-            <div v-for="w in karyaTampil[s.id]" :key="w.id" class="bg-white rounded-xl p-3 border border-slate-100">
-              <p class="text-xs font-bold text-sky-600 mb-1">{{ namaFenomena(w.phenomenon_id) }}</p>
-              <p v-for="i in 4" :key="i" class="font-display text-sm font-semibold text-slate-700">{{ w['larik' + i] }}</p>
-            </div>
-            <p v-if="!karyaTampil[s.id].length" class="text-xs text-slate-400 font-semibold">Belum ada karya.</p>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <!-- Modal penilaian -->
-  <div v-if="siswaDinilai" class="fixed inset-0 bg-black/40 flex items-center justify-center p-4 z-50" @click.self="siswaDinilai = null">
-    <div class="card p-6 max-w-md w-full">
-      <p class="font-display font-bold text-slate-700 mb-1">⭐ Nilai {{ siswaDinilai.nama_lengkap }}</p>
-      <p class="text-xs font-semibold text-slate-400 mb-4">Penilaian tersimpan terpisah, tidak mengubah karya siswa.</p>
-      <label class="block text-xs font-bold text-slate-600 mb-1">Fenomena</label>
-      <select v-model="formFenomena" class="input-cute mb-3">
-        <option v-for="f in FENOMENA" :key="f.id" :value="f.id">{{ f.icon }} {{ f.nama }}</option>
-      </select>
-      <label class="block text-xs font-bold text-slate-600 mb-1">Nilai</label>
-      <input v-model="formNilai" class="input-cute mb-3" placeholder="Contoh: 85 / A / Baik Sekali" />
-      <label class="block text-xs font-bold text-slate-600 mb-1">Komentar</label>
-      <textarea v-model="formKomentar" rows="3" class="input-cute mb-4" placeholder="Masukan untuk siswa..." />
-      <div class="flex gap-2">
-        <button class="btn-soft flex-1" @click="siswaDinilai = null">Batal</button>
-        <button class="btn-primary flex-1" :disabled="menyimpan" @click="kirimNilai">Simpan</button>
       </div>
     </div>
   </div>
@@ -101,40 +234,89 @@ import { FENOMENA } from '~/data/fenomena'
 definePageMeta({ layout: 'app', middleware: 'auth-bff' })
 
 const { user, logout } = useAuth()
+const menu = [
+  { id: 'dash', label: 'Dashboard', icon: '▦' },
+  { id: 'kelas', label: 'Kelas', icon: '🏫' },
+  { id: 'siswa', label: 'Siswa', icon: '👥' },
+]
+const tab = ref('dash')
 const daftarKelas = ref<any[]>([])
-const kelasAktif = ref('')
 const tampilBuat = ref(false)
 const namaKelas = ref('')
 const membuat = ref(false)
+const cari = ref('')
+const filterKelas = ref('')
 const siswaDinilai = ref<any>(null)
 const formFenomena = ref(FENOMENA[0].id)
 const formNilai = ref('')
 const formKomentar = ref('')
 const menyimpan = ref(false)
-const karyaTampil = ref<Record<string, any[]>>({})
+const karyaAktif = ref<any>(null)
+
+const tanggalHariIni = new Date().toLocaleDateString('id-ID', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' })
 
 onMounted(muat)
 
 async function muat() {
   try {
     const r = await $fetch<{ data: { kelas: any[] } }>('/api/v1/guru/siswa')
-    daftarKelas.value = r.data.kelas
+    daftarKelas.value = r.data.kelas.map(k => ({
+      ...k,
+      siswa: k.siswa.map((s: any) => ({ ...s, namaKelas: k.kelas.nama, kelasId: k.kelas.id })),
+    }))
   } catch {}
 }
+
+const semuaSiswa = computed(() => daftarKelas.value.flatMap(k => k.siswa))
+const siswaTampil = computed(() => semuaSiswa.value.filter(s => {
+  const c = (s.nama_lengkap + s.username).toLowerCase().includes(cari.value.toLowerCase())
+  const k = !filterKelas.value || s.kelasId === filterKelas.value
+  return c && k
+}))
+
+const stats = computed(() => {
+  const n = semuaSiswa.value.length
+  const avg = n ? Math.round(semuaSiswa.value.reduce((a, s) => a + persen(s), 0) / n) : 0
+  return [
+    { label: 'Total Siswa', nilai: n, sub: `${daftarKelas.value.length} kelas` },
+    { label: 'Total Kelas', nilai: daftarKelas.value.length, sub: 'kelas aktif' },
+    { label: 'Rata-rata Progres', nilai: avg + '%', sub: 'dari 40 tahap' },
+    { label: 'Siap Pengayaan', nilai: semuaSiswa.value.filter(s => rekom(s).k === 'siap').length, sub: 'siswa' },
+  ]
+})
+
+const progresFenomena = computed(() => FENOMENA.map(f => {
+  const vals = semuaSiswa.value.map(s => new Set((s.progres || []).filter((p: any) => p.phenomenon_id === f.id).map((p: any) => p.stage_id)).size)
+  const avg = vals.length ? Math.round(vals.reduce((a, b) => a + b, 0) / vals.length / 5 * 100) : 0
+  return { id: f.id, nama: f.nama, persen: avg }
+}))
+
+const distribusi = computed(() => {
+  const hit: Record<string, number> = { kosong: 0, awal: 0, jalan: 0, siap: 0 }
+  semuaSiswa.value.forEach(s => hit[rekom(s).k]++)
+  return [
+    { label: 'Belum mulai', jumlah: hit.kosong, warna: 'bg-slate-300' },
+    { label: 'Baru mulai', jumlah: hit.awal, warna: 'bg-amber-400' },
+    { label: 'Sedang berkembang', jumlah: hit.jalan, warna: 'bg-sky-400' },
+    { label: 'Siap pengayaan', jumlah: hit.siap, warna: 'bg-emerald-400' },
+  ]
+})
 
 function totalTahap(s: any): number {
   return new Set((s.progres || []).map((p: any) => `${p.phenomenon_id}:${p.stage_id}`)).size
 }
 function persen(s: any): number { return Math.round(totalTahap(s) / 40 * 100) }
+function rataKelas(k: any): number {
+  if (!k.siswa.length) return 0
+  return Math.round(k.siswa.reduce((a: number, s: any) => a + persen(s), 0) / k.siswa.length)
+}
 function namaFenomena(id: string) { return FENOMENA.find(f => f.id === id)?.nama || id }
-
-/** Rekomendasi rule-based (bukan AI). */
-function rekom(s: any): { k: string; label: string; alasan: string } {
+function rekom(s: any): { k: string; label: string } {
   const t = totalTahap(s)
-  if (t === 0) return { k: 'kosong', label: 'Belum mulai', alasan: 'Siswa belum mengerjakan tahap apa pun.' }
-  if (t < 10) return { k: 'awal', label: 'Baru mulai', alasan: `Baru ${t}/40 tahap. Ajak eksplorasi fenomena yang menarik.` }
-  if (t < 30) return { k: 'jalan', label: 'Sedang berkembang', alasan: `${t}/40 tahap selesai. Pantau konsistensi.` }
-  return { k: 'siap', label: 'Siap pengayaan', alasan: `${t}/40 tahap selesai. Pertimbangkan tantangan lanjutan.` }
+  if (t === 0) return { k: 'kosong', label: 'Belum mulai' }
+  if (t < 10) return { k: 'awal', label: 'Baru mulai' }
+  if (t < 30) return { k: 'jalan', label: 'Berkembang' }
+  return { k: 'siap', label: 'Siap pengayaan' }
 }
 function warnaRekom(k: string) {
   return { kosong: 'bg-slate-100 text-slate-500', awal: 'bg-amber-100 text-amber-700', jalan: 'bg-sky-100 text-sky-700', siap: 'bg-emerald-100 text-emerald-700' }[k]
@@ -154,15 +336,13 @@ async function resetKode(id: string) {
 }
 function salinKode(kode: string) {
   navigator.clipboard?.writeText(kode)
-  alert(`Kode ${kode} disalin! Bagikan ke siswa.`)
+  alert(`Kode ${kode} disalin!`)
 }
 async function lihatKarya(s: any) {
-  if (karyaTampil.value[s.id]) { delete karyaTampil.value[s.id]; return }
   try {
-    // Guru melihat karya via endpoint works (difilter server ke kelasnya)
     const r = await $fetch<{ data: { items: any[] } }>('/api/v1/works?limit=100')
-    karyaTampil.value[s.id] = (r.data.items || []).filter((w: any) => w.user_id === s.id)
-  } catch { karyaTampil.value[s.id] = [] }
+    karyaAktif.value = { nama: s.nama_lengkap, list: (r.data.items || []).filter((w: any) => w.user_id === s.id) }
+  } catch { karyaAktif.value = { nama: s.nama_lengkap, list: [] } }
 }
 async function kirimNilai() {
   menyimpan.value = true
