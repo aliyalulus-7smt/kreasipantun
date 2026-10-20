@@ -23,16 +23,19 @@
     </aside>
 
     <!-- Mobile top bar -->
-    <div class="md:hidden fixed top-0 inset-x-0 z-40 bg-slate-900 text-white px-4 py-3 flex items-center justify-between">
-      <p class="font-extrabold">Kreasi Pantun</p>
+    <div class="md:hidden fixed top-0 inset-x-0 z-40 bg-slate-900 text-white px-4 py-3">
+      <div class="flex items-center justify-between mb-2.5">
+        <p class="font-extrabold">Kreasi Pantun <span class="text-slate-400 font-bold text-xs">· Panel Guru</span></p>
+        <button @click="keluar" class="px-3 py-1.5 rounded-lg text-xs font-bold bg-slate-800 text-slate-200 active:scale-95 transition">⎋ Keluar</button>
+      </div>
       <div class="flex gap-1">
         <button v-for="m in menu" :key="m.id" @click="tab = m.id"
-          :class="['px-3 py-1.5 rounded-lg text-xs font-bold', tab === m.id ? 'bg-indigo-600' : 'text-slate-300']">{{ m.label }}</button>
+          :class="['flex-1 px-3 py-1.5 rounded-lg text-xs font-bold', tab === m.id ? 'bg-indigo-600' : 'text-slate-300 bg-slate-800/60']">{{ m.label }}</button>
       </div>
     </div>
 
     <!-- Main -->
-    <main class="flex-1 min-w-0 p-4 md:p-8 pt-16 md:pt-8 max-w-6xl mx-auto w-full">
+    <main class="flex-1 min-w-0 p-4 md:p-8 pt-32 md:pt-8 max-w-6xl mx-auto w-full">
       <!-- ===== OVERVIEW ===== -->
       <div v-if="tab === 'dash'">
         <div class="flex items-center justify-between mb-6">
