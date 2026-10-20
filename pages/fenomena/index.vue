@@ -1,47 +1,31 @@
 <template>
-  <div class="mb-6">
-    <h1 class="page-title">🌟 Pilih Fenomena</h1>
-    <p class="page-sub">Bebas pilih urutan — kerjakan yang paling menarik dulu!</p>
-  </div>
+  <div>
+    <div class="mb-5">
+      <h1 class="kp-section-title !text-2xl flex items-center gap-2"><span aria-hidden="true">🧩</span> Pilih Fenomena</h1>
+      <p class="text-slate-500 font-semibold mt-1 text-sm md:text-base">Pilih topik yang ingin kamu kerjakan. Urutannya bebas!</p>
+    </div>
 
-  <div class="grid grid-cols-2 md:grid-cols-4 gap-4 max-w-4xl mx-auto">
-    <NuxtLink v-for="f in FENOMENA" :key="f.id" :to="`/fenomena/${f.id}`"
-      class="card p-5 text-center hover:scale-[1.03] transition cursor-pointer">
-      <p class="text-4xl mb-2">{{ f.icon }}</p>
-      <p class="font-display font-bold text-slate-700 text-sm">{{ f.nama }}</p>
-      <p class="text-xs font-bold mt-1.5" :class="progres(f.id) === 5 ? 'text-emerald-600' : 'text-slate-400'">
-        {{ progres(f.id) }}/5 tahap
-      </p>
-      <div class="h-1.5 rounded-full bg-slate-100 mt-2 overflow-hidden">
-        <div class="h-full rounded-full bg-emerald-400 transition-all" :style="{ width: (progres(f.id) / 5 * 100) + '%' }" />
-      </div>
-    </NuxtLink>
-  </div>
+    <div v-if="memuat && !pernahMuat" class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3 md:gap-4" aria-busy="true">
+      <div v-for="i in 8" :key="i" class="kp-card p-3"><div class="skeleton h-24 rounded-2xl mb-3" /><div class="skeleton h-4 rounded-full" /></div>
+    </div>
+    <div v-else class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3 md:gap-4">
+      <FenomenaCard v-for="f in FENOMENA" :key="f.id" :fenomena="f" :progres="progresFenomena(f.id)" />
+    </div>
 
-  <div class="text-center mt-8">
-    <NuxtLink to="/karya" class="btn-soft">🖼️ Galeri Karyaku</NuxtLink>
+    <div class="mt-6">
+      <RingkasanProgres :fenomena-selesai="fenomenaSelesai" :total-tahap="totalTahap" />
+    </div>
   </div>
 </template>
 
 <script setup lang="ts">
 import { FENOMENA } from '~/data/fenomena'
+import FenomenaCard from '~/components/siswa/FenomenaCard.vue'
+import RingkasanProgres from '~/components/siswa/RingkasanProgres.vue'
 
-definePageMeta({ layout: 'app', middleware: 'auth-bff' })
+definePageMeta({ layout: 'siswa', middleware: 'auth-bff' })
 
-const selesai = useState<Record<string, boolean>>('kp-tahap-selesai', () => ({}))
+const { memuat, pernahMuat, muat, progresFenomena, totalTahap, fenomenaSelesai } = useProgresSiswa()
 
-function progres(fid: string): number {
-  return ['kenali', 'eksplorasi', 'ekspresikan', 'asah', 'evaluasi']
-    .filter(t => selesai.value[`${fid}:${t}`]).length
-}
-
-// Muat status dari server saat buka
-onMounted(async () => {
-  try {
-    const r = await $fetch<{ data: { changes: any[] } }>('/api/v1/sync/pull', { method: 'POST', body: { limit: 500 } })
-    for (const c of r.data.changes) {
-      selesai.value[`${c.phenomenon_id}:${c.stage_id}`] = true
-    }
-  } catch {}
-})
+onMounted(() => { void muat() })
 </script>

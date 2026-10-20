@@ -44,6 +44,26 @@ body {
   .page-sub {
     @apply text-slate-500 font-semibold mt-1;
   }
+
+  /* === Design system siswa (playful learning, redesain 2026) === */
+  .kp-card {
+    @apply bg-white rounded-[1.75rem] border border-slate-100 shadow-[0_8px_24px_rgba(15,80,60,0.06)];
+  }
+  .kp-btn {
+    @apply inline-flex items-center justify-center gap-2 font-display font-bold rounded-full px-6 py-3 min-h-[48px] transition-all duration-200 active:scale-95 disabled:opacity-50 disabled:pointer-events-none;
+  }
+  .kp-btn-primary {
+    @apply kp-btn text-white bg-[#0e7a4f] shadow-lg shadow-emerald-200 hover:brightness-105;
+  }
+  .kp-btn-biru {
+    @apply kp-btn text-white bg-[#1663b8] shadow-lg shadow-sky-200 hover:brightness-105;
+  }
+  .kp-btn-soft {
+    @apply kp-btn bg-white text-[#1663b8] border-2 border-sky-200 hover:bg-sky-50;
+  }
+  .kp-section-title {
+    @apply font-display font-extrabold text-lg md:text-xl text-[#123c2b];
+  }
 }
 
 /* Skeleton loading — shimmer ringan */

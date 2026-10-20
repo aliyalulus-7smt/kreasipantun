@@ -85,14 +85,14 @@ const loading = ref(false)
 onMounted(async () => {
   const { me } = useAuth()
   const u = await me()
-  if (u) await navigateTo(u.role === 'guru' ? '/guru' : '/fenomena', { replace: true })
+  if (u) await navigateTo(u.role === 'guru' ? '/guru' : '/beranda', { replace: true })
 })
 
 async function masuk() {
   error.value = ''; loading.value = true
   try {
     const u = await login(username.value, password.value)
-    await navigateTo(u.role === 'guru' ? '/guru' : '/fenomena')
+    await navigateTo(u.role === 'guru' ? '/guru' : '/beranda')
   } catch (e: any) {
     error.value = e?.data?.message || e?.message || 'Gagal masuk.'
   } finally { loading.value = false }
@@ -104,7 +104,7 @@ async function daftar() {
     const u = peran.value === 'guru'
       ? await registerGuru(nama.value, username.value, password.value)
       : await registerSiswa({ kode_kelas: kode.value, nama_lengkap: nama.value, no_absen: noAbsen.value, username: username.value, password: password.value })
-    await navigateTo(u.role === 'guru' ? '/guru' : '/fenomena')
+    await navigateTo(u.role === 'guru' ? '/guru' : '/beranda')
   } catch (e: any) {
     error.value = e?.data?.message || e?.message || 'Gagal mendaftar.'
   } finally { loading.value = false }
