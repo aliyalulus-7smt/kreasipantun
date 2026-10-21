@@ -9,6 +9,7 @@ import { randomUUID } from '~/utils/uuid'
 
 export interface OpOutbox {
   operation_id: string
+  type: 'stage_progress.upsert'
   phenomenon_id: string
   stage_id: string
   content_version: string
@@ -24,6 +25,25 @@ export type StatusSinkron = 'sinkron' | 'menyimpan' | 'menunggu' | 'gagal' | 'ko
 
 const KUNCI = 'kp-outbox-v2'
 const KUNCI_CURSOR = 'kp-cursor-v2'
+const KUNCI_VERSI = 'kp-versi-v2'
+
+/** Peta versi server terakhir yang dikenal per "fenomena:tahap" (dari pull/ack push). */
+export function catatVersiServer(phenomenonId: string, stageId: string, version: number) {
+  if (!import.meta.client || typeof version !== 'number') return
+  try {
+    const peta = JSON.parse(localStorage.getItem(KUNCI_VERSI) || '{}')
+    peta[`${phenomenonId}:${stageId}`] = version
+    localStorage.setItem(KUNCI_VERSI, JSON.stringify(peta))
+  } catch {}
+}
+export function versiServerDikenal(phenomenonId: string, stageId: string): number | null {
+  if (!import.meta.client) return null
+  try {
+    const peta = JSON.parse(localStorage.getItem(KUNCI_VERSI) || '{}')
+    const v = peta[`${phenomenonId}:${stageId}`]
+    return typeof v === 'number' ? v : null
+  } catch { return null }
+}
 
 function bacaOutbox(): OpOutbox[] {
   if (!import.meta.client) return []
@@ -40,13 +60,18 @@ export function useOutbox() {
   const sedang = useState('kp-sync-jalan', () => false)
 
   /** Antrekan perubahan lokal (langsung tersimpan di perangkat). */
-  function antrekan(input: Omit<OpOutbox, 'operation_id' | 'percobaan' | 'dibuat'>) {
+  function antrekan(input: Omit<OpOutbox, 'operation_id' | 'percobaan' | 'dibuat' | 'type' | 'base_version'> & { base_version?: number }) {
     const ops = bacaOutbox()
     // Satu snapshot per phenomenon:stage (ganti yang lama, pertahankan operation_id untuk retry aman)
     const idx = ops.findIndex(o => o.phenomenon_id === input.phenomenon_id && o.stage_id === input.stage_id)
     const op: OpOutbox = {
+      ...input,
       operation_id: idx >= 0 ? ops[idx].operation_id : randomUUID(),
-      percobaan: 0, dibuat: Date.now(), ...input,
+      type: 'stage_progress.upsert',
+      // base_version WAJIB versi server terakhir yang dikenal (kontrak wire);
+      // 0 hanya untuk record yang belum pernah ada di server.
+      base_version: versiServerDikenal(input.phenomenon_id, input.stage_id) ?? input.base_version ?? 0,
+      percobaan: 0, dibuat: Date.now(),
     }
     if (idx >= 0) ops[idx] = op; else ops.push(op)
     tulisOutbox(ops)
@@ -63,11 +88,21 @@ export function useOutbox() {
     sedang.value = true
     status.value = 'menyimpan'
     try {
-      const r = await $fetch<{ data: { acknowledged: { operation_id: string }[] } }>('/api/v1/sync/push', {
+      const r = await $fetch<{ data: { acknowledged: { operation_id: string; version?: number }[] } }>('/api/v1/sync/push', {
         method: 'POST',
-        body: { device_id: idPerangkat(), operations: ops.map(({ percobaan, dibuat, ...o }) => o) },
+        // Segarkan type & base_version saat kirim: menyembuhkan antrean lama
+        // yang tersimpan sebelum perbaikan kontrak wire ini.
+        body: { device_id: idPerangkat(), operations: ops.map(({ percobaan, dibuat, ...o }) => ({
+          ...o,
+          type: 'stage_progress.upsert' as const,
+          base_version: versiServerDikenal(o.phenomenon_id, o.stage_id) ?? o.base_version ?? 0,
+        })) },
       })
       const ack = new Set(r.data.acknowledged.map(a => a.operation_id))
+      for (const a of r.data.acknowledged) {
+        const opAsal = ops.find(o => o.operation_id === a.operation_id)
+        if (opAsal && typeof a.version === 'number') catatVersiServer(opAsal.phenomenon_id, opAsal.stage_id, a.version)
+      }
       tulisOutbox(ops.filter(o => !ack.has(o.operation_id)))
       status.value = bacaOutbox().length ? 'menunggu' : 'sinkron'
       await tarik()
@@ -95,6 +130,7 @@ export function useOutbox() {
         method: 'POST', body: { cursor, limit: 100 },
       })
       for (const ch of r.data.changes) {
+        if (ch.phenomenon_id && ch.stage_id) catatVersiServer(ch.phenomenon_id, ch.stage_id, ch.version)
         window.dispatchEvent(new CustomEvent('kp-remote-change', { detail: ch }))
       }
       if (r.data.next_cursor) localStorage.setItem(KUNCI_CURSOR, r.data.next_cursor)

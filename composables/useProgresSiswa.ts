@@ -7,6 +7,7 @@
  * atau 'perangkat' (offline).
  */
 import { FENOMENA, DAFTAR_TAHAP } from '~/data/fenomena'
+import { catatVersiServer } from '~/composables/useOutbox'
 
 export type StatusAktivitas = 'tersinkron' | 'menunggu' | 'perangkat'
 
@@ -36,6 +37,7 @@ export function useProgresSiswa() {
       })
       for (const c of r.data.changes || []) {
         const key = `${c.phenomenon_id}:${c.stage_id}`
+        catatVersiServer(c.phenomenon_id, c.stage_id, c.version)
         peta.set(key, {
           key, phenomenon_id: c.phenomenon_id, stage_id: c.stage_id,
           waktu: new Date(c.server_updated_at).getTime() || Date.now(),
