@@ -267,7 +267,8 @@ Saat pulang sekolah, Raka melihat berita tentang warga yang terdampak banjir di 
       kenali: {
         judul: 'Kenali Fenomena', tipe: 'gambar',
         data: {
-          gambarUrl: 'https://pin.it/26GpcOpeQ',
+          gambarUrl: '/fenomena/stop-perundungan.jpg',
+          pinUrl: 'https://www.pinterest.com/pin/798192733999662735/',
           catatan: 'Poster tentang perundungan.',
           pertanyaan: [
             'Perilaku apa yang termasuk perundungan berdasarkan poster tersebut?',
@@ -336,7 +337,8 @@ Saat pulang sekolah, Raka melihat berita tentang warga yang terdampak banjir di 
       kenali: {
         judul: 'Kenali Fenomena', tipe: 'gambar',
         data: {
-          gambarUrl: 'https://pin.it/3m0wPP0gc',
+          gambarUrl: '/fenomena/semangat-belajar.jpg',
+          pinUrl: 'https://www.pinterest.com/pin/1128081406676011727/',
           catatan: 'Foto tentang semangat belajar dalam berbagai kondisi.',
           pertanyaan: [
             'Apa pesan yang ingin disampaikan melalui poster tersebut?',
@@ -402,7 +404,8 @@ Saat pulang sekolah, Raka melihat berita tentang warga yang terdampak banjir di 
       kenali: {
         judul: 'Kenali Fenomena', tipe: 'gambar',
         data: {
-          gambarUrl: 'https://pin.it/4GutLRYBE',
+          gambarUrl: '/fenomena/lestarikan-budaya.jpg',
+          pinUrl: 'https://www.pinterest.com/pin/1066438386758892835/',
           catatan: 'Foto kesenian tradisional Indonesia.',
           pertanyaan: [
             'Menurutmu, apa nama kesenian tradisional yang ditampilkan pada gambar tersebut?',
