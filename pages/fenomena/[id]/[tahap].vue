@@ -51,10 +51,9 @@
       <NuxtLink :to="tombolLanjut.to" class="kp-btn-primary !px-6 !py-3 mt-4 text-base">
         {{ tombolLanjut.label }}
       </NuxtLink>
-    </div>
-
-    <div class="max-w-2xl mx-auto mt-8 flex justify-between">
-      <NuxtLink :to="`/fenomena/${fenomena.id}`" class="btn-soft">← Tahap Lain</NuxtLink>
+      <p v-if="baruSelesai" class="text-xs font-semibold text-slate-400 mt-3">
+        ⏳ Tunggu sebentar — kamu akan otomatis dilanjutkan…
+      </p>
     </div>
     </template>
     <ConfettiLetus ref="confetti" />
@@ -94,9 +93,11 @@ const tombolLanjut = computed(() => {
     return { label: `Selanjutnya: ${tahapBerikutnya.value.nama} →`, to: `/fenomena/${fid}/${tahapBerikutnya.value.id}` }
   }
   if (fenomenaBerikutnya.value) {
-    return { label: `Lanjutkan ke Fenomena ${fenomenaBerikutnya.value.nama} →`, to: `/fenomena/${fenomenaBerikutnya.value.id}` }
+    // Langsung masuk ke progres pertama fenomena berikutnya.
+    return { label: `Lanjutkan ke Fenomena ${fenomenaBerikutnya.value.nama} →`, to: `/fenomena/${fenomenaBerikutnya.value.id}/kenali` }
   }
-  return { label: 'Selesai 🎉', to: '/beranda' }
+  // Progres terakhir di fenomena terakhir: Selesai -> halaman Profil.
+  return { label: 'Selesai 🎉', to: '/profil' }
 })
 const teksPanel = computed(() => {
   if (tahapBerikutnya.value) return `Kamu sudah menyelesaikan tahap ${tahap.value?.nama}. Lanjut ke tahap berikutnya, yuk!`
@@ -106,15 +107,23 @@ const teksPanel = computed(() => {
 
 const confetti = ref<InstanceType<typeof ConfettiLetus> | null>(null)
 const panelSelesai = ref<HTMLElement | null>(null)
-// Confetti hanya saat tahap BARU saja selesai di kunjungan ini (bukan saat membuka ulang tahap lama).
+const baruSelesai = ref(false)
+let timerLanjut: ReturnType<typeof setTimeout> | null = null
+// Confetti + otomatis lanjut hanya saat tahap BARU saja selesai di kunjungan ini
+// (bukan saat membuka ulang tahap lama — di sana panel tetap tampil untuk navigasi manual).
 watch(sudahSelesai, (baru, lama) => {
   if (baru && !lama) {
+    baruSelesai.value = true
     confetti.value?.letus(tahapId.value === 'evaluasi')
     nextTick(() => {
       try { panelSelesai.value?.scrollIntoView({ behavior: 'smooth', block: 'center' }) } catch {}
     })
+    timerLanjut = setTimeout(() => {
+      void navigateTo(tombolLanjut.value.to)
+    }, tahapId.value === 'evaluasi' ? 3200 : 2600)
   }
 })
+onUnmounted(() => { if (timerLanjut) clearTimeout(timerLanjut) })
 
 function tandai() {
   const key = `${route.params.id}:${tahapId.value}`
