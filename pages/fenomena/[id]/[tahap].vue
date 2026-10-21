@@ -39,18 +39,31 @@
       <ChecklistTahap v-else-if="tahapId === 'evaluasi'" :data="konten.data" :fenomena-id="fenomena.id" />
     </div>
 
-    <div class="max-w-2xl mx-auto mt-8 flex justify-between">
-      <NuxtLink :to="`/fenomena/${fenomena.id}`" class="btn-soft">← Tahap Lain</NuxtLink>
-      <NuxtLink v-if="tahapBerikutnya && tahapTerbuka(fenomena.id, tahapBerikutnya.id)" :to="`/fenomena/${fenomena.id}/${tahapBerikutnya.id}`" class="btn-primary">
-        {{ tahapBerikutnya.nama }} →
+    <!-- Panel perayaan: muncul begitu tahap ini selesai -->
+    <div v-if="sudahSelesai" ref="panelSelesai" class="max-w-2xl mx-auto mt-8 kp-card p-5 md:p-6 text-center border-2 !border-emerald-200 bg-gradient-to-br from-emerald-50 to-amber-50">
+      <p class="text-4xl mb-2" aria-hidden="true">🎉</p>
+      <p class="font-display font-extrabold text-lg text-[#123c2b]">
+        {{ tahapId === 'evaluasi' ? 'Fenomena selesai! Kerja bagus!' : 'Tahap selesai! Hebat!' }}
+      </p>
+      <p class="text-sm font-semibold text-slate-500 mt-1">
+        {{ teksPanel }}
+      </p>
+      <NuxtLink :to="tombolLanjut.to" class="kp-btn-primary !px-6 !py-3 mt-4 text-base">
+        {{ tombolLanjut.label }}
       </NuxtLink>
     </div>
+
+    <div class="max-w-2xl mx-auto mt-8 flex justify-between">
+      <NuxtLink :to="`/fenomena/${fenomena.id}`" class="btn-soft">← Tahap Lain</NuxtLink>
+    </div>
     </template>
+    <ConfettiLetus ref="confetti" />
   </div>
 </template>
 
 <script setup lang="ts">
-import { DAFTAR_TAHAP, cariFenomena, type IdTahap } from '~/data/fenomena'
+import { DAFTAR_TAHAP, FENOMENA, cariFenomena, type IdTahap } from '~/data/fenomena'
+import ConfettiLetus from '~/components/ConfettiLetus.vue'
 
 definePageMeta({ layout: 'app', middleware: 'auth-bff' })
 
@@ -66,6 +79,41 @@ const bolehAkses = computed(() => tahapTerbuka(String(route.params.id), tahapId.
 const tahapBerikutnya = computed(() => {
   const idx = DAFTAR_TAHAP.findIndex(t => t.id === tahapId.value)
   return idx >= 0 && idx < DAFTAR_TAHAP.length - 1 ? DAFTAR_TAHAP[idx + 1] : null
+})
+
+const sudahSelesai = computed(() => !!selesai.value[`${route.params.id}:${tahapId.value}`])
+const fenomenaBerikutnya = computed(() => {
+  const idx = FENOMENA.findIndex(f => f.id === String(route.params.id))
+  return idx >= 0 && idx < FENOMENA.length - 1 ? FENOMENA[idx + 1] : null
+})
+
+/** Tombol lanjut kontekstual setelah tahap selesai. */
+const tombolLanjut = computed(() => {
+  const fid = String(route.params.id)
+  if (tahapBerikutnya.value) {
+    return { label: `Selanjutnya: ${tahapBerikutnya.value.nama} →`, to: `/fenomena/${fid}/${tahapBerikutnya.value.id}` }
+  }
+  if (fenomenaBerikutnya.value) {
+    return { label: `Lanjutkan ke Fenomena ${fenomenaBerikutnya.value.nama} →`, to: `/fenomena/${fenomenaBerikutnya.value.id}` }
+  }
+  return { label: 'Selesai 🎉', to: '/beranda' }
+})
+const teksPanel = computed(() => {
+  if (tahapBerikutnya.value) return `Kamu sudah menyelesaikan tahap ${tahap.value?.nama}. Lanjut ke tahap berikutnya, yuk!`
+  if (fenomenaBerikutnya.value) return `Semua tahap fenomena ${fenomena.value?.nama} sudah kamu selesaikan. Fenomena berikutnya sudah terbuka!`
+  return 'Luar biasa! Kamu sudah menuntaskan semua fenomena sampai yang terakhir. 🎓'
+})
+
+const confetti = ref<InstanceType<typeof ConfettiLetus> | null>(null)
+const panelSelesai = ref<HTMLElement | null>(null)
+// Confetti hanya saat tahap BARU saja selesai di kunjungan ini (bukan saat membuka ulang tahap lama).
+watch(sudahSelesai, (baru, lama) => {
+  if (baru && !lama) {
+    confetti.value?.letus(tahapId.value === 'evaluasi')
+    nextTick(() => {
+      try { panelSelesai.value?.scrollIntoView({ behavior: 'smooth', block: 'center' }) } catch {}
+    })
+  }
 })
 
 function tandai() {
