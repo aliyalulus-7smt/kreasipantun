@@ -50,10 +50,10 @@
       <section>
         <div class="flex items-center justify-between mb-3">
           <h2 class="kp-section-title flex items-center gap-2"><span aria-hidden="true">🧩</span> Pilih Fenomena</h2>
-          <span class="text-xs font-bold text-slate-400">Urutannya bebas!</span>
+          <span class="text-xs font-bold text-slate-400">Kerjakan berurutan ya! 🔢</span>
         </div>
         <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3 md:gap-4">
-          <FenomenaCard v-for="f in FENOMENA" :key="f.id" :fenomena="f" :progres="progresFenomena(f.id)" />
+          <FenomenaCard v-for="(f, i) in FENOMENA" :key="f.id" :fenomena="f" :progres="progresFenomena(f.id)" :terkunci="!fenomenaTerbuka(f.id)" :nomor="i + 1" />
         </div>
       </section>
 
@@ -81,7 +81,7 @@ import AktivitasItem from '~/components/siswa/AktivitasItem.vue'
 definePageMeta({ layout: 'siswa', middleware: 'auth-bff' })
 
 const { user } = useAuth()
-const { aktivitas, memuat, galat, pernahMuat, muat, progresFenomena, totalTahap, fenomenaSelesai, terakhir, tahapLanjut } = useProgresSiswa()
+const { aktivitas, memuat, galat, pernahMuat, muat, progresFenomena, totalTahap, fenomenaSelesai, terakhir, tahapLanjut, fenomenaTerbuka } = useProgresSiswa()
 
 const namaDepan = computed(() => (user.value?.nama_lengkap || 'Teman').split(' ')[0])
 

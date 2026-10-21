@@ -70,6 +70,26 @@ export function useProgresSiswa() {
   const progresFenomena = (fid: string) =>
     DAFTAR_TAHAP.filter(t => selesai.value[`${fid}:${t.id}`]).length
 
+  /**
+   * Aturan urutan wajib (revisi 21 Okt 2026): fenomena dikerjakan berurutan
+   * dari nomor 1 (Bijak Berteknologi) sampai 8 (Hidup Sehat); fenomena
+   * berikutnya hanya terbuka bila SEMUA tahap fenomena sebelumnya selesai.
+   * Di dalam fenomena, tahap juga berurutan: tahap berikutnya hanya terbuka
+   * bila tahap sebelumnya selesai.
+   */
+  const fenomenaTerbuka = (fid: string) => {
+    const idx = FENOMENA.findIndex(f => f.id === fid)
+    if (idx <= 0) return idx === 0
+    return progresFenomena(FENOMENA[idx - 1].id) === DAFTAR_TAHAP.length
+  }
+
+  const tahapTerbuka = (fid: string, tahapId: string) => {
+    if (!fenomenaTerbuka(fid)) return false
+    const idx = DAFTAR_TAHAP.findIndex(t => t.id === tahapId)
+    if (idx <= 0) return idx === 0
+    return !!selesai.value[`${fid}:${DAFTAR_TAHAP[idx - 1].id}`]
+  }
+
   const totalTahap = computed(() => Object.keys(selesai.value).length)
   const fenomenaSelesai = computed(() =>
     FENOMENA.filter(f => progresFenomena(f.id) === DAFTAR_TAHAP.length).length)
@@ -86,5 +106,6 @@ export function useProgresSiswa() {
   return {
     selesai, aktivitas, memuat, galat, pernahMuat, muat,
     progresFenomena, totalTahap, fenomenaSelesai, terakhir, tahapLanjut,
+    fenomenaTerbuka, tahapTerbuka,
   }
 }
