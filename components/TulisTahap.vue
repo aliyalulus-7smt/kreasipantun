@@ -41,14 +41,16 @@
           <label class="text-xs font-bold" :class="i <= 2 ? 'text-sky-600' : 'text-emerald-600'">
             Baris {{ i }} {{ i <= 2 ? '(sampiran)' : '(isi)' }}{{ barisTerkunci.has(i - 1) ? ' — dari soal 🔒' : (barisDariSoal.has(i - 1) ? ' — dari soal' : '') }}
           </label>
-          <input v-model="baris[i - 1]" :disabled="barisTerkunci.has(i - 1)" @focus="barisFokus = i - 1" class="input-cute !py-2.5 disabled:bg-slate-100 disabled:text-slate-500" :placeholder="`Tulis baris ${i}...`" maxlength="120" />
+          <input v-model="baris[i - 1]" :disabled="barisTerkunci.has(i - 1) || tersimpan" @focus="barisFokus = i - 1" class="input-cute !py-2.5 disabled:bg-slate-100 disabled:text-slate-500" :placeholder="`Tulis baris ${i}...`" maxlength="120" />
         </div>
       </div>
     </div>
 
-    <button class="btn-primary w-full" :disabled="!bisaSimpan" @click="simpan">
-      {{ tersimpan ? '✓ Tersimpan' : '💾 Simpan Karya' }}
+    <button v-if="tersimpan" class="btn-soft w-full" @click="tersimpan = false">✏️ Ubah Karya</button>
+    <button v-else class="btn-primary w-full" :disabled="!bisaSimpan" @click="simpan">
+      💾 Simpan Karya
     </button>
+    <p v-if="tersimpan" class="text-center text-emerald-600 font-bold text-sm">✓ Tersimpan</p>
 
     <!-- Referensi Pilihan Rima (paling bawah, model /limar/elaborate) -->
     <div class="card p-4">

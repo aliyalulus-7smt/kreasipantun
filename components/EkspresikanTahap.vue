@@ -140,6 +140,7 @@
       <p class="text-center font-bold text-slate-600 text-sm mt-1">Jawabanmu belum semuanya benar. Perbaiki yang masih salah sampai benar, baru bisa lanjut ya.</p>
     </div>
 
+    <button v-if="tersimpan" class="btn-soft w-full" @click="tersimpan = false">✏️ Ubah Jawaban</button>
     <button v-if="bisaSimpan" class="btn-primary w-full" @click="simpan">💾 Simpan Jawaban</button>
     <p v-if="tersimpan" class="text-center text-emerald-600 font-bold text-sm">✓ Tersimpan</p>
   </div>

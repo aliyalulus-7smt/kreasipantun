@@ -76,6 +76,7 @@
       <AnimasiSedih />
       <p class="text-center font-bold text-slate-600 text-sm mt-1">Jawaban yang masih salah belum bisa membawamu lanjut. Ulangi sampai semuanya benar ya.</p>
     </div>
+    <button v-if="tersimpan" class="btn-soft w-full" @click="mulaiUbah">✏️ Ubah Jawaban</button>
     <button v-if="bisaPeriksa" class="btn-primary w-full" @click="periksa">
       🔍 Periksa Jawaban
     </button>
@@ -188,6 +189,13 @@ function kelasPilihanKuis(si: number, pi: number) {
 function jawab(i: number, v: any) {
   if (kunciItemTerkunci(i)) return
   jawaban.value = { ...jawaban.value, [i]: v }
+}
+// Mode ubah: buka kunci semua item & ulangi alur periksa dari awal.
+function mulaiUbah() {
+  tersimpan.value = false
+  terbukti.value = new Set()
+  diperiksa.value = false
+  snapshot.value = {}
 }
 function periksa() {
   snapshot.value = { ...jawaban.value }

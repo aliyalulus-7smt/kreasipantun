@@ -8,7 +8,7 @@
       <p class="text-sm font-semibold text-slate-500 mb-4">Centang setiap pernyataan yang sudah sesuai dengan pantunmu. Item bertanda 🤖 dinilai otomatis dari pantunmu di tahap Asah.</p>
       <div class="space-y-2.5">
         <div v-for="(it, i) in data.item" :key="i">
-          <button @click="toggle(i)" :disabled="otomatisAktif(i)"
+          <button @click="toggle(i)" :disabled="otomatisAktif(i) || tersimpan"
             :class="['w-full text-left card p-4 border-2 transition flex items-start gap-3',
               nilaiItem(i) ? '!border-emerald-400 bg-emerald-50/60' : 'hover:border-slate-300',
               otomatisAktif(i) ? 'cursor-default' : '']">
@@ -36,12 +36,14 @@
 
     <div class="card p-5">
       <label class="block font-bold text-slate-700 mb-1.5 text-sm">💭 Refleksimu (opsional)</label>
-      <textarea v-model="refleksi" rows="3" class="input-cute" placeholder="Apa yang sudah bagus dan apa yang ingin kamu perbaiki?" />
+      <textarea v-model="refleksi" rows="3" class="input-cute disabled:bg-slate-100" :disabled="tersimpan" placeholder="Apa yang sudah bagus dan apa yang ingin kamu perbaiki?" />
     </div>
 
-    <button class="btn-primary w-full" :disabled="tersimpan" @click="simpan">
-      {{ tersimpan ? '✓ Tersimpan' : '💾 Simpan Evaluasi' }}
+    <button v-if="tersimpan" class="btn-soft w-full" @click="tersimpan = false">✏️ Ubah Evaluasi</button>
+    <button v-else class="btn-primary w-full" @click="simpan">
+      💾 Simpan Evaluasi
     </button>
+    <p v-if="tersimpan" class="text-center text-emerald-600 font-bold text-sm">✓ Tersimpan</p>
   </div>
 </template>
 

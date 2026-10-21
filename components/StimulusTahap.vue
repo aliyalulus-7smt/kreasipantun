@@ -22,12 +22,14 @@
         <li v-for="(t, i) in data.pertanyaan" :key="i">{{ t }}</li>
       </ol>
       <label class="block font-bold text-slate-700 mb-1.5 text-sm">✏️ Tanggapanmu</label>
-      <textarea v-model="respons" rows="3" class="input-cute" placeholder="Tulis tanggapanmu di sini..." />
+      <textarea v-model="respons" rows="3" class="input-cute disabled:bg-slate-100 disabled:text-slate-500" :disabled="tersimpan" placeholder="Tulis tanggapanmu di sini..." />
     </div>
 
-    <button class="btn-primary w-full" :disabled="!bisaSimpan" @click="simpan">
-      {{ tersimpan ? '✓ Tersimpan' : '💾 Simpan Tanggapan' }}
+    <button v-if="tersimpan" class="btn-soft w-full" @click="tersimpan = false">✏️ Ubah Tanggapan</button>
+    <button v-else class="btn-primary w-full" :disabled="!bisaSimpan" @click="simpan">
+      💾 Simpan Tanggapan
     </button>
+    <p v-if="tersimpan" class="text-center text-emerald-600 font-bold text-sm">✓ Tersimpan</p>
   </div>
 </template>
 
