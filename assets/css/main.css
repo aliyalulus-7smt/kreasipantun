@@ -105,3 +105,14 @@ body {
 .papan-kayu.papan-terikat { outline-color: #fbbf24; }
 .papan-kayu.papan-benar { outline-color: #34d399; }
 .papan-kayu.papan-putus { outline-color: #fb7185; }
+
+/* Animasi sedih (jawaban salah): wajah bergoyang + hujan rintik */
+.animasi-sedih { position: relative; width: 7rem; height: 5.5rem; margin: 0 auto; overflow: visible; }
+.sedih-wajah { position: absolute; left: 0; right: 0; top: 1.1rem; text-align: center; font-size: 2.6rem; animation: goyangSedih 2.4s ease-in-out infinite; }
+.sedih-hujan span { position: absolute; top: -0.3rem; font-size: 0.95rem; opacity: 0; animation: hujanTurun 1.7s linear infinite; }
+@keyframes hujanTurun { 0% { transform: translateY(0); opacity: 0; } 25% { opacity: 1; } 100% { transform: translateY(4.4rem); opacity: 0; } }
+@keyframes goyangSedih { 0%, 100% { transform: rotate(-3deg); } 50% { transform: rotate(3deg); } }
+@media (prefers-reduced-motion: reduce) {
+  .sedih-wajah, .sedih-hujan span { animation: none; }
+  .sedih-hujan span { opacity: .6; }
+}

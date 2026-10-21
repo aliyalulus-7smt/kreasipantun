@@ -135,6 +135,11 @@
       </div>
     </div>
 
+    <div v-if="tampilSedih" class="card p-4 bg-sky-50/60">
+      <AnimasiSedih />
+      <p class="text-center font-bold text-slate-600 text-sm mt-1">Jawabanmu belum semuanya benar. Perbaiki yang masih salah sampai benar, baru bisa lanjut ya.</p>
+    </div>
+
     <button v-if="bisaSimpan" class="btn-primary w-full" @click="simpan">💾 Simpan Jawaban</button>
     <p v-if="tersimpan" class="text-center text-emerald-600 font-bold text-sm">✓ Tersimpan</p>
   </div>
@@ -269,15 +274,47 @@ const cekHasil = computed(() => {
   if (urutan.value.length < props.data.benar.length) return null
   return urutan.value.every((b, i) => b === props.data.benar[i])
 })
-const bisaSimpan = computed(() => {
-  if (tersimpan.value) return false
+// Gerbang jawaban: tahap hanya bisa disimpan bila SEMUA jawaban benar —
+// siswa harus mengulang/memperbaiki sampai benar (tidak ada lanjut/confetti untuk jawaban salah).
+const semuaTerjawab = computed(() => {
+  switch (props.tipe) {
+    case 'identifikasi-sampiran-isi':
+      return Object.keys(jawaban.value).length === (props.data.larik || []).length
+    case 'hitung-suku-kata':
+      return (props.data.larik || []).every((_: any, i: number) => jawaban.value[i] !== undefined && jawaban.value[i] !== '')
+    case 'pasang-sampiran-isi':
+      return jawaban.value[0] !== undefined
+    case 'susun-larik':
+      return urutan.value.length === (props.data.benar || []).length
+    case 'pasang-rima':
+      return semuaTerpasang.value
+    default:
+      return daftarSoal.value.length > 0 && Object.keys(jawaban.value).length === daftarSoal.value.length
+  }
+})
+const semuaBenarEkspresi = computed(() => {
   switch (props.tipe) {
     case 'susun-larik': return cekHasil.value === true
     case 'pasang-rima': return semuaPasanganBenar.value
-    case 'identifikasi-sampiran-isi': return Object.keys(jawaban.value).length === (props.data.larik || []).length
-    case 'hitung-suku-kata': return dicek.value
-    default: return Object.keys(jawaban.value).length === (daftarSoal.value.length || 1)
+    case 'identifikasi-sampiran-isi':
+      return (props.data.larik || []).every((l: any, i: number) => jawaban.value[i] === l.kunci)
+    case 'hitung-suku-kata':
+      return (props.data.larik || []).every((l: any, i: number) => Number(jawaban.value[i]) === l.kunci)
+    case 'pasang-sampiran-isi':
+      return props.data.pilihan?.[jawaban.value[0]]?.benar === true
+    default:
+      return daftarSoal.value.length > 0 && daftarSoal.value.every((s: any, si: number) => jawaban.value[si] === s.kunci)
   }
+})
+const tampilSedih = computed(() => {
+  if (tersimpan.value || !semuaTerjawab.value || semuaBenarEkspresi.value) return false
+  if (props.tipe === 'hitung-suku-kata') return dicek.value
+  return true
+})
+const bisaSimpan = computed(() => {
+  if (tersimpan.value) return false
+  if (props.tipe === 'hitung-suku-kata') return dicek.value && semuaBenarEkspresi.value
+  return semuaBenarEkspresi.value
 })
 
 function klsTombol(aktif: boolean, benar: boolean) {

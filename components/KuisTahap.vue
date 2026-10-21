@@ -72,6 +72,10 @@
     </div>
 
     <!-- Aksi periksa & simpan -->
+    <div v-if="tampilSedihKuis" class="card p-4 bg-sky-50/60">
+      <AnimasiSedih />
+      <p class="text-center font-bold text-slate-600 text-sm mt-1">Jawaban yang masih salah belum bisa membawamu lanjut. Ulangi sampai semuanya benar ya.</p>
+    </div>
     <button v-if="bisaPeriksa" class="btn-primary w-full" @click="periksa">
       🔍 Periksa Jawaban
     </button>
@@ -136,6 +140,10 @@ const semuaBenar = computed(() => (props.data.item || []).every((it: any, i: num
 const semuaTerisi = computed(() => Object.keys(jawaban.value).length >= jumlahItem.value && jumlahItem.value > 0)
 const semuaTerbuktiBenar = computed(() => jumlahItem.value > 0 && terbukti.value.size >= jumlahItem.value)
 const tampilkanFakta = computed(() => tersimpan.value || (props.tipe === 'pilah' ? semuaBenar.value : semuaTerbuktiBenar.value))
+const tampilSedihKuis = computed(() => !tersimpan.value && (
+  (props.tipe !== 'pilah' && diperiksa.value && !semuaTerbuktiBenar.value) ||
+  (props.tipe === 'pilah' && !sisa.value.length && !semuaBenar.value)
+))
 const bisaPeriksa = computed(() => props.tipe !== 'pilah' && !tersimpan.value && semuaTerisi.value && !semuaTerbuktiBenar.value)
 const bisaSimpan = computed(() => {
   if (tersimpan.value) return false
