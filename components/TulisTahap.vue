@@ -27,14 +27,26 @@
       </div>
     </div>
 
+    <!-- Referensi pilihan rima -->
+    <div class="card p-4 bg-amber-50/70">
+      <p class="font-display font-bold text-slate-700">🎵 Referensi Pilihan Rima</p>
+      <p class="text-xs font-semibold text-slate-500 mt-1 mb-3">Kata-kata dalam satu kelompok bunyi akhirnya sama (berima). Pakai <b>satu kelompok</b> untuk akhir baris 1 &amp; 3 (rima A), dan <b>kelompok lain</b> untuk akhir baris 2 &amp; 4 (rima B) — jadilah sajak a-b-a-b.</p>
+      <div class="grid sm:grid-cols-2 gap-2">
+        <div v-for="g in referensiRima" :key="g.akhiran" class="bg-white rounded-xl px-3 py-2">
+          <span class="pill !px-2.5 !py-0.5 bg-amber-100 text-amber-700 text-xs font-bold mr-1.5">{{ g.akhiran }}</span>
+          <span class="text-sm font-semibold text-slate-600">{{ g.kata.join(' · ') }}</span>
+        </div>
+      </div>
+    </div>
+
     <div class="card p-5">
       <p class="font-display font-bold text-slate-700 mb-3">✍️ Pantunmu</p>
       <div class="space-y-2.5">
         <div v-for="i in 4" :key="i">
           <label class="text-xs font-bold" :class="i <= 2 ? 'text-sky-600' : 'text-emerald-600'">
-            Baris {{ i }} {{ i <= 2 ? '(sampiran)' : '(isi)' }}
+            Baris {{ i }} {{ i <= 2 ? '(sampiran)' : '(isi)' }}{{ barisTerkunci.has(i - 1) ? ' — dari soal 🔒' : (barisDariSoal.has(i - 1) ? ' — dari soal' : '') }}
           </label>
-          <input v-model="baris[i - 1]" class="input-cute !py-2.5" :placeholder="`Tulis baris ${i}...`" maxlength="120" />
+          <input v-model="baris[i - 1]" :disabled="barisTerkunci.has(i - 1)" class="input-cute !py-2.5 disabled:bg-slate-100 disabled:text-slate-500" :placeholder="`Tulis baris ${i}...`" maxlength="120" />
         </div>
       </div>
     </div>
@@ -46,12 +58,24 @@
 </template>
 
 <script setup lang="ts">
+import { referensiRima } from '~/data/rima'
+
 const props = defineProps<{ tipe: string; data: Record<string, any>; fenomenaId: string; dataTersimpan?: Record<string, any> | null }>()
 const { antrekan } = useOutbox()
 
 const baris = ref<string[]>(['', '', '', ''])
 const tantanganKe = ref<number>(0)
 const tersimpan = ref(false)
+// Baris yang sudah disediakan soal: sampiran (baris 1-2) langsung terisi;
+// isi yang disediakan (baris 3-4) terisi DAN terkunci — siswa mengisi yang kosong saja.
+const barisDariSoal = new Set<number>()
+const barisTerkunci = new Set<number>()
+if (Array.isArray(props.data.sampiran)) {
+  props.data.sampiran.forEach((b: string, i: number) => { if (i < 2 && b) { baris.value[i] = b; barisDariSoal.add(i) } })
+}
+if (Array.isArray(props.data.isi)) {
+  props.data.isi.forEach((b: string, j: number) => { const i = j + 2; if (b) { baris.value[i] = b; barisDariSoal.add(i); barisTerkunci.add(i) } })
+}
 if (Array.isArray(props.dataTersimpan?.baris)) {
   props.dataTersimpan!.baris.forEach((b: string, i: number) => { if (i < 4) baris.value[i] = b || '' })
   tersimpan.value = baris.value.some(b => b.trim().length > 0)

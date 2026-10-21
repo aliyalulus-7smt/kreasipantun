@@ -88,3 +88,20 @@ body {
 .kartu-depan { background: linear-gradient(135deg, #fef3c7, #fde68a); border: 2px dashed #f59e0b; }
 .kartu-belakang { background: #fffbeb; border: 2px solid #fcd34d; transform: rotateY(180deg); }
 @media (prefers-reduced-motion: reduce) { .kartu-dalam { transition: none; } }
+
+/* Papan kayu untuk pasang-rima */
+.papan-kayu { position: relative; width: 100%; padding: .7rem 1.4rem; border-radius: .55rem; border: 2px solid #7c4f24;
+  background:
+    radial-gradient(circle 4px at 10px 50%, #e8ddc8 60%, #8d8577 100%),
+    radial-gradient(circle 4px at calc(100% - 10px) 50%, #e8ddc8 60%, #8d8577 100%),
+    repeating-linear-gradient(93deg, rgba(90, 55, 20, .14) 0 2px, transparent 2px 9px),
+    linear-gradient(180deg, #bd8a52, #a06a35);
+  color: #fff7ea; font-family: 'Baloo 2', ui-rounded, system-ui, sans-serif; font-weight: 700; font-size: .95rem;
+  text-shadow: 0 1px 2px rgba(60, 35, 5, .45);
+  box-shadow: inset 0 1px 0 rgba(255, 240, 210, .45), inset 0 -2px 0 rgba(70, 42, 10, .35), 0 2px 5px rgba(60, 35, 5, .3);
+  transition: transform .15s ease, outline-color .15s ease; outline: 3px solid transparent; outline-offset: 2px; }
+.papan-kayu:hover { transform: translateY(-1px); }
+.papan-kayu.papan-aktif { outline-color: #38bdf8; transform: scale(1.04); }
+.papan-kayu.papan-terikat { outline-color: #fbbf24; }
+.papan-kayu.papan-benar { outline-color: #34d399; }
+.papan-kayu.papan-putus { outline-color: #fb7185; }

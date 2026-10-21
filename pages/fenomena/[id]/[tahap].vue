@@ -38,7 +38,7 @@
         <KuisTahap v-else-if="tahapId === 'eksplorasi'" :tipe="konten.tipe" :data="konten.data" :fenomena-id="fenomena.id" :data-tersimpan="dataTersimpan" />
         <EkspresikanTahap v-else-if="tahapId === 'ekspresikan'" :tipe="konten.tipe" :data="konten.data" :fenomena-id="fenomena.id" :data-tersimpan="dataTersimpan" />
         <TulisTahap v-else-if="tahapId === 'asah'" :tipe="konten.tipe" :data="konten.data" :fenomena-id="fenomena.id" :data-tersimpan="dataTersimpan" />
-        <ChecklistTahap v-else-if="tahapId === 'evaluasi'" :data="konten.data" :fenomena-id="fenomena.id" :data-tersimpan="dataTersimpan" />
+        <ChecklistTahap v-else-if="tahapId === 'evaluasi'" :data="konten.data" :fenomena-id="fenomena.id" :data-tersimpan="dataTersimpan" :pantun-asah="pantunAsah" />
       </template>
     </div>
 
@@ -94,15 +94,28 @@ const sudahSelesai = computed(() => !!selesai.value[`${route.params.id}:${tahapI
  */
 const dataTersimpan = ref<Record<string, any> | null>(null)
 const dataSiap = ref(false)
+// Khusus evaluasi: pantun dari tahap Asah siswa, untuk penilaian otomatis
+// (suku kata & sajak a-b-a-b) di daftar periksa.
+const pantunAsah = ref<string[] | null>(null)
 async function muatTersimpan() {
   const fid = String(route.params.id)
-  const lokal = bacaPayloadLokal(fid, tahapId.value)
-  if (lokal) { dataTersimpan.value = lokal as Record<string, any>; dataSiap.value = true; return }
-  try {
-    const r = await $fetch<{ data: { changes: any[] } }>('/api/v1/sync/pull', { method: 'POST', body: { limit: 500 } })
-    const c = (r.data.changes || []).find((x: any) => x.phenomenon_id === fid && x.stage_id === tahapId.value)
-    if (c?.response_payload) dataTersimpan.value = c.response_payload
-  } catch {}
+  let changes: any[] | null = null
+  const ambilPayload = async (stage: string): Promise<Record<string, any> | null> => {
+    const lokal = bacaPayloadLokal(fid, stage)
+    if (lokal) return lokal as Record<string, any>
+    if (!changes) {
+      try {
+        const r = await $fetch<{ data: { changes: any[] } }>('/api/v1/sync/pull', { method: 'POST', body: { limit: 500 } })
+        changes = r.data.changes || []
+      } catch { changes = [] }
+    }
+    return changes.find((x: any) => x.phenomenon_id === fid && x.stage_id === stage)?.response_payload || null
+  }
+  dataTersimpan.value = await ambilPayload(tahapId.value)
+  if (tahapId.value === 'evaluasi') {
+    const asah = await ambilPayload('asah')
+    if (Array.isArray(asah?.baris)) pantunAsah.value = asah.baris
+  }
   dataSiap.value = true
 }
 const fenomenaBerikutnya = computed(() => {
