@@ -41,8 +41,16 @@ export const FENOMENA: Fenomena[] = [
       kenali: {
         judul: 'Kenali Fenomena', tipe: 'artikel',
         data: {
-          // Naskah artikel: LAMPIRAN (diminta ke pemilik di akhir)
-          artikel: null,
+          // Naskah artikel dari lampiran pemilik (diterima 21 Okt 2026)
+          artikel: `Bijak Berteknologi: Manfaatkan Internet, Jaga Diri!
+
+Internet dan teknologi digital sudah menjadi bagian dari kehidupan remaja. Melalui internet, kita dapat mencari informasi, belajar hal baru, menonton video pembelajaran, berkomunikasi dengan teman, serta mengembangkan kreativitas. Namun, teknologi perlu digunakan secara bijak agar manfaatnya dapat dirasakan tanpa mengabaikan keselamatan diri.
+
+Penggunaan internet juga memiliki risiko. Berdasarkan laporan UNICEF Indonesia (2025), hanya 37,5% anak yang pernah menerima informasi tentang cara menjaga keamanan saat menggunakan internet. Selain itu, 42% anak mengaku pernah merasa tidak nyaman atau takut akibat pengalaman mereka di dunia daring. Data tersebut menunjukkan bahwa kemampuan menggunakan teknologi perlu disertai pengetahuan tentang cara melindungi diri di internet.
+
+Ada beberapa cara untuk menggunakan teknologi dengan bijak. Pertama, manfaatkan internet untuk belajar dan mencari informasi dari sumber yang tepercaya. Kedua, periksa kebenaran informasi sebelum membagikannya kepada orang lain. Ketiga, gunakan bahasa yang sopan ketika berkomunikasi di media sosial dan hindari komentar yang menyakiti orang lain. Keempat, jangan sembarangan membagikan informasi pribadi, seperti alamat rumah, kata sandi, atau nomor telepon, kepada orang yang tidak dikenal.
+
+Dengan demikian, teknologi bukan hanya alat untuk mencari hiburan, tetapi juga sarana untuk belajar, berkarya, dan menyebarkan pesan positif. Remaja dapat memanfaatkan teknologi untuk menghasilkan karya kreatif, termasuk pantun yang mengajak teman sebaya menggunakan internet secara bertanggung jawab.`,
           catatan: 'Artikel tentang penggunaan teknologi secara bijak (lampiran).',
           pertanyaan: [
             'Sudahkah kamu menggunakan teknologi untuk hal-hal yang bermanfaat? Apa buktinya?',
@@ -180,8 +188,10 @@ export const FENOMENA: Fenomena[] = [
       kenali: {
         judul: 'Kenali Fenomena', tipe: 'artikel',
         data: {
-          // Cerita: LAMPIRAN
-          artikel: null,
+          // Cerita dari lampiran pemilik (diterima 21 Okt 2026)
+          artikel: `Uluran Tangan untuk Sesama
+
+Saat pulang sekolah, Raka melihat berita tentang warga yang terdampak banjir di daerah sekitar tempat tinggalnya. Banyak rumah terendam air dan beberapa keluarga kesulitan mendapatkan makanan serta pakaian bersih. Raka mengajak teman-temannya mengumpulkan bantuan berupa makanan, pakaian layak pakai, dan perlengkapan kebersihan. Mereka juga membantu memilah dan mengemas barang-barang tersebut agar mudah dibagikan. Awalnya, hanya beberapa teman yang ikut, tetapi semakin banyak siswa bergabung setelah mengetahui kegiatan itu. Melihat semangat teman-temannya, Raka menyadari bahwa membantu sesama tidak harus menunggu menjadi kaya atau memiliki banyak barang. Kepedulian, tenaga, dan tindakan sederhana pun dapat meringankan beban orang lain.`,
           catatan: 'Cerita tentang bantuan bagi korban bencana banjir (lampiran).',
           pertanyaan: [
             'Masalah apa yang dialami warga dalam cerita tersebut?',
