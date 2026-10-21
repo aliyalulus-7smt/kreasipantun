@@ -79,3 +79,12 @@ body {
 @media (prefers-reduced-motion: reduce) {
   .skeleton { animation: none; }
 }
+
+/* Kartu Fakta bolak-balik (flip) */
+.kartu-balik { perspective: 900px; cursor: pointer; height: 11rem; }
+.kartu-dalam { position: relative; width: 100%; height: 100%; transform-style: preserve-3d; transition: transform .55s cubic-bezier(.4,.1,.2,1); }
+.kartu-balik.terbuka .kartu-dalam { transform: rotateY(180deg); }
+.kartu-muka { position: absolute; inset: 0; backface-visibility: hidden; -webkit-backface-visibility: hidden; border-radius: 1rem; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: .35rem; padding: 1rem; text-align: center; }
+.kartu-depan { background: linear-gradient(135deg, #fef3c7, #fde68a); border: 2px dashed #f59e0b; }
+.kartu-belakang { background: #fffbeb; border: 2px solid #fcd34d; transform: rotateY(180deg); }
+@media (prefers-reduced-motion: reduce) { .kartu-dalam { transition: none; } }

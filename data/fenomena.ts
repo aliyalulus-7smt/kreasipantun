@@ -10,7 +10,7 @@ export type IdFenomena =
 
 export type IdTahap = 'kenali' | 'eksplorasi' | 'ekspresikan' | 'asah' | 'evaluasi'
 
-export interface Pilihan { teks: string; benar?: boolean; label?: string }
+export interface Pilihan { teks: string; benar?: boolean; label?: string; penjelasan?: string }
 export interface TahapKonten {
   judul: string
   tipe: string
@@ -53,10 +53,10 @@ export const FENOMENA: Fenomena[] = [
         judul: 'Eksplorasi Fenomena', tipe: 'benar-salah',
         data: {
           pernyataan: [
-            { teks: 'Internet dapat dimanfaatkan untuk mencari informasi, belajar, dan mengembangkan kreativitas.', benar: true },
-            { teks: 'Semua informasi yang ditemukan di internet dapat langsung dipercaya dan dibagikan kepada orang lain.', benar: false },
-            { teks: 'Remaja dapat memanfaatkan teknologi untuk menghasilkan karya kreatif, termasuk pantun yang berisi pesan positif.', benar: true },
-            { teks: 'Menjaga keamanan di internet dapat dilakukan dengan membagikan kata sandi kepada teman agar akun lebih mudah diakses.', benar: false },
+            { teks: 'Internet dapat dimanfaatkan untuk mencari informasi, belajar, dan mengembangkan kreativitas.', benar: true, penjelasan: 'Internet memang berguna untuk mencari informasi, belajar, dan mengembangkan kreativitas jika digunakan dengan bijak.' },
+            { teks: 'Semua informasi yang ditemukan di internet dapat langsung dipercaya dan dibagikan kepada orang lain.', benar: false, penjelasan: 'Tidak semua informasi di internet benar. Kita harus memeriksa kebenarannya dulu sebelum percaya atau membagikannya.' },
+            { teks: 'Remaja dapat memanfaatkan teknologi untuk menghasilkan karya kreatif, termasuk pantun yang berisi pesan positif.', benar: true, penjelasan: 'Teknologi dapat dipakai untuk berkarya, misalnya membuat pantun digital yang berisi pesan positif.' },
+            { teks: 'Menjaga keamanan di internet dapat dilakukan dengan membagikan kata sandi kepada teman agar akun lebih mudah diakses.', benar: false, penjelasan: 'Kata sandi adalah rahasia pribadi. Membagikannya kepada orang lain justru membuat akun tidak aman.' },
           ] as Pilihan[],
           kartuFakta: [
             'Teknologi memberikan hiburan dan akses informasi, tetapi penggunaannya tanpa kendali dapat membawa pelajar pada aktivitas yang merugikan.',
@@ -201,17 +201,17 @@ export const FENOMENA: Fenomena[] = [
                 'Mengumpulkan selimut dan pakaian layak',
                 'Menonton saja',
               ],
-              kunci: 1,
+              kunci: 1, penjelasan: 'Saat warga kedinginan, bantuan yang paling tepat adalah memberikan selimut dan pakaian layak, bukan sekadar memotret atau menonton.'
             },
             {
               teks: 'Teman sekelas kehilangan buku karena banjir.',
               pilihan: ['Meminjamkan dan menyumbang buku', 'Menjual buku yang kita punya', 'Pura-pura tidak tahu'],
-              kunci: 0,
+              kunci: 0, penjelasan: 'Meminjamkan atau menyumbang buku membantu teman tetap bisa belajar setelah kehilangan bukunya.'
             },
             {
               teks: 'Ada ajakan donasi dari akun tak dikenal.',
               pilihan: ['Langsung transfer', 'Menyebarkannya tanpa cek', 'Cek dulu lembaganya yang terpercaya'],
-              kunci: 2,
+              kunci: 2, penjelasan: 'Sebelum berdonasi, pastikan dulu lembaga atau akunnya terpercaya agar bantuan tidak disalahgunakan.'
             },
           ],
           kartuFakta: [
@@ -404,9 +404,9 @@ export const FENOMENA: Fenomena[] = [
         judul: 'Eksplorasi Fenomena', tipe: 'kuis',
         data: {
           soal: [
-            { teks: 'Tari Saman merupakan kesenian tradisional yang berasal dari?', pilihan: ['Aceh', 'Bali', 'Jawa Barat'], kunci: 0 },
-            { teks: 'Alat musik angklung menghasilkan bunyi ketika dimainkan dengan cara?', pilihan: ['Dipetik', 'Digoyangkan', 'Ditiup'], kunci: 1 },
-            { teks: 'Mengapa kesenian tradisional Indonesia perlu dilestarikan?', pilihan: ['Agar hanya dikenal oleh masyarakat daerah asalnya', 'Agar tidak tergantikan oleh kesenian dari luar negeri', 'Agar tetap dikenal dan diwariskan kepada generasi berikutnya'], kunci: 2 },
+            { teks: 'Tari Saman merupakan kesenian tradisional yang berasal dari?', pilihan: ['Aceh', 'Bali', 'Jawa Barat'], kunci: 0, penjelasan: 'Tari Saman berasal dari Aceh dan dikenal dengan gerakan tangan yang cepat dan serempak.' },
+            { teks: 'Alat musik angklung menghasilkan bunyi ketika dimainkan dengan cara?', pilihan: ['Dipetik', 'Digoyangkan', 'Ditiup'], kunci: 1, penjelasan: 'Angklung terbuat dari bambu dan berbunyi saat digoyangkan.' },
+            { teks: 'Mengapa kesenian tradisional Indonesia perlu dilestarikan?', pilihan: ['Agar hanya dikenal oleh masyarakat daerah asalnya', 'Agar tidak tergantikan oleh kesenian dari luar negeri', 'Agar tetap dikenal dan diwariskan kepada generasi berikutnya'], kunci: 2, penjelasan: 'Kesenian tradisional perlu dilestarikan agar tetap dikenal dan dapat diwariskan kepada generasi berikutnya.' },
           ],
           kartuFakta: [
             'Indonesia memiliki ribuan warisan budaya, termasuk bahasa daerah, tarian tradisional, musik, pakaian adat, dan upacara adat yang mencerminkan keberagaman masyarakatnya.',
@@ -539,10 +539,10 @@ export const FENOMENA: Fenomena[] = [
         judul: 'Eksplorasi Fenomena', tipe: 'benar-salah',
         data: {
           pernyataan: [
-            { teks: 'Melewatkan sarapan dapat membantu tubuh menjadi lebih sehat dan bugar.', benar: false },
-            { teks: 'Tidur yang cukup membantu tubuh memulihkan energi dan menjaga konsentrasi saat belajar.', benar: true },
-            { teks: 'Mencuci tangan dengan sabun dan air mengalir dapat membantu mencegah penyebaran kuman penyebab penyakit.', benar: true },
-            { teks: 'Minum air putih hanya diperlukan ketika kita merasa haus.', benar: false },
+            { teks: 'Melewatkan sarapan dapat membantu tubuh menjadi lebih sehat dan bugar.', benar: false, penjelasan: 'Sarapan memberi energi untuk beraktivitas dan belajar, jadi melewatkannya justru membuat tubuh lemas.' },
+            { teks: 'Tidur yang cukup membantu tubuh memulihkan energi dan menjaga konsentrasi saat belajar.', benar: true, penjelasan: 'Saat tidur, tubuh memulihkan energi dan memperbaiki diri, sehingga kita lebih fokus saat belajar.' },
+            { teks: 'Mencuci tangan dengan sabun dan air mengalir dapat membantu mencegah penyebaran kuman penyebab penyakit.', benar: true, penjelasan: 'Sabun dan air mengalir membersihkan kuman di tangan, sehingga penyakit lebih sulit menyebar.' },
+            { teks: 'Minum air putih hanya diperlukan ketika kita merasa haus.', benar: false, penjelasan: 'Tubuh membutuhkan air secara teratur sepanjang hari, bukan hanya saat merasa haus.' },
           ] as Pilihan[],
           kartuFakta: [
             'Tubuh membutuhkan beragam zat gizi, seperti karbohidrat, protein, lemak, vitamin, dan mineral, agar dapat tumbuh dan berfungsi dengan baik.',
