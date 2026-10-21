@@ -76,14 +76,14 @@
 </template>
 
 <script setup lang="ts">
-const props = defineProps<{ tipe: string; data: Record<string, any>; fenomenaId: string }>()
+const props = defineProps<{ tipe: string; data: Record<string, any>; fenomenaId: string; dataTersimpan?: Record<string, any> | null }>()
 const { antrekan } = useOutbox()
 
-const jawaban = ref<Record<number, any>>({})
-const terkunci = ref(false)
-const tersimpan = ref(false)
+const jawaban = ref<Record<number, any>>({ ...(props.dataTersimpan?.jawaban || {}) })
+const terkunci = ref(!!props.dataTersimpan)
+const tersimpan = ref(!!props.dataTersimpan)
 const kelompokAktif = ref<string>('')
-const penempatan = ref<Record<number, string>>({})
+const penempatan = ref<Record<number, string>>({ ...(props.dataTersimpan?.penempatan || {}) })
 
 const daftarSoal = computed(() => props.data.soal || props.data.situasi || [])
 const sisa = computed(() => (props.data.item || []).filter((_: any, i: number) => !(i in penempatan.value)))

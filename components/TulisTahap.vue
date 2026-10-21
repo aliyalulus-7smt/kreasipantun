@@ -46,12 +46,21 @@
 </template>
 
 <script setup lang="ts">
-const props = defineProps<{ tipe: string; data: Record<string, any>; fenomenaId: string }>()
+const props = defineProps<{ tipe: string; data: Record<string, any>; fenomenaId: string; dataTersimpan?: Record<string, any> | null }>()
 const { antrekan } = useOutbox()
 
 const baris = ref<string[]>(['', '', '', ''])
 const tantanganKe = ref<number>(0)
 const tersimpan = ref(false)
+if (Array.isArray(props.dataTersimpan?.baris)) {
+  props.dataTersimpan!.baris.forEach((b: string, i: number) => { if (i < 4) baris.value[i] = b || '' })
+  tersimpan.value = baris.value.some(b => b.trim().length > 0)
+  const tTersimpan = props.dataTersimpan!.tantangan
+  if (tTersimpan && Array.isArray(props.data.tantangan)) {
+    const idx = props.data.tantangan.findIndex((t: any) => JSON.stringify(t) === JSON.stringify(tTersimpan))
+    if (idx >= 0) tantanganKe.value = idx
+  }
+}
 const bisaSimpan = computed(() => !tersimpan.value && baris.value.every(b => b.trim().length > 0))
 
 async function simpan() {

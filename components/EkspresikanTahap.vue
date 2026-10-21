@@ -118,19 +118,28 @@
 </template>
 
 <script setup lang="ts">
-const props = defineProps<{ tipe: string; data: Record<string, any>; fenomenaId: string }>()
+const props = defineProps<{ tipe: string; data: Record<string, any>; fenomenaId: string; dataTersimpan?: Record<string, any> | null }>()
 const { antrekan } = useOutbox()
 
-const jawaban = ref<Record<number, any>>({})
-const tersimpan = ref(false)
-const dicek = ref(false)
+const jawaban = ref<Record<number, any>>({ ...(props.dataTersimpan?.jawaban || {}) })
+const tersimpan = ref(!!props.dataTersimpan)
+const dicek = ref(!!props.dataTersimpan && Object.keys(props.dataTersimpan?.jawaban || {}).length > 0)
 // susun-larik
-const urutan = ref<string[]>([])
+const urutan = ref<string[]>([...(props.dataTersimpan?.urutan || [])])
 const acakDipakai = ref<number[]>([])
 // pasang-rima
 const pilihanKata = ref<string[]>([])
-const pasanganDitemukan = ref<string[][]>([])
-const kataTerpakai = ref<Set<string>>(new Set())
+const pasanganDitemukan = ref<string[][]>(Array.isArray(props.dataTersimpan?.pasangan) ? props.dataTersimpan!.pasangan.map((p: string[]) => [...p]) : [])
+const kataTerpakai = ref<Set<string>>(new Set(pasanganDitemukan.value.flat()))
+// Pulihkan indeks acak yang terpakai dari urutan tersimpan (susun-larik)
+if (urutan.value.length && Array.isArray(props.data.acak)) {
+  const terpakai = new Set<number>()
+  for (const kata of urutan.value) {
+    const idx = props.data.acak.findIndex((a: string, i: number) => a === kata && !terpakai.has(i))
+    if (idx >= 0) terpakai.add(idx)
+  }
+  acakDipakai.value = [...terpakai]
+}
 
 const sisaAcak = computed(() => (props.data.acak || []).filter((_: string, i: number) => !acakDipakai.value.includes(i)))
 const sisaKata = computed(() => (props.data.kata || []).filter((k: string) => !kataTerpakai.value.has(k)))

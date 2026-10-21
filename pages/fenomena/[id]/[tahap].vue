@@ -32,11 +32,14 @@
     </div>
 
     <div class="max-w-2xl mx-auto">
-      <StimulusTahap v-if="tahapId === 'kenali'" :tipe="konten.tipe" :data="konten.data" :fenomena-id="fenomena.id" @selesai="tandai" />
-      <KuisTahap v-else-if="tahapId === 'eksplorasi'" :tipe="konten.tipe" :data="konten.data" :fenomena-id="fenomena.id" />
-      <EkspresikanTahap v-else-if="tahapId === 'ekspresikan'" :tipe="konten.tipe" :data="konten.data" :fenomena-id="fenomena.id" />
-      <TulisTahap v-else-if="tahapId === 'asah'" :tipe="konten.tipe" :data="konten.data" :fenomena-id="fenomena.id" />
-      <ChecklistTahap v-else-if="tahapId === 'evaluasi'" :data="konten.data" :fenomena-id="fenomena.id" />
+      <p v-if="!dataSiap" class="text-center font-bold text-slate-400 py-10">Memuat jawaban tersimpan…</p>
+      <template v-else>
+        <StimulusTahap v-if="tahapId === 'kenali'" :tipe="konten.tipe" :data="konten.data" :fenomena-id="fenomena.id" :data-tersimpan="dataTersimpan" @selesai="tandai" />
+        <KuisTahap v-else-if="tahapId === 'eksplorasi'" :tipe="konten.tipe" :data="konten.data" :fenomena-id="fenomena.id" :data-tersimpan="dataTersimpan" />
+        <EkspresikanTahap v-else-if="tahapId === 'ekspresikan'" :tipe="konten.tipe" :data="konten.data" :fenomena-id="fenomena.id" :data-tersimpan="dataTersimpan" />
+        <TulisTahap v-else-if="tahapId === 'asah'" :tipe="konten.tipe" :data="konten.data" :fenomena-id="fenomena.id" :data-tersimpan="dataTersimpan" />
+        <ChecklistTahap v-else-if="tahapId === 'evaluasi'" :data="konten.data" :fenomena-id="fenomena.id" :data-tersimpan="dataTersimpan" />
+      </template>
     </div>
 
     <!-- Panel perayaan: muncul begitu tahap ini selesai -->
@@ -63,6 +66,7 @@
 <script setup lang="ts">
 import { DAFTAR_TAHAP, FENOMENA, cariFenomena, type IdTahap } from '~/data/fenomena'
 import ConfettiLetus from '~/components/ConfettiLetus.vue'
+import { bacaPayloadLokal } from '~/composables/useOutbox'
 
 definePageMeta({ layout: 'app', middleware: 'auth-bff' })
 
@@ -81,6 +85,26 @@ const tahapBerikutnya = computed(() => {
 })
 
 const sudahSelesai = computed(() => !!selesai.value[`${route.params.id}:${tahapId.value}`])
+
+/**
+ * Jawaban tersimpan siswa untuk tahap ini — agar membuka ulang tahap
+ * menampilkan data yang pernah diisi, bukan formulir kosong.
+ * Prioritas: antrean lokal perangkat (paling baru, mungkin belum tersinkron),
+ * lalu record server via sync/pull.
+ */
+const dataTersimpan = ref<Record<string, any> | null>(null)
+const dataSiap = ref(false)
+async function muatTersimpan() {
+  const fid = String(route.params.id)
+  const lokal = bacaPayloadLokal(fid, tahapId.value)
+  if (lokal) { dataTersimpan.value = lokal as Record<string, any>; dataSiap.value = true; return }
+  try {
+    const r = await $fetch<{ data: { changes: any[] } }>('/api/v1/sync/pull', { method: 'POST', body: { limit: 500 } })
+    const c = (r.data.changes || []).find((x: any) => x.phenomenon_id === fid && x.stage_id === tahapId.value)
+    if (c?.response_payload) dataTersimpan.value = c.response_payload
+  } catch {}
+  dataSiap.value = true
+}
 const fenomenaBerikutnya = computed(() => {
   const idx = FENOMENA.findIndex(f => f.id === String(route.params.id))
   return idx >= 0 && idx < FENOMENA.length - 1 ? FENOMENA[idx + 1] : null
@@ -109,10 +133,16 @@ const confetti = ref<InstanceType<typeof ConfettiLetus> | null>(null)
 const panelSelesai = ref<HTMLElement | null>(null)
 const baruSelesai = ref(false)
 let timerLanjut: ReturnType<typeof setTimeout> | null = null
-// Confetti + otomatis lanjut hanya saat tahap BARU saja selesai di kunjungan ini
-// (bukan saat membuka ulang tahap lama — di sana panel tetap tampil untuk navigasi manual).
-watch(sudahSelesai, (baru, lama) => {
-  if (baru && !lama) {
+// Keadaan tahap SAAT data progres pertama kali termuat di halaman ini.
+// Transisi "belum termuat -> selesai" ketika membuka ulang tahap lama BUKAN
+// penyelesaian baru — confetti + auto-lanjut hanya untuk tahap yang saat
+// halaman dibuka memang belum selesai, lalu diselesaikan di kunjungan ini.
+const keadaanAwal = ref<boolean | null>(null)
+watch(pernahMuat, (v) => {
+  if (v && keadaanAwal.value === null) keadaanAwal.value = sudahSelesai.value
+}, { immediate: true })
+watch(sudahSelesai, (baru) => {
+  if (baru && keadaanAwal.value === false && !baruSelesai.value) {
     baruSelesai.value = true
     confetti.value?.letus(tahapId.value === 'evaluasi')
     nextTick(() => {
@@ -136,6 +166,7 @@ function tandai() {
 // Semua komponen tahap memicu via outbox -> dengarkan perubahan remote
 onMounted(() => {
   void muat()
+  void muatTersimpan()
   const h = () => tandai()
   window.addEventListener('kp-remote-change', h)
   onUnmounted(() => window.removeEventListener('kp-remote-change', h))

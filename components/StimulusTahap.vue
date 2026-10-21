@@ -32,12 +32,12 @@
 </template>
 
 <script setup lang="ts">
-const props = defineProps<{ tipe: string; data: Record<string, any>; fenomenaId: string }>()
+const props = defineProps<{ tipe: string; data: Record<string, any>; fenomenaId: string; dataTersimpan?: Record<string, any> | null }>()
 const emit = defineEmits(['selesai'])
 const { antrekan } = useOutbox()
 
-const respons = ref('')
-const tersimpan = ref(false)
+const respons = ref(props.dataTersimpan?.tanggapan || '')
+const tersimpan = ref(!!props.dataTersimpan?.tanggapan)
 const bisaSimpan = computed(() => respons.value.trim().length > 0 && !tersimpan.value)
 
 const embedUrl = computed(() => {

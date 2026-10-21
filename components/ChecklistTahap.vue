@@ -29,12 +29,17 @@
 </template>
 
 <script setup lang="ts">
-const props = defineProps<{ data: Record<string, any>; fenomenaId: string }>()
+const props = defineProps<{ data: Record<string, any>; fenomenaId: string; dataTersimpan?: Record<string, any> | null }>()
 const { antrekan } = useOutbox()
 
 const centang = ref<Record<number, boolean>>({})
-const refleksi = ref('')
-const tersimpan = ref(false)
+const refleksi = ref(props.dataTersimpan?.refleksi || '')
+const tersimpan = ref(!!props.dataTersimpan)
+if (Array.isArray(props.dataTersimpan?.checklist)) {
+  const awal: Record<number, boolean> = {}
+  props.dataTersimpan!.checklist.forEach((it: any, i: number) => { awal[i] = !!it?.ya })
+  centang.value = awal
+}
 
 function toggle(i: number) { centang.value = { ...centang.value, [i]: !centang.value[i] } }
 

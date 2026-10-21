@@ -45,6 +45,16 @@ export function versiServerDikenal(phenomenonId: string, stageId: string): numbe
   } catch { return null }
 }
 
+/** Payload tersimpan lokal (antrean belum tersinkron) untuk satu tahap, bila ada. */
+export function bacaPayloadLokal(phenomenonId: string, stageId: string): Record<string, unknown> | null {
+  if (!import.meta.client) return null
+  try {
+    const ops = JSON.parse(localStorage.getItem(KUNCI) || '[]') as OpOutbox[]
+    const op = ops.find(o => o.phenomenon_id === phenomenonId && o.stage_id === stageId)
+    return op?.response_payload || null
+  } catch { return null }
+}
+
 function bacaOutbox(): OpOutbox[] {
   if (!import.meta.client) return []
   try { return JSON.parse(localStorage.getItem(KUNCI) || '[]') } catch { return [] }
