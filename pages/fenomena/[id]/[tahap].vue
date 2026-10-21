@@ -176,11 +176,19 @@ function tandai() {
   }))
 }
 
-// Semua komponen tahap memicu via outbox -> dengarkan perubahan remote
+// Semua komponen tahap memicu via outbox -> dengarkan perubahan remote.
+// PENTING: tandai selesai HANYA bila perubahan remote itu memang untuk
+// fenomena+tahap yang sedang dibuka. Tanpa pemeriksaan ini, tarikan
+// sinkronisasi milik tahap SEBELUMNYA (mis. Kenali) yang tiba terlambat
+// setelah halaman berpindah akan menandai tahap yang sedang dibuka
+// (mis. Eksplorasi) sebagai selesai padahal belum dikerjakan.
 onMounted(() => {
   void muat()
   void muatTersimpan()
-  const h = () => tandai()
+  const h = (e: Event) => {
+    const d = (e as CustomEvent).detail as { phenomenon_id?: string; stage_id?: string } | undefined
+    if (d?.phenomenon_id === String(route.params.id) && d?.stage_id === tahapId.value) tandai()
+  }
   window.addEventListener('kp-remote-change', h)
   onUnmounted(() => window.removeEventListener('kp-remote-change', h))
 })
