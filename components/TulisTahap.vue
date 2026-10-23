@@ -1,7 +1,8 @@
 <!-- Asah Kreativitas: tulis pantun (semua varian) + simpan karya.
-     Tantangan dipilih lewat roda spin; referensi pilihan rima (model
-     /limar/elaborate) ada di paling bawah: panel Rima A & B, klik kata
-     untuk memasukkannya ke baris pantun yang aktif. -->
+     Tantangan dipilih lewat roda spin; kamus kata berima (satu panel)
+     ada di paling bawah: klik kata untuk memasukkannya ke baris aktif.
+     Baris yang sudah disediakan soal TIDAK ditampilkan sebagai kolom
+     input — hanya kolom yang perlu diisi siswa yang muncul. -->
 <template>
   <div class="space-y-5">
     <div class="card !rounded-2xl p-4 bg-amber-50/70 border !border-amber-100">
@@ -37,12 +38,14 @@
     <div class="card !rounded-2xl p-5">
       <p class="font-display font-bold text-slate-700 mb-3">✍️ Pantunmu</p>
       <div class="space-y-2.5">
-        <div v-for="i in 4" :key="i">
-          <label class="text-xs font-bold" :class="i <= 2 ? 'text-sky-600' : 'text-amber-600'">
-            Baris {{ i }} {{ i <= 2 ? '(sampiran)' : '(isi)' }}{{ barisTerkunci.has(i - 1) ? ' — dari soal 🔒' : (barisDariSoal.has(i - 1) ? ' — dari soal' : '') }}
-          </label>
-          <input v-model="baris[i - 1]" :disabled="barisTerkunci.has(i - 1) || tersimpan" @focus="barisFokus = i - 1" class="w-full bg-conlow rounded-xl px-4 py-2.5 font-semibold text-ink placeholder:text-muted placeholder:font-medium focus:bg-white focus:outline-none focus:shadow-md transition disabled:bg-slate-100 disabled:text-slate-500" :placeholder="`Tulis baris ${i}...`" maxlength="120" />
-        </div>
+        <template v-for="i in 4" :key="i">
+          <div v-if="!barisDariSoal.has(i - 1)">
+            <label class="text-xs font-bold" :class="i <= 2 ? 'text-sky-600' : 'text-amber-600'">
+              Baris {{ i }} {{ i <= 2 ? '(sampiran)' : '(isi)' }}
+            </label>
+            <input v-model="baris[i - 1]" :disabled="tersimpan" @focus="barisFokus = i - 1" class="w-full bg-conlow rounded-xl px-4 py-2.5 font-semibold text-ink placeholder:text-muted placeholder:font-medium focus:bg-white focus:outline-none focus:shadow-md transition disabled:bg-slate-100 disabled:text-slate-500" :placeholder="`Tulis baris ${i}...`" maxlength="120" />
+          </div>
+        </template>
       </div>
     </div>
 
@@ -59,40 +62,36 @@
         <span class="text-xl">{{ tampilRima ? '▲' : '▼' }}</span>
       </button>
       <p v-if="!tampilRima" class="text-xs font-semibold text-slate-500 mt-1">
-        Klik untuk melihat pilihan rima A (baris 1 &amp; 3) dan rima B (baris 2 &amp; 4) sebagai referensi menyusun pantunmu.
+        Klik untuk melihat kamus kata berima sebagai referensi menyusun pantunmu.
       </p>
 
-      <div v-if="tampilRima" class="mt-4 grid md:grid-cols-2 gap-4">
-        <div v-for="panel in panelRima" :key="panel.key" class="border-2 rounded-2xl p-4"
-          :class="panel.key === 'A' ? 'border-sky-200 bg-sky-50/50' : 'border-amber-200 bg-amber-50/50'">
-          <p class="font-display font-bold mb-1" :class="panel.key === 'A' ? 'text-sky-700' : 'text-amber-700'">{{ panel.judul }}</p>
-          <p class="text-xs font-semibold text-slate-500 mb-3">Pilih akhiran, lalu klik kata untuk memasukkannya ke baris pantunmu.</p>
+      <div v-if="tampilRima" class="mt-4 border-2 border-amber-200 bg-amber-50/50 rounded-2xl p-4">
+        <p class="text-xs font-semibold text-slate-500 mb-3">Pilih akhiran, lalu klik kata untuk memasukkannya ke baris pantun yang sedang kamu isi.</p>
 
-          <p class="text-xs font-bold text-slate-500 mb-2">Akhiran:</p>
-          <div class="flex flex-wrap gap-1.5 mb-3">
-            <button v-for="g in referensiRima" :key="g.akhiran" @click="akhiranPilihan[panel.key] = g.akhiran"
-              class="pill !text-xs border-2 transition"
-              :class="akhiranPilihan[panel.key] === g.akhiran
-                ? (panel.key === 'A' ? 'bg-sky-500 text-white border-sky-500' : 'bg-amber-500 text-white border-amber-500')
-                : 'bg-white text-slate-600 border-slate-200 hover:border-slate-300'">
-              {{ g.akhiran }}
-            </button>
-          </div>
+        <p class="text-xs font-bold text-slate-500 mb-2">Akhiran:</p>
+        <div class="flex flex-wrap gap-1.5 mb-3">
+          <button v-for="g in referensiRima" :key="g.akhiran" @click="akhiranPilihan = g.akhiran"
+            class="pill !text-xs border-2 transition"
+            :class="akhiranPilihan === g.akhiran
+              ? 'bg-amber-500 text-white border-amber-500'
+              : 'bg-white text-slate-600 border-slate-200 hover:border-slate-300'">
+            {{ g.akhiran }}
+          </button>
+        </div>
 
-          <div v-if="kelompokDipilih(panel.key)">
-            <p class="text-xs font-bold text-slate-500 mb-2">Kata (klik untuk memasukkan):</p>
-            <div class="space-y-2 max-h-48 overflow-y-auto pr-1">
-              <div v-for="kat in urutanKategori" :key="kat">
-                <template v-if="kataKategori(panel.key, kat).length">
-                  <p class="text-xs font-bold text-slate-400 mb-1">{{ labelKategori[kat] }}</p>
-                  <div class="flex flex-wrap gap-1.5">
-                    <button v-for="w in kataKategori(panel.key, kat)" :key="w.teks" @click="sisipKata(panel.key, w.teks)"
-                      class="pill !text-xs border-2 bg-white text-slate-600 border-slate-200 hover:border-amber-300 transition">
-                      {{ w.teks }}
-                    </button>
-                  </div>
-                </template>
-              </div>
+        <div v-if="kelompokDipilih()">
+          <p class="text-xs font-bold text-slate-500 mb-2">Kata (klik untuk memasukkan):</p>
+          <div class="space-y-2 max-h-48 overflow-y-auto pr-1">
+            <div v-for="kat in urutanKategori" :key="kat">
+              <template v-if="kataKategori(kat).length">
+                <p class="text-xs font-bold text-slate-400 mb-1">{{ labelKategori[kat] }}</p>
+                <div class="flex flex-wrap gap-1.5">
+                  <button v-for="w in kataKategori(kat)" :key="w.teks" @click="sisipKata(w.teks)"
+                    class="pill !text-xs border-2 bg-white text-slate-600 border-slate-200 hover:border-amber-300 transition">
+                    {{ w.teks }}
+                  </button>
+                </div>
+              </template>
             </div>
           </div>
         </div>
@@ -115,15 +114,15 @@ const tantanganDipilih = ref(!!props.dataTersimpan)
 // berarti roda sudah pernah diputar; hasil putaran menguncinya.
 const sudahSpin = ref(!!props.dataTersimpan)
 const tersimpan = ref(false)
-// Baris yang sudah disediakan soal: sampiran (baris 1-2) langsung terisi;
-// isi yang disediakan (baris 3-4) terisi DAN terkunci — siswa mengisi yang kosong saja.
+// Baris yang sudah disediakan soal (sampiran / isi) tetap terisi di state
+// agar payload pantun utuh 4 baris, tetapi TIDAK dirender sebagai kolom
+// input — siswa hanya mengisi kolom yang memang kosong untuknya.
 const barisDariSoal = new Set<number>()
-const barisTerkunci = new Set<number>()
 if (Array.isArray(props.data.sampiran)) {
   props.data.sampiran.forEach((b: string, i: number) => { if (i < 2 && b) { baris.value[i] = b; barisDariSoal.add(i) } })
 }
 if (Array.isArray(props.data.isi)) {
-  props.data.isi.forEach((b: string, j: number) => { const i = j + 2; if (b) { baris.value[i] = b; barisDariSoal.add(i); barisTerkunci.add(i) } })
+  props.data.isi.forEach((b: string, j: number) => { const i = j + 2; if (b) { baris.value[i] = b; barisDariSoal.add(i) } })
 }
 if (Array.isArray(props.dataTersimpan?.baris)) {
   props.dataTersimpan!.baris.forEach((b: string, i: number) => { if (i < 4) baris.value[i] = b || '' })
@@ -146,29 +145,26 @@ function terimaSpin(seg: { indeks: number }) {
   sudahSpin.value = true
 }
 
-// ── Referensi Pilihan Rima ──────────────────────────────────────────
+// ── Kamus Kata Berima (satu panel referensi) ────────────────────────
 const tampilRima = ref(false)
-const akhiranPilihan = ref<{ A: string | null; B: string | null }>({ A: null, B: null })
+const akhiranPilihan = ref<string | null>(null)
 const barisFokus = ref<number | null>(null)
 const pesanSisip = ref('')
-const panelRima = [
-  { key: 'A' as const, judul: 'Rima A — baris 1 & 3' },
-  { key: 'B' as const, judul: 'Rima B — baris 2 & 4' },
-]
 const urutanKategori: KataRimaRef['kategori'][] = ['benda', 'sifat', 'kerja']
-function kelompokDipilih(panel: 'A' | 'B') {
-  return referensiRima.find(g => g.akhiran === akhiranPilihan.value[panel]) || null
+function kelompokDipilih() {
+  return referensiRima.find(g => g.akhiran === akhiranPilihan.value) || null
 }
-function kataKategori(panel: 'A' | 'B', kat: KataRimaRef['kategori']) {
-  return (kelompokDipilih(panel)?.kata || []).filter(w => w.kategori === kat)
+function kataKategori(kat: KataRimaRef['kategori']) {
+  return (kelompokDipilih()?.kata || []).filter(w => w.kategori === kat)
 }
-function sisipKata(panel: 'A' | 'B', kata: string) {
-  const kandidat = panel === 'A' ? [0, 2] : [1, 3]
+function sisipKata(kata: string) {
+  // Target: baris yang sedang difokus siswa; bila tidak ada, baris pertama
+  // yang memang perlu diisi siswa (baris dari soal tidak bisa disisipi).
   let target: number | undefined
-  if (barisFokus.value !== null && kandidat.includes(barisFokus.value) && !barisTerkunci.has(barisFokus.value)) {
+  if (barisFokus.value !== null && !barisDariSoal.has(barisFokus.value)) {
     target = barisFokus.value
   } else {
-    target = kandidat.find(i => !barisTerkunci.has(i))
+    target = [0, 1, 2, 3].find(i => !barisDariSoal.has(i))
   }
   if (target === undefined) return
   const kini = baris.value[target]
