@@ -1,7 +1,7 @@
 <!-- Ekspresikan: susun larik / identifikasi sampiran-isi / pasang rima / hitung suku kata / dst. -->
 <template>
   <div class="space-y-5">
-    <div v-if="data.instruksi" class="card p-4 bg-violet-50/70">
+    <div v-if="data.instruksi" class="card !rounded-2xl p-4 bg-violet-50/70 border !border-violet-100">
       <p class="font-semibold text-slate-700 text-sm">{{ data.instruksi }}</p>
     </div>
 
@@ -9,7 +9,7 @@
     <div v-if="tipe === 'susun-larik'" class="space-y-3">
       <p class="text-sm font-bold text-slate-500">Ketuk baris sesuai urutan yang benar:</p>
       <div class="space-y-2">
-        <div v-for="(b, i) in urutan" :key="i" class="card p-3.5 flex items-center gap-3">
+        <div v-for="(b, i) in urutan" :key="i" class="card !rounded-2xl p-3.5 flex items-center gap-3">
           <span class="w-7 h-7 rounded-full bg-violet-100 text-violet-700 font-bold text-sm flex items-center justify-center">{{ i + 1 }}</span>
           <p class="font-display font-semibold text-slate-700">{{ b }}</p>
         </div>
@@ -28,7 +28,7 @@
          tiap halaman dibuka; hasil benar/salah baru tampil setelah
          SEMUA larik dijawab (arahan guru). -->
     <div v-if="tipe === 'identifikasi-sampiran-isi'" class="space-y-3">
-      <div v-for="li in urutanLarik" :key="li" class="card p-4">
+      <div v-for="li in urutanLarik" :key="li" class="card !rounded-2xl p-4">
         <p class="font-display font-semibold text-slate-700 mb-2">"{{ data.larik[li].teks }}"</p>
         <div class="flex gap-2">
           <template v-if="tombolTerbalik[li]">
@@ -84,11 +84,12 @@
 
     <!-- Hitung suku kata -->
     <div v-if="tipe === 'hitung-suku-kata'" class="space-y-3">
-      <div v-for="(l, i) in data.larik" :key="i" class="card p-4">
+      <div v-for="(l, i) in data.larik" :key="i" class="card !rounded-2xl p-4">
         <p class="font-display font-semibold text-slate-700 mb-2">{{ l.teks }}</p>
         <div class="flex items-center gap-2">
-          <input v-model.number="jawaban[i]" type="number" min="1" max="20" class="input-cute !w-24" placeholder="?" />
+          <input v-model.number="jawaban[i]" type="number" min="1" max="20" class="w-24 bg-conlow rounded-xl px-3 py-2.5 font-semibold text-ink text-center focus:bg-white focus:outline-none focus:shadow-md transition" placeholder="?" />
           <span class="text-sm font-bold text-slate-500">suku kata</span>
+          <span class="pill !px-2 !py-0.5 bg-con text-onvariant text-[11px]">target 8–12</span>
           <span v-if="dicek" class="text-sm font-bold" :class="jawaban[i] === l.kunci ? 'text-emerald-600' : 'text-rose-500'">
             {{ jawaban[i] === l.kunci ? '✓' : `✗ (jawaban: ${l.kunci})` }}
           </span>
@@ -99,7 +100,7 @@
 
     <!-- Lengkapi rumpang / pilih kata -->
     <div v-if="tipe === 'lengkapi-rumpang' || tipe === 'pilih-kata'" class="space-y-4">
-      <div v-for="(s, si) in daftarSoal" :key="si" class="card p-4">
+      <div v-for="(s, si) in daftarSoal" :key="si" class="card !rounded-2xl p-4">
         <div class="bg-amber-50 rounded-xl p-4 mb-3 space-y-1">
           <p v-for="(b, bi) in s.pantun" :key="bi" class="font-display font-semibold text-slate-700">
             {{ bi === s.rumpangKe ? b.replace('___', '.....') : b }}
@@ -108,9 +109,10 @@
         <p class="text-sm font-bold text-slate-600 mb-2">{{ s.tanya || 'Pilih jawaban:' }}</p>
         <div class="space-y-2">
           <button v-for="(p, pi) in s.pilihan" :key="pi" @click="jawab(si, pi)"
-            :class="['w-full text-left pill !px-4 !py-2.5 border-2 transition text-sm',
+            :class="['w-full text-left rounded-xl px-4 py-2.5 border-2 transition text-sm bg-white flex items-center gap-2.5 font-semibold text-slate-700',
               jawaban[si] === pi ? (pi === s.kunci ? '!bg-emerald-100 !border-emerald-400' : '!bg-rose-100 !border-rose-400') : 'hover:border-violet-300']">
-            {{ ['a', 'b', 'c'][pi] }}. {{ p }}
+<span class="w-6 h-6 rounded-full bg-con text-primary font-display font-bold text-xs flex items-center justify-center shrink-0">{{ ['a', 'b', 'c'][pi] }}</span>
+            <span>{{ p }}</span>
           </button>
         </div>
       </div>
@@ -123,7 +125,7 @@
       </div>
       <div class="space-y-2">
         <button v-for="(p, i) in data.pilihan" :key="i" @click="jawab(0, i)"
-          :class="['w-full text-left card p-4 border-2 transition',
+          :class="['w-full text-left card !rounded-2xl p-4 border-2 transition',
             jawaban[0] === i ? (p.benar ? '!border-emerald-400 bg-emerald-50' : '!border-rose-400 bg-rose-50') : 'hover:border-violet-300']">
           <p v-for="(b, j) in p.isi" :key="j" class="font-display font-semibold text-slate-700 text-sm">{{ b }}</p>
         </button>
@@ -135,11 +137,11 @@
       <div class="bg-amber-50 rounded-xl p-4 space-y-1 mb-2">
         <p v-for="(b, i) in data.pantun" :key="i" class="font-display font-semibold text-slate-700">{{ b }}</p>
       </div>
-      <div v-for="(s, si) in data.soal" :key="si" class="card p-4">
+      <div v-for="(s, si) in data.soal" :key="si" class="card !rounded-2xl p-4">
         <p class="font-semibold text-slate-700 text-sm mb-3">{{ si + 1 }}. {{ s.tanya }}</p>
         <div class="space-y-2">
           <button v-for="(p, pi) in s.pilihan" :key="pi" @click="jawab(si, pi)"
-            :class="['w-full text-left pill !px-4 !py-2.5 border-2 transition text-sm',
+            :class="['w-full text-left rounded-xl px-4 py-2.5 border-2 transition text-sm bg-white flex items-center gap-2.5 font-semibold text-slate-700',
               jawaban[si] === pi ? (pi === s.kunci ? '!bg-emerald-100 !border-emerald-400' : '!bg-rose-100 !border-rose-400') : 'hover:border-violet-300']">
             {{ p }}
           </button>
@@ -147,7 +149,7 @@
       </div>
     </div>
 
-    <div v-if="tampilSedih" class="card p-4 bg-sky-50/60">
+    <div v-if="tampilSedih" class="card !rounded-2xl p-4 bg-sky-50/60">
       <AnimasiSedih />
       <p class="text-center font-bold text-slate-600 text-sm mt-1">Jawabanmu belum semuanya benar. Perbaiki yang masih salah sampai benar, baru bisa lanjut ya.</p>
     </div>
@@ -345,7 +347,7 @@ function klsIdentifikasi(i: number, nilai: string) {
   if (semua || tersimpan.value) {
     return [dasar, jawaban.value[i] === props.data.larik[i]?.kunci ? '!bg-emerald-100 !border-emerald-400' : '!bg-rose-100 !border-rose-400']
   }
-  return [dasar, '!bg-violet-100 !border-violet-400']
+  return [dasar, nilai === 'sampiran' ? '!bg-sky-100 !border-sky-400' : '!bg-amber-100 !border-amber-400']
 }
 function jawab(i: number, v: any) { jawaban.value = { ...jawaban.value, [i]: v } }
 function pilih(i: number) {

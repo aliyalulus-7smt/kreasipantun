@@ -10,9 +10,9 @@
           <p class="text-[13px] font-semibold text-slate-500 leading-tight">{{ fenomenaSelesai }} dari 8 Fenomena Tuntas</p>
         </div>
       </div>
-      <span class="px-2.5 py-0.5 rounded-full bg-pfixed text-primary text-xs font-extrabold shrink-0">{{ persen }}%</span>
+      <span class="px-2.5 py-0.5 rounded-full bg-pfixed text-onfixvar text-xs font-extrabold shrink-0">{{ persen }}%</span>
     </div>
-    <div class="w-full bg-[#E4EFFF] h-2.5 rounded-full overflow-hidden">
+    <div class="w-full bg-con h-2.5 rounded-full overflow-hidden">
       <div class="bg-emerald-500 h-full rounded-full transition-all duration-700" :style="{ width: persen + '%' }" />
     </div>
     <div class="flex items-center justify-between gap-2 pt-0.5">

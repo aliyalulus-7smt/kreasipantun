@@ -6,7 +6,7 @@
       <div class="absolute -left-6 -bottom-6 w-28 h-28 rounded-full bg-amber-400/15 blur-xl pointer-events-none" aria-hidden="true" />
       <div class="relative">
         <h1 class="font-display font-extrabold text-2xl md:text-3xl text-ink leading-tight">
-          Halo, {{ namaDepan }}! 👋
+          Halo, {{ namaDepan }}! <span class="inline-block animate-bounce" aria-hidden="true">👋</span>
         </h1>
         <p class="font-semibold text-slate-500 mt-1 text-sm md:text-base flex items-center gap-1.5">
           <span class="inline-block w-2 h-2 rounded-full bg-emerald-500 shrink-0" aria-hidden="true" />

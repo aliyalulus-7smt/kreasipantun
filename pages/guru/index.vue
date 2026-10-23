@@ -4,9 +4,14 @@
     <InstallBanner />
     <div class="flex-1 flex items-center justify-center px-4 py-10">
     <div class="card max-w-md w-full p-8 md:p-10 text-center relative overflow-hidden">
-      <div class="absolute -top-8 -right-8 text-[100px] opacity-10 select-none">👩‍🏫</div>
-
-      <div class="text-6xl mb-4">👩‍🏫</div>
+      <div class="relative w-[72px] h-[72px] mx-auto mb-4">
+        <div class="w-full h-full rounded-3xl bg-con flex items-center justify-center text-primary">
+          <span class="material-symbols-outlined text-[40px]" aria-hidden="true">school</span>
+        </div>
+        <span class="absolute -bottom-1 -right-1 w-6 h-6 bg-emerald-500 rounded-full border-2 border-white flex items-center justify-center text-white" aria-hidden="true">
+          <span class="material-symbols-outlined text-[14px]">check</span>
+        </span>
+      </div>
       <h1 class="font-display text-3xl font-extrabold text-slate-800">
         Dashboard <span class="text-primary">Guru</span>
       </h1>
@@ -18,14 +23,14 @@
       <form @submit.prevent="masuk" class="text-left space-y-4">
         <div>
           <label class="block font-bold text-slate-700 mb-1.5">Kode Guru</label>
-          <input v-model="kode" type="password" class="input-cute" placeholder="••••••" autocomplete="off" />
+          <input v-model="kode" type="password" class="w-full h-12 bg-conlow rounded-xl px-4 text-center font-display font-bold tracking-[0.3em] placeholder:text-muted focus:bg-white focus:outline-none focus:shadow-md transition" placeholder="••••••" autocomplete="off" />
         </div>
         <p v-if="error" class="text-rose-500 text-sm font-bold">{{ error }}</p>
         <button type="submit" class="btn-primary w-full !mt-6">Masuk 🔑</button>
       </form>
 
-      <NuxtLink to="/" class="inline-block mt-5 text-sm font-bold text-slate-400 hover:text-primary transition">
-        ← Kembali ke halaman siswa
+      <NuxtLink to="/" class="inline-flex items-center gap-1 mt-5 text-sm font-display font-bold text-primary">
+        <span class="material-symbols-outlined text-[18px]" aria-hidden="true">keyboard_backspace</span> Kembali ke halaman siswa
       </NuxtLink>
     </div>
     </div>

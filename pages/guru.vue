@@ -2,22 +2,27 @@
   <div class="min-h-screen bg-[#FFFBF3] flex">
     <!-- Sidebar -->
     <aside class="w-64 bg-white text-slate-800 border-r border-slate-200/80 flex-col hidden md:flex shrink-0 min-h-screen sticky top-0 h-screen">
-      <div class="p-6">
-        <p class="font-display text-lg font-extrabold tracking-tight text-primary">Kreasi Pantun</p>
-        <p class="text-xs text-slate-400 mt-0.5">Panel Guru</p>
+      <div class="p-6 flex items-center gap-3">
+        <div class="w-10 h-10 rounded-xl bg-primary flex items-center justify-center text-white shadow-sm shrink-0">
+          <span class="material-symbols-outlined text-2xl" aria-hidden="true">auto_stories</span>
+        </div>
+        <div>
+          <p class="font-display text-lg font-extrabold tracking-tight text-primary leading-tight">Kreasi Pantun</p>
+          <p class="text-xs text-slate-400">Panel Guru</p>
+        </div>
       </div>
       <nav class="flex-1 px-3 space-y-1">
         <button v-for="m in menu" :key="m.id" @click="tab = m.id"
           :class="['w-full text-left px-4 py-2.5 rounded-lg text-sm font-semibold transition flex items-center gap-3',
             tab === m.id ? 'bg-pfixed text-primary' : 'text-slate-500 hover:bg-panel']">
-          <span class="w-5 text-center">{{ m.icon }}</span>{{ m.label }}
+          <span class="material-symbols-outlined text-[20px] w-5 text-center" aria-hidden="true">{{ m.icon }}</span>{{ m.label }}
         </button>
       </nav>
       <div class="p-4 border-t border-slate-100">
         <p class="text-sm font-bold truncate">{{ user?.nama_lengkap }}</p>
         <p class="text-xs text-slate-400">@{{ user?.username }}</p>
-        <button @click="keluar" class="mt-3 w-full text-left px-4 py-2 rounded-lg text-sm font-semibold text-slate-500 hover:bg-panel transition">
-          ⎋ Keluar
+        <button @click="keluar" class="mt-3 w-full text-left px-4 py-2 rounded-lg text-sm font-semibold text-slate-500 hover:bg-panel transition flex items-center gap-2">
+          <span class="material-symbols-outlined text-[18px]" aria-hidden="true">logout</span> Keluar
         </button>
       </div>
     </aside>
@@ -26,7 +31,7 @@
     <div class="md:hidden fixed top-0 inset-x-0 z-40 bg-white/95 backdrop-blur text-ink px-4 py-3 shadow-[0_1px_8px_rgba(31,42,55,0.06)]">
       <div class="flex items-center justify-between mb-2.5">
         <p class="font-extrabold">Kreasi Pantun <span class="text-slate-400 font-bold text-xs">· Panel Guru</span></p>
-        <button @click="keluar" class="px-3 py-1.5 rounded-full text-xs font-bold bg-panel text-primary active:scale-95 transition">⎋ Keluar</button>
+        <button @click="keluar" class="px-3 py-1.5 rounded-full text-xs font-bold bg-panel text-primary active:scale-95 transition inline-flex items-center gap-1"><span class="material-symbols-outlined text-[14px]" aria-hidden="true">logout</span> Keluar</button>
       </div>
       <div class="flex gap-1">
         <button v-for="m in menu" :key="m.id" @click="tab = m.id"
@@ -47,10 +52,17 @@
 
         <!-- Stats -->
         <div class="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
-          <div v-for="s in stats" :key="s.label" class="bg-white rounded-[20px] p-5 shadow-[0_8px_24px_rgba(31,42,55,0.06)]">
-            <p class="text-xs font-bold text-slate-400 uppercase tracking-wide">{{ s.label }}</p>
-            <p class="text-3xl font-extrabold text-slate-900 mt-1">{{ s.nilai }}</p>
-            <p class="text-xs text-slate-400 mt-1">{{ s.sub }}</p>
+          <div v-for="(s, i) in stats" :key="s.label" class="bg-white rounded-[20px] p-5 shadow-[0_8px_24px_rgba(31,42,55,0.06)]">
+            <div class="flex items-start justify-between gap-2">
+              <div>
+                <p class="text-xs font-bold text-slate-400 uppercase tracking-wide">{{ s.label }}</p>
+                <p class="text-3xl font-extrabold text-slate-900 mt-1">{{ s.nilai }}</p>
+                <p class="text-xs text-slate-400 mt-1">{{ s.sub }}</p>
+              </div>
+              <span class="w-10 h-10 rounded-xl bg-con flex items-center justify-center text-primary shrink-0">
+                <span class="material-symbols-outlined text-[20px]" aria-hidden="true">{{ ikonStat[i] }}</span>
+              </span>
+            </div>
           </div>
         </div>
 
@@ -65,7 +77,7 @@
                   <span class="text-slate-600">{{ f.nama }}</span>
                   <span class="text-slate-400">{{ f.persen }}%</span>
                 </div>
-                <div class="h-2 rounded-full bg-slate-100 overflow-hidden">
+                <div class="h-2 rounded-full bg-convariant overflow-hidden">
                   <div class="h-full rounded-full transition-all" :style="{ width: f.persen + '%', backgroundColor: f.hex }" />
                 </div>
               </div>
@@ -96,7 +108,7 @@
           </div>
           <div v-if="!daftarKelas.length" class="text-sm text-slate-400">Belum ada kelas.</div>
           <div class="grid sm:grid-cols-2 lg:grid-cols-3 gap-3">
-            <div v-for="k in daftarKelas" :key="k.kelas.id" class="border border-slate-100 bg-panel/60 rounded-[20px] p-4">
+            <div v-for="k in daftarKelas" :key="k.kelas.id" class="border border-convariant/60 bg-conlow rounded-[20px] p-4">
               <p class="font-bold text-slate-800">{{ k.kelas.nama }}</p>
               <p class="text-xs text-slate-400 mt-0.5">{{ k.siswa.length }} siswa · {{ rataKelas(k) }}% rata-rata</p>
               <p class="font-mono text-lg font-bold text-primary tracking-widest mt-2">{{ k.kelas.kode }}</p>
@@ -112,12 +124,12 @@
           <button @click="tampilBuat = !tampilBuat" class="bg-psky text-white px-4 py-2 rounded-full text-sm font-display font-bold hover:brightness-105 transition shadow-lg shadow-sky-200">+ Buat Kelas</button>
         </div>
         <div v-if="tampilBuat" class="bg-white rounded-[20px] p-5 shadow-[0_8px_24px_rgba(31,42,55,0.06)] mb-4 flex gap-2">
-          <input v-model="namaKelas" class="flex-1 border border-slate-200 rounded-lg px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-sky-300" placeholder="Nama kelas, contoh: VII-A" />
+          <input v-model="namaKelas" class="flex-1 bg-conlow rounded-xl px-4 py-2.5 text-sm font-semibold placeholder:text-muted placeholder:font-medium focus:bg-white focus:outline-none focus:shadow-md transition" placeholder="Nama kelas, contoh: VII-A" />
           <button @click="buatKelas" :disabled="!namaKelas.trim() || membuat" class="bg-psky text-white px-5 rounded-full text-sm font-display font-bold hover:brightness-105 disabled:opacity-40 shadow-lg shadow-sky-200">Buat</button>
         </div>
         <div class="bg-white rounded-[20px] shadow-[0_8px_24px_rgba(31,42,55,0.06)] overflow-hidden">
           <table class="w-full text-sm">
-            <thead class="bg-slate-50 text-slate-500 text-xs uppercase">
+            <thead class="bg-conlow text-slate-500 text-xs uppercase">
               <tr>
                 <th class="text-left px-5 py-3 font-bold">Kelas</th>
                 <th class="text-left px-5 py-3 font-bold">Kode</th>
@@ -127,7 +139,7 @@
               </tr>
             </thead>
             <tbody class="divide-y divide-slate-100">
-              <tr v-for="k in daftarKelas" :key="k.kelas.id" class="hover:bg-slate-50">
+              <tr v-for="k in daftarKelas" :key="k.kelas.id" class="hover:bg-conlow/60">
                 <td class="px-5 py-3.5 font-bold text-slate-800">{{ k.kelas.nama }}</td>
                 <td class="px-5 py-3.5"><span class="font-mono font-bold text-primary tracking-widest">{{ k.kelas.kode }}</span></td>
                 <td class="px-5 py-3.5 text-slate-600">{{ k.siswa.length }}</td>
@@ -147,8 +159,8 @@
       <div v-if="tab === 'siswa'">
         <h1 class="font-display text-2xl font-extrabold text-ink mb-6">Siswa</h1>
         <div class="bg-white rounded-[20px] p-4 shadow-[0_8px_24px_rgba(31,42,55,0.06)] mb-4 flex flex-wrap gap-3">
-          <input v-model="cari" class="flex-1 min-w-[200px] border border-slate-200 rounded-lg px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-sky-300" placeholder="Cari nama atau username..." />
-          <select v-model="filterKelas" class="border border-slate-200 rounded-lg px-4 py-2.5 text-sm font-semibold text-slate-600">
+          <input v-model="cari" class="flex-1 min-w-[200px] bg-conlow rounded-xl px-4 py-2.5 text-sm font-semibold placeholder:text-muted placeholder:font-medium focus:bg-white focus:outline-none focus:shadow-md transition" placeholder="Cari nama atau username..." />
+          <select v-model="filterKelas" class="bg-conlow rounded-xl px-4 py-2.5 text-sm font-semibold text-slate-600 focus:bg-white focus:outline-none focus:shadow-md transition">
             <option value="">Semua kelas</option>
             <option v-for="k in daftarKelas" :key="k.kelas.id" :value="k.kelas.id">{{ k.kelas.nama }}</option>
           </select>
@@ -156,7 +168,7 @@
         <div class="bg-white rounded-[20px] shadow-[0_8px_24px_rgba(31,42,55,0.06)] overflow-hidden">
           <div class="overflow-x-auto">
             <table class="w-full text-sm min-w-[640px]">
-              <thead class="bg-slate-50 text-slate-500 text-xs uppercase">
+              <thead class="bg-conlow text-slate-500 text-xs uppercase">
                 <tr>
                   <th class="text-left px-5 py-3 font-bold">Siswa</th>
                   <th class="text-left px-5 py-3 font-bold">Kelas</th>
@@ -166,7 +178,7 @@
                 </tr>
               </thead>
               <tbody class="divide-y divide-slate-100">
-                <tr v-for="s in siswaTampil" :key="s.id" class="hover:bg-slate-50">
+                <tr v-for="s in siswaTampil" :key="s.id" class="hover:bg-conlow/60">
                   <td class="px-5 py-3.5">
                     <p class="font-bold text-slate-800">{{ s.nama_lengkap }}</p>
                     <p class="text-xs text-slate-400">@{{ s.username }} · No. {{ s.no_absen || '—' }}</p>
@@ -200,9 +212,9 @@
           </div>
           <div v-if="!karyaAktif.list.length" class="text-sm text-slate-400">Belum ada karya.</div>
           <div class="grid md:grid-cols-2 gap-3">
-            <div v-for="w in karyaAktif.list" :key="w.id" class="border border-slate-100 rounded-xl p-4 bg-slate-50">
+            <div v-for="w in karyaAktif.list" :key="w.id" class="border border-convariant/50 rounded-xl p-4 bg-conlow">
               <p class="text-xs font-bold text-primary mb-2">{{ namaFenomena(w.phenomenon_id) }}</p>
-              <p v-for="i in 4" :key="i" class="font-semibold text-slate-700 text-sm">{{ w['larik' + i] }}</p>
+              <p v-for="i in 4" :key="i" class="font-display font-semibold text-sm" :class="i <= 2 ? 'italic text-slate-600' : 'font-bold text-primary'">{{ w['larik' + i] }}</p>
             </div>
           </div>
         </div>
@@ -215,13 +227,13 @@
         <p class="font-extrabold text-slate-900 mb-1">Penilaian — {{ siswaDinilai.nama_lengkap }}</p>
         <p class="text-xs text-slate-400 mb-4">Tersimpan terpisah, tidak mengubah karya siswa.</p>
         <label class="block text-xs font-bold text-slate-500 mb-1">Fenomena</label>
-        <select v-model="formFenomena" class="w-full border border-slate-200 rounded-lg px-3 py-2.5 text-sm mb-3">
+        <select v-model="formFenomena" class="w-full bg-conlow rounded-xl px-3 py-2.5 text-sm font-semibold focus:bg-white focus:outline-none focus:shadow-md transition mb-3">
           <option v-for="f in FENOMENA" :key="f.id" :value="f.id">{{ f.nama }}</option>
         </select>
         <label class="block text-xs font-bold text-slate-500 mb-1">Nilai</label>
-        <input v-model="formNilai" class="w-full border border-slate-200 rounded-lg px-3 py-2.5 text-sm mb-3" placeholder="Contoh: 85 / Baik Sekali" />
+        <input v-model="formNilai" class="w-full bg-conlow rounded-xl px-3 py-2.5 text-sm font-semibold focus:bg-white focus:outline-none focus:shadow-md transition mb-3" placeholder="Contoh: 85 / Baik Sekali" />
         <label class="block text-xs font-bold text-slate-500 mb-1">Komentar</label>
-        <textarea v-model="formKomentar" rows="3" class="w-full border border-slate-200 rounded-lg px-3 py-2.5 text-sm mb-4" placeholder="Masukan untuk siswa..." />
+        <textarea v-model="formKomentar" rows="3" class="w-full bg-conlow rounded-xl px-3 py-2.5 text-sm font-semibold placeholder:text-muted placeholder:font-medium focus:bg-white focus:outline-none focus:shadow-md transition mb-4" placeholder="Masukan untuk siswa..." />
         <div class="flex gap-2">
           <button @click="siswaDinilai = null" class="flex-1 border border-slate-200 rounded-lg py-2.5 text-sm font-bold text-slate-600">Batal</button>
           <button @click="kirimNilai" :disabled="menyimpan" class="flex-1 bg-psky text-white rounded-full py-2.5 text-sm font-display font-bold hover:brightness-105">Simpan</button>
@@ -239,10 +251,11 @@ definePageMeta({ layout: 'app', middleware: 'auth-bff' })
 
 const { user, logout } = useAuth()
 const menu = [
-  { id: 'dash', label: 'Dashboard', icon: '▦' },
-  { id: 'kelas', label: 'Kelas', icon: '🏫' },
-  { id: 'siswa', label: 'Siswa', icon: '👥' },
+  { id: 'dash', label: 'Dashboard', icon: 'dashboard' },
+  { id: 'kelas', label: 'Kelas', icon: 'school' },
+  { id: 'siswa', label: 'Siswa', icon: 'group' },
 ]
+const ikonStat = ['group', 'school', 'trending_up', 'stars']
 const tab = ref('dash')
 const daftarKelas = ref<any[]>([])
 const tampilBuat = ref(false)

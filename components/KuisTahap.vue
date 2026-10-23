@@ -5,13 +5,13 @@
      terbuka (model kartu bolak-balik) hanya setelah semua jawaban benar. -->
 <template>
   <div class="space-y-5">
-    <div v-if="data.instruksi" class="card p-4 bg-teal-50/70">
+    <div v-if="data.instruksi" class="card !rounded-2xl p-4 bg-teal-50/70 border !border-teal-100">
       <p class="font-semibold text-slate-700 text-sm">{{ data.instruksi }}</p>
     </div>
 
     <!-- Mode benar/salah -->
     <div v-if="tipe === 'benar-salah'" class="space-y-3">
-      <div v-for="(p, i) in data.pernyataan" :key="i" class="card p-4">
+      <div v-for="(p, i) in data.pernyataan" :key="i" class="card !rounded-2xl p-4">
         <p class="font-semibold text-slate-700 text-sm mb-3">{{ i + 1 }}. {{ p.teks }}</p>
         <div class="flex gap-2">
           <button @click="jawab(i, true)" :disabled="kunciItemTerkunci(i)"
@@ -73,12 +73,13 @@
 
     <!-- Mode kuis / pilih-tindakan -->
     <div v-if="tipe === 'kuis' || tipe === 'pilih-tindakan'" class="space-y-4">
-      <div v-for="(s, si) in daftarSoal" :key="si" class="card p-4">
+      <div v-for="(s, si) in daftarSoal" :key="si" class="card !rounded-2xl p-4">
         <p class="font-semibold text-slate-700 text-sm mb-3">{{ si + 1 }}. {{ s.teks }}</p>
         <div class="space-y-2">
           <button v-for="(p, pi) in s.pilihan" :key="pi" @click="jawab(si, pi)" :disabled="kunciItemTerkunci(si)"
             :class="kelasPilihanKuis(si, pi)">
-            {{ ['a', 'b', 'c', 'd'][pi] }}. {{ p }}
+<span class="w-6 h-6 rounded-full bg-con text-primary font-display font-bold text-xs flex items-center justify-center shrink-0">{{ ['a', 'b', 'c', 'd'][pi] }}</span>
+            <span>{{ p }}</span>
           </button>
         </div>
         <div v-if="tampilHasil(si)" :class="['mt-3 rounded-xl p-3 text-sm font-semibold', benarItem(si) ? 'bg-emerald-50 text-emerald-800' : 'bg-rose-50 text-rose-800']">
@@ -90,7 +91,7 @@
     </div>
 
     <!-- Aksi periksa (simpan ada di paling bawah, di bawah Kartu Fakta) -->
-    <div v-if="tampilSedihKuis" class="card p-4 bg-sky-50/60">
+    <div v-if="tampilSedihKuis" class="card !rounded-2xl p-4 bg-sky-50/60">
       <AnimasiSedih />
       <p class="text-center font-bold text-slate-600 text-sm mt-1">Jawaban yang masih salah belum bisa membawamu lanjut. Ulangi sampai semuanya benar ya.</p>
     </div>
@@ -100,7 +101,7 @@
     <p v-if="tipe !== 'pilah' && diperiksa && !semuaTerbuktiBenar && !tersimpan" class="text-center text-amber-600 font-bold text-sm">
       Masih ada jawaban yang belum tepat — perbaiki yang ditandai merah, lalu periksa lagi.
     </p>
-    <div v-if="semuaTerbuktiBenar && !tersimpan" class="card p-4 bg-emerald-50 text-center">
+    <div v-if="semuaTerbuktiBenar && !tersimpan" class="card !rounded-2xl p-4 bg-emerald-50 text-center">
       <p class="font-display font-bold text-emerald-700">🎉 Semua jawabanmu benar!</p>
       <p class="text-sm font-semibold text-emerald-600 mt-1">Kartu Fakta sudah terbuka di bawah — setelah membacanya, simpan jawabanmu di paling bawah ya.</p>
     </div>
@@ -189,7 +190,7 @@ function tampilHasil(i: number) {
   return diperiksa.value && jawaban.value[i] !== undefined && snapshot.value[i] === jawaban.value[i]
 }
 function kelasDasar(aktif: boolean) {
-  return ['pill !px-5 !py-2 border-2 transition', aktif ? '!bg-sky-100 !border-sky-400' : 'hover:border-sky-300']
+  return ['pill !px-5 !py-2 border-2 transition', aktif ? '!bg-teal-100 !border-teal-400' : 'hover:border-teal-300']
 }
 function kelasPilihanBs(i: number, nilai: boolean) {
   const dipilih = jawaban.value[i] === nilai
@@ -200,13 +201,13 @@ function kelasPilihanBs(i: number, nilai: boolean) {
   return kelasDasar(dipilih)
 }
 function kelasPilihanKuis(si: number, pi: number) {
-  const dasar = 'w-full text-left pill !px-4 !py-2.5 border-2 transition text-sm'
+  const dasar = 'w-full text-left rounded-xl px-4 py-2.5 border-2 transition text-sm bg-white flex items-center gap-2.5 font-semibold text-slate-700'
   const dipilih = jawaban.value[si] === pi
   if (tampilHasil(si)) {
     if (dipilih) return [dasar, benarItem(si) ? '!bg-emerald-100 !border-emerald-400' : '!bg-rose-100 !border-rose-400']
     if (kunciItem(si) === pi) return [dasar, '!bg-emerald-50 !border-emerald-300']
   }
-  return [dasar, dipilih ? '!bg-sky-100 !border-sky-400' : 'hover:border-sky-300']
+  return [dasar, dipilih ? '!bg-teal-100 !border-teal-400' : 'hover:border-teal-300']
 }
 
 function jawab(i: number, v: any) {

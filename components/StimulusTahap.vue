@@ -24,29 +24,32 @@
     </figure>
     <!-- Pilih makanan sehat ke piring (Kenali Hidup Sehat) -->
     <div v-else-if="tipe === 'pilih-makanan'" class="space-y-4">
-      <div class="card p-5 bg-lime-50/70">
+      <div class="card !rounded-2xl p-5 bg-lime-50/70">
         <p class="font-semibold text-slate-700 text-sm text-center">{{ data.instruksi }}</p>
-        <div class="flex flex-wrap justify-center gap-2 mt-4">
+        <div class="grid grid-cols-2 sm:grid-cols-3 gap-2.5 mt-4">
           <button v-for="m in data.makanan" :key="m.nama" @click="toggleMakanan(m.nama)" :disabled="tersimpan"
-            :class="['pill !px-4 !py-2 border-2 transition inline-flex items-center gap-1.5',
-              diPiring(m.nama) ? '!bg-lime-200 !border-lime-500' : 'bg-white hover:border-lime-400']">
-            {{ ikonMakanan(m.nama) }} {{ m.nama }}
+            :class="['rounded-2xl border-2 p-3 transition flex flex-col items-center gap-1 bg-white',
+              diPiring(m.nama) ? '!bg-lime-100 !border-lime-500 shadow-sm' : 'border-slate-200 hover:border-lime-400']">
+            <span class="text-3xl leading-none" aria-hidden="true">{{ ikonMakanan(m.nama) }}</span>
+            <span class="text-sm font-bold text-slate-700">{{ m.nama }}</span>
           </button>
         </div>
       </div>
-      <div class="card p-5 text-center">
+      <div class="card !rounded-2xl p-5 text-center">
         <p class="font-display font-bold text-slate-700">🍽️ Piringku</p>
-        <div v-if="piring.length" class="flex flex-wrap justify-center gap-2 mt-3">
+        <div class="bg-conlow rounded-2xl px-3 py-3 mt-3">
+        <div v-if="piring.length" class="flex flex-wrap justify-center gap-2">
           <span v-for="n in piring" :key="n" class="pill bg-lime-100 text-lime-800 !px-3.5 !py-1.5">{{ ikonMakanan(n) }} {{ n }}</span>
         </div>
-        <p v-else class="text-sm font-semibold text-slate-400 mt-2">Piringmu masih kosong — ketuk makanan di atas untuk meletakkannya di sini.</p>
+        <p v-else class="text-sm font-semibold text-slate-400">Piringmu masih kosong — ketuk makanan di atas untuk meletakkannya di sini.</p>
+        </div>
         <button v-if="piring.length && !piringBenar && !tersimpan" class="btn-soft w-full mt-4" @click="piringDicek = true">🔍 Periksa Piringku</button>
         <p v-if="piringBenar" class="mt-3 text-sm font-bold text-emerald-600">🎉 Hebat! Semua isi piringmu makanan sehat dan bergizi!</p>
         <p v-else-if="piringDicek" class="mt-3 text-sm font-bold text-rose-500">Masih ada yang kurang tepat — mungkin ada makanan kurang sehat di piringmu, atau ada makanan sehat yang belum kamu ambil. Ketuk makanannya untuk mengubah isi piringmu.</p>
       </div>
     </div>
 
-    <div v-else class="card p-5">
+    <div v-else class="card !rounded-2xl p-5">
       <template v-if="data.artikel">
         <p v-if="artikelJudul" class="font-display font-extrabold text-center text-ink text-lg mb-3">{{ artikelJudul }}</p>
         <p class="text-slate-700 leading-relaxed whitespace-pre-line">{{ artikelIsi }}</p>
@@ -54,13 +57,13 @@
       <p v-else class="text-slate-500 font-semibold italic">📄 {{ data.catatan || 'Materi artikel menyusul.' }}</p>
     </div>
 
-    <div class="card p-5">
+    <div class="card !rounded-2xl p-5">
       <p class="font-display font-bold text-slate-700 mb-3">❓ Pertanyaan Pemantik</p>
       <ol class="list-decimal list-inside space-y-2 text-sm font-semibold text-slate-600 mb-4">
         <li v-for="(t, i) in data.pertanyaan" :key="i">{{ t }}</li>
       </ol>
       <label class="block font-bold text-slate-700 mb-1.5 text-sm">✏️ Tanggapanmu</label>
-      <textarea v-model="respons" rows="3" class="input-cute disabled:bg-slate-100 disabled:text-slate-500" :disabled="tersimpan" placeholder="Tulis tanggapanmu di sini..." />
+      <textarea v-model="respons" rows="3" class="w-full bg-conlow rounded-xl px-4 py-3 font-semibold text-ink placeholder:text-muted placeholder:font-medium focus:bg-white focus:outline-none focus:shadow-md transition disabled:bg-slate-100 disabled:text-slate-500" :disabled="tersimpan" placeholder="Tulis tanggapanmu di sini..." />
     </div>
 
     <button v-if="tersimpan" class="btn-soft w-full" @click="tersimpan = false">✏️ Ubah Tanggapan</button>

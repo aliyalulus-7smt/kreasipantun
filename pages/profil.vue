@@ -4,13 +4,18 @@
 
     <section class="kp-card p-5 md:p-6">
       <div class="flex items-center gap-4">
-        <span class="w-16 h-16 md:w-20 md:h-20 rounded-full bg-primary text-white font-display font-extrabold text-3xl flex items-center justify-center shrink-0 shadow-[0_4px_12px_rgba(0,101,145,0.3)]">
-          {{ inisial }}
+        <span class="relative shrink-0">
+          <span class="block w-16 h-16 md:w-20 md:h-20 rounded-full p-1 bg-gradient-to-tr from-psky-light via-primary to-violet-500 shadow-md">
+            <span class="w-full h-full rounded-full bg-primary text-white font-display font-extrabold text-3xl flex items-center justify-center">{{ inisial }}</span>
+          </span>
+          <span class="absolute bottom-0 right-0 w-5 h-5 bg-emerald-500 rounded-full border-2 border-white flex items-center justify-center text-white" aria-hidden="true">
+            <span class="material-symbols-outlined text-[12px]">check</span>
+          </span>
         </span>
         <div class="min-w-0">
           <p class="font-display font-extrabold text-xl text-ink truncate">{{ user?.nama_lengkap }}</p>
           <p class="text-sm font-bold text-slate-400">@{{ user?.username }}</p>
-          <p v-if="user?.no_absen" class="text-sm font-semibold text-slate-500 mt-0.5">No. Absen {{ user.no_absen }}</p>
+          <p v-if="user?.no_absen" class="mt-1.5"><span class="pill bg-pfixed text-onfixvar !px-2.5 !py-0.5 text-[11px]">No. Absen {{ user.no_absen }}</span></p>
         </div>
       </div>
     </section>
@@ -24,8 +29,8 @@
       <p class="text-xs font-semibold text-slate-400 mb-2">Putaran-putaran sebelumnya yang sudah diarsipkan — buka untuk mengecek ulang jawaban lamamu.</p>
       <NuxtLink v-for="r in daftarArsip" :key="r.run_no" :to="`/arsip/${r.run_no}`"
         class="flex items-center justify-between py-2 font-bold text-slate-700 border-t border-slate-50 first:border-0">
-        <span class="flex items-center gap-3"><span aria-hidden="true">🗂️</span> Putaran {{ r.run_no }}</span>
-        <span class="text-xs font-bold text-slate-400">{{ r.jumlah_tahap }} tahap · {{ formatTanggal(r.archived_at) }} ›</span>
+        <span class="flex items-center gap-3"><span class="material-symbols-outlined text-primary text-[20px]" aria-hidden="true">inventory_2</span> Putaran {{ r.run_no }}</span>
+        <span class="flex items-center gap-0.5 text-xs font-bold text-slate-400">{{ r.jumlah_tahap }} tahap · {{ formatTanggal(r.archived_at) }} <span class="material-symbols-outlined text-[16px]" aria-hidden="true">chevron_right</span></span>
       </NuxtLink>
     </section>
 
@@ -50,18 +55,18 @@
 
     <section class="kp-card p-5">
       <NuxtLink to="/karya" class="flex items-center justify-between py-2 font-bold text-slate-700">
-        <span class="flex items-center gap-3"><span aria-hidden="true">📖</span> Karya Saya</span>
-        <span class="text-slate-300" aria-hidden="true">›</span>
+        <span class="flex items-center gap-3"><span class="material-symbols-outlined text-primary text-[20px]" aria-hidden="true">auto_stories</span> Karya Saya</span>
+        <span class="material-symbols-outlined text-slate-300" aria-hidden="true">chevron_right</span>
       </NuxtLink>
       <div class="border-t border-slate-50" />
       <NuxtLink to="/fenomena" class="flex items-center justify-between py-2 font-bold text-slate-700">
-        <span class="flex items-center gap-3"><span aria-hidden="true">🧩</span> Semua Fenomena</span>
-        <span class="text-slate-300" aria-hidden="true">›</span>
+        <span class="flex items-center gap-3"><span class="material-symbols-outlined text-primary text-[20px]" aria-hidden="true">explore</span> Semua Fenomena</span>
+        <span class="material-symbols-outlined text-slate-300" aria-hidden="true">chevron_right</span>
       </NuxtLink>
     </section>
 
     <button @click="keluar" class="kp-card w-full p-4 font-display font-bold text-rose-600 flex items-center justify-center gap-2 active:scale-[0.98] transition">
-      🚪 Keluar dari Akun
+      <span class="material-symbols-outlined text-[20px]" aria-hidden="true">logout</span> Keluar dari Akun
     </button>
   </div>
 </template>

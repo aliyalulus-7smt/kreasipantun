@@ -8,10 +8,14 @@
     <!-- Tahap terkunci: tahap/fenomena sebelumnya belum selesai -->
     <div v-else-if="!bolehAkses" class="max-w-2xl mx-auto">
       <div class="mb-6">
-        <NuxtLink :to="`/fenomena/${fenomena.id}`" class="btn-soft !px-4 !py-2 text-sm">← {{ fenomena.nama }}</NuxtLink>
+        <NuxtLink :to="`/fenomena/${fenomena.id}`" class="inline-flex items-center gap-1 font-display font-bold text-sm text-primary">
+          <span class="material-symbols-outlined text-[18px]" aria-hidden="true">keyboard_backspace</span> {{ fenomena.nama }}
+        </NuxtLink>
       </div>
       <div class="kp-card p-6 md:p-8 text-center">
-        <p class="text-5xl mb-3" aria-hidden="true">🔒</p>
+        <div class="w-14 h-14 mx-auto mb-3 rounded-full bg-con flex items-center justify-center text-slate-400">
+          <span class="material-symbols-outlined text-[28px]">lock</span>
+        </div>
         <p class="font-display font-extrabold text-lg text-slate-700">Tahap ini masih terkunci</p>
         <p class="text-sm font-semibold text-slate-500 mt-1.5 leading-relaxed">
           Setiap tahap wajib dikerjakan berurutan. Selesaikan dulu tahap-tahap sebelumnya
@@ -22,12 +26,30 @@
     </div>
 
     <template v-else>
-    <div class="mb-6 flex items-center justify-between">
-      <NuxtLink :to="`/fenomena/${fenomena.id}`" class="btn-soft !px-4 !py-2 text-sm">← {{ fenomena.nama }}</NuxtLink>
-      <span :class="['pill', warnaTahap.badge]">
-        <span class="w-2 h-2 rounded-full" :style="{ backgroundColor: warnaTahap.hex }" aria-hidden="true" />
+    <div class="mb-3 flex items-center justify-between gap-2">
+      <NuxtLink :to="`/fenomena/${fenomena.id}`" class="inline-flex items-center gap-1 font-display font-bold text-sm text-primary min-w-0">
+        <span class="material-symbols-outlined text-[18px] shrink-0" aria-hidden="true">keyboard_backspace</span>
+        <span class="truncate">{{ fenomena.nama }}</span>
+      </NuxtLink>
+      <span :class="['pill shrink-0', warnaTahap.badge]">
+        <span class="w-2 h-2 rounded-full animate-pulse" :style="{ backgroundColor: warnaTahap.hex }" aria-hidden="true" />
         {{ tahap.nama }}
       </span>
+    </div>
+
+    <!-- Kartu pelacak langkah (struktur referensi Stitch) -->
+    <div class="max-w-2xl mx-auto mb-6 bg-white rounded-xl shadow-[0_4px_16px_rgba(31,42,55,0.04)] p-3 flex flex-col gap-2">
+      <div class="flex justify-between items-center gap-2">
+        <span class="flex items-center gap-1.5 font-display font-bold text-sm" :style="{ color: warnaTahap.hex }">
+          <span class="material-symbols-outlined text-[16px]" aria-hidden="true">{{ ikonTahap }}</span>
+          {{ tahap.nama }}
+        </span>
+        <span class="bg-con px-2 py-0.5 rounded-full text-[#003751] text-xs font-extrabold shrink-0">{{ indeksTahap + 1 }} dari 5 Tahap</span>
+      </div>
+      <div class="w-full bg-con rounded-full h-2.5 overflow-hidden p-0.5">
+        <div class="h-full rounded-full transition-all duration-500"
+          :style="{ width: ((indeksTahap + 1) / 5 * 100) + '%', background: `linear-gradient(90deg, #38BDF8, ${warnaTahap.hex})` }" />
+      </div>
     </div>
 
     <div class="text-center mb-6">
@@ -79,6 +101,10 @@ const fenomena = computed(() => cariFenomena(String(route.params.id)))
 const tahapId = computed(() => String(route.params.tahap) as IdTahap)
 const tahap = computed(() => DAFTAR_TAHAP.find(t => t.id === tahapId.value))
 const warnaTahap = computed(() => WARNA_TAHAP[tahapId.value] || WARNA_TAHAP_DEFAULT)
+const indeksTahap = computed(() => DAFTAR_TAHAP.findIndex(t => t.id === tahapId.value))
+const ikonTahap = computed(() => ({
+  kenali: 'menu_book', eksplorasi: 'explore', ekspresikan: 'lightbulb', asah: 'edit_note', evaluasi: 'fact_check',
+}[tahapId.value] || 'menu_book'))
 const konten = computed(() => fenomena.value!.tahap[tahapId.value])
 const selesai = useState<Record<string, boolean>>('kp-tahap-selesai', () => ({}))
 const { pernahMuat, muat, tahapTerbuka } = useProgresSiswa()

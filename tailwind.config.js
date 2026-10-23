@@ -21,7 +21,18 @@ export default {
         pfixed: '#C9E6FF',
         panel: '#EEF4FF',
         ink: '#111C29',
-        canvas: '#FFFBF3'
+        canvas: '#FFFBF3',
+        // Token permukaan persis referensi Stitch (surface-container*)
+        conlow: '#EEF4FF',
+        con: '#E4EFFF',
+        conhigh: '#DEE9FB',
+        convariant: '#D8E3F5',
+        secfix: '#6FFBBE',
+        onsecfix: '#002113',
+        onfixvar: '#004C6E',
+        muted: '#64748B',
+        onvariant: '#3E4850',
+        inverse: '#26313F'
       }
     }
   },

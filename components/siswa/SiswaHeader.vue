@@ -9,8 +9,8 @@
           <span class="block font-display font-extrabold text-lg leading-tight text-primary">
             Kreasi Pantun
           </span>
-          <span class="hidden sm:block text-[11px] font-bold text-slate-500 leading-tight truncate">
-            Belajar, Berkarya, dan Ekspresikan Diri dengan Pantun
+          <span class="block text-[11px] font-bold text-onvariant leading-tight truncate">
+            {{ labelHalaman }}
           </span>
         </span>
       </NuxtLink>
@@ -39,7 +39,17 @@
 </template>
 
 <script setup lang="ts">
+const route = useRoute()
 const { user } = useAuth()
+
+/** Label halaman aktif di bawah judul (mengikuti referensi Stitch). */
+const labelHalaman = computed(() => {
+  if (route.path.startsWith('/fenomena')) return 'Fenomena'
+  if (route.path.startsWith('/karya')) return 'Karya'
+  if (route.path.startsWith('/profil')) return 'Profil'
+  if (route.path.startsWith('/arsip')) return 'Karya'
+  return 'Beranda'
+})
 const { status, sinkron } = useOutbox()
 const daring = ref(true)
 

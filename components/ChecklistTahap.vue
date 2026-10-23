@@ -3,13 +3,13 @@
      dibuat siswa di tahap Asah; item lain dicentang manual. -->
 <template>
   <div class="space-y-5">
-    <div class="card p-5">
+    <div class="card !rounded-2xl p-5">
       <p class="font-display font-bold text-slate-700 mb-1">📋 Evaluasi Karyamu</p>
       <p class="text-sm font-semibold text-slate-500 mb-4">Centang setiap pernyataan yang sudah sesuai dengan pantunmu. Item bertanda 🤖 dinilai otomatis dari pantunmu di tahap Asah.</p>
       <div class="space-y-2.5">
         <div v-for="(it, i) in data.item" :key="i">
           <button @click="toggle(i)" :disabled="otomatisAktif(i) || tersimpan"
-            :class="['w-full text-left card p-4 border-2 transition flex items-start gap-3',
+            :class="['w-full text-left card !rounded-2xl p-4 border-2 transition flex items-start gap-3',
               nilaiItem(i) ? '!border-emerald-400 bg-emerald-50/60' : 'hover:border-slate-300',
               otomatisAktif(i) ? 'cursor-default' : '']">
             <span :class="['w-6 h-6 rounded-lg border-2 flex items-center justify-center shrink-0 mt-0.5',
@@ -18,7 +18,7 @@
             </span>
             <span class="flex-1">
               <span class="font-semibold text-slate-700 text-sm">{{ it }}</span>
-              <span v-if="jenisOtomatis(it)" class="ml-2 pill !px-2 !py-0.5 bg-panel text-primary text-[11px] font-bold align-middle">🤖 Otomatis</span>
+              <span v-if="jenisOtomatis(it)" class="ml-2 pill !px-2 !py-0.5 bg-con text-onfixvar text-[11px] font-bold align-middle">🤖 Otomatis</span>
               <span v-if="jenisOtomatis(it) === 'suku' && analisis" class="block mt-1.5 text-xs font-bold" :class="analisis.sukuOk ? 'text-emerald-600' : 'text-rose-500'">
                 Pantunmu: baris 1 = {{ analisis.suku[0] }}, baris 2 = {{ analisis.suku[1] }}, baris 3 = {{ analisis.suku[2] }}, baris 4 = {{ analisis.suku[3] }} suku kata {{ analisis.sukuOk ? '— semua dalam rentang 8–12 ✓' : '— masih ada baris di luar rentang 8–12' }}
               </span>
@@ -34,12 +34,12 @@
       </div>
     </div>
 
-    <div class="card p-5">
+    <div class="card !rounded-2xl p-5">
       <label class="block font-bold text-slate-700 mb-1.5 text-sm">💭 Refleksimu (wajib diisi)</label>
-      <textarea v-model="refleksi" rows="3" class="input-cute disabled:bg-slate-100" :disabled="tersimpan" placeholder="Apa yang sudah bagus dan apa yang ingin kamu perbaiki?" />
+      <textarea v-model="refleksi" rows="3" class="w-full bg-conlow rounded-xl px-4 py-3 font-semibold text-ink placeholder:text-muted placeholder:font-medium focus:bg-white focus:outline-none focus:shadow-md transition disabled:bg-slate-100" :disabled="tersimpan" placeholder="Apa yang sudah bagus dan apa yang ingin kamu perbaiki?" />
     </div>
 
-    <div v-if="!tersimpan && daftarKurang.length" class="card p-5 border-2 !border-rose-300 bg-rose-50/70">
+    <div v-if="!tersimpan && daftarKurang.length" class="card !rounded-2xl p-5 border-2 !border-rose-300 bg-rose-50/70">
       <p class="font-display font-bold text-rose-600 mb-2">⚠️ Belum bisa lanjut — masih ada yang kurang:</p>
       <ul class="list-disc list-inside space-y-1.5 text-sm font-semibold text-rose-500">
         <li v-for="(k, i) in daftarKurang" :key="i">{{ k }}</li>
