@@ -24,7 +24,10 @@
     <template v-else>
     <div class="mb-6 flex items-center justify-between">
       <NuxtLink :to="`/fenomena/${fenomena.id}`" class="btn-soft !px-4 !py-2 text-sm">← {{ fenomena.nama }}</NuxtLink>
-      <span class="pill bg-sky-100 text-sky-700">{{ tahap.nama }}</span>
+      <span :class="['pill', warnaTahap.badge]">
+        <span class="w-2 h-2 rounded-full" :style="{ backgroundColor: warnaTahap.hex }" aria-hidden="true" />
+        {{ tahap.nama }}
+      </span>
     </div>
 
     <div class="text-center mb-6">
@@ -43,9 +46,9 @@
     </div>
 
     <!-- Panel perayaan: muncul begitu tahap ini selesai -->
-    <div v-if="sudahSelesai" ref="panelSelesai" class="max-w-2xl mx-auto mt-8 kp-card p-5 md:p-6 text-center border-2 !border-emerald-200 bg-gradient-to-br from-emerald-50 to-amber-50">
+    <div v-if="sudahSelesai" ref="panelSelesai" class="max-w-2xl mx-auto mt-8 kp-card p-5 md:p-6 text-center border-2 !border-emerald-200 bg-gradient-to-br from-emerald-50 to-sky-50">
       <p class="text-4xl mb-2" aria-hidden="true">🎉</p>
-      <p class="font-display font-extrabold text-lg text-[#123c2b]">
+      <p class="font-display font-extrabold text-lg text-ink">
         {{ tahapId === 'evaluasi' ? 'Fenomena selesai! Kerja bagus!' : 'Tahap selesai! Hebat!' }}
       </p>
       <p class="text-sm font-semibold text-slate-500 mt-1">
@@ -65,6 +68,7 @@
 
 <script setup lang="ts">
 import { DAFTAR_TAHAP, FENOMENA, cariFenomena, type IdTahap } from '~/data/fenomena'
+import { WARNA_TAHAP, WARNA_TAHAP_DEFAULT } from '~/utils/fenomena-ui'
 import ConfettiLetus from '~/components/ConfettiLetus.vue'
 import { bacaPayloadLokal } from '~/composables/useOutbox'
 
@@ -74,6 +78,7 @@ const route = useRoute()
 const fenomena = computed(() => cariFenomena(String(route.params.id)))
 const tahapId = computed(() => String(route.params.tahap) as IdTahap)
 const tahap = computed(() => DAFTAR_TAHAP.find(t => t.id === tahapId.value))
+const warnaTahap = computed(() => WARNA_TAHAP[tahapId.value] || WARNA_TAHAP_DEFAULT)
 const konten = computed(() => fenomena.value!.tahap[tahapId.value])
 const selesai = useState<Record<string, boolean>>('kp-tahap-selesai', () => ({}))
 const { pernahMuat, muat, tahapTerbuka } = useProgresSiswa()

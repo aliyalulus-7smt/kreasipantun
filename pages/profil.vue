@@ -4,18 +4,20 @@
 
     <section class="kp-card p-5 md:p-6">
       <div class="flex items-center gap-4">
-        <span class="w-16 h-16 md:w-20 md:h-20 rounded-full bg-gradient-to-br from-emerald-400 to-teal-600 text-white font-display font-extrabold text-3xl flex items-center justify-center shrink-0">
+        <span class="w-16 h-16 md:w-20 md:h-20 rounded-full bg-primary text-white font-display font-extrabold text-3xl flex items-center justify-center shrink-0 shadow-[0_4px_12px_rgba(0,101,145,0.3)]">
           {{ inisial }}
         </span>
         <div class="min-w-0">
-          <p class="font-display font-extrabold text-xl text-slate-800 truncate">{{ user?.nama_lengkap }}</p>
+          <p class="font-display font-extrabold text-xl text-ink truncate">{{ user?.nama_lengkap }}</p>
           <p class="text-sm font-bold text-slate-400">@{{ user?.username }}</p>
           <p v-if="user?.no_absen" class="text-sm font-semibold text-slate-500 mt-0.5">No. Absen {{ user.no_absen }}</p>
         </div>
       </div>
     </section>
 
-    <RingkasanProgres :fenomena-selesai="fenomenaSelesai" :total-tahap="totalTahap" />
+    <section class="kp-card p-4 md:p-5">
+      <RingkasanProgres :fenomena-selesai="fenomenaSelesai" :total-tahap="totalTahap" />
+    </section>
 
     <section v-if="daftarArsip.length" class="kp-card p-5">
       <p class="font-display font-bold text-slate-700 mb-1">📚 Arsip Progresku</p>

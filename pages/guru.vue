@@ -1,36 +1,36 @@
 <template>
-  <div class="min-h-screen bg-slate-100 flex">
+  <div class="min-h-screen bg-[#FFFBF3] flex">
     <!-- Sidebar -->
-    <aside class="w-64 bg-slate-900 text-white flex-col hidden md:flex shrink-0 min-h-screen sticky top-0 h-screen">
+    <aside class="w-64 bg-white text-slate-800 border-r border-slate-200/80 flex-col hidden md:flex shrink-0 min-h-screen sticky top-0 h-screen">
       <div class="p-6">
-        <p class="text-lg font-extrabold tracking-tight">Kreasi Pantun</p>
+        <p class="font-display text-lg font-extrabold tracking-tight text-primary">Kreasi Pantun</p>
         <p class="text-xs text-slate-400 mt-0.5">Panel Guru</p>
       </div>
       <nav class="flex-1 px-3 space-y-1">
         <button v-for="m in menu" :key="m.id" @click="tab = m.id"
           :class="['w-full text-left px-4 py-2.5 rounded-lg text-sm font-semibold transition flex items-center gap-3',
-            tab === m.id ? 'bg-indigo-600 text-white' : 'text-slate-300 hover:bg-slate-800']">
+            tab === m.id ? 'bg-pfixed text-primary' : 'text-slate-500 hover:bg-panel']">
           <span class="w-5 text-center">{{ m.icon }}</span>{{ m.label }}
         </button>
       </nav>
-      <div class="p-4 border-t border-slate-800">
+      <div class="p-4 border-t border-slate-100">
         <p class="text-sm font-bold truncate">{{ user?.nama_lengkap }}</p>
         <p class="text-xs text-slate-400">@{{ user?.username }}</p>
-        <button @click="keluar" class="mt-3 w-full text-left px-4 py-2 rounded-lg text-sm font-semibold text-slate-300 hover:bg-slate-800 transition">
+        <button @click="keluar" class="mt-3 w-full text-left px-4 py-2 rounded-lg text-sm font-semibold text-slate-500 hover:bg-panel transition">
           ⎋ Keluar
         </button>
       </div>
     </aside>
 
     <!-- Mobile top bar -->
-    <div class="md:hidden fixed top-0 inset-x-0 z-40 bg-slate-900 text-white px-4 py-3">
+    <div class="md:hidden fixed top-0 inset-x-0 z-40 bg-white/95 backdrop-blur text-ink px-4 py-3 shadow-[0_1px_8px_rgba(31,42,55,0.06)]">
       <div class="flex items-center justify-between mb-2.5">
         <p class="font-extrabold">Kreasi Pantun <span class="text-slate-400 font-bold text-xs">· Panel Guru</span></p>
-        <button @click="keluar" class="px-3 py-1.5 rounded-lg text-xs font-bold bg-slate-800 text-slate-200 active:scale-95 transition">⎋ Keluar</button>
+        <button @click="keluar" class="px-3 py-1.5 rounded-full text-xs font-bold bg-panel text-primary active:scale-95 transition">⎋ Keluar</button>
       </div>
       <div class="flex gap-1">
         <button v-for="m in menu" :key="m.id" @click="tab = m.id"
-          :class="['flex-1 px-3 py-1.5 rounded-lg text-xs font-bold', tab === m.id ? 'bg-indigo-600' : 'text-slate-300 bg-slate-800/60']">{{ m.label }}</button>
+          :class="['flex-1 px-3 py-1.5 rounded-lg text-xs font-bold', tab === m.id ? 'bg-psky text-white' : 'text-slate-500 bg-panel']">{{ m.label }}</button>
       </div>
     </div>
 
@@ -40,14 +40,14 @@
       <div v-if="tab === 'dash'">
         <div class="flex items-center justify-between mb-6">
           <div>
-            <h1 class="text-2xl font-extrabold text-slate-900">Dashboard</h1>
+            <h1 class="font-display text-2xl font-extrabold text-ink">Dashboard</h1>
             <p class="text-sm text-slate-500">{{ tanggalHariIni }}</p>
           </div>
         </div>
 
         <!-- Stats -->
         <div class="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
-          <div v-for="s in stats" :key="s.label" class="bg-white rounded-xl p-5 shadow-sm border border-slate-200">
+          <div v-for="s in stats" :key="s.label" class="bg-white rounded-[20px] p-5 shadow-[0_8px_24px_rgba(31,42,55,0.06)]">
             <p class="text-xs font-bold text-slate-400 uppercase tracking-wide">{{ s.label }}</p>
             <p class="text-3xl font-extrabold text-slate-900 mt-1">{{ s.nilai }}</p>
             <p class="text-xs text-slate-400 mt-1">{{ s.sub }}</p>
@@ -56,7 +56,7 @@
 
         <div class="grid lg:grid-cols-2 gap-4 mb-6">
           <!-- Progres per fenomena -->
-          <div class="bg-white rounded-xl p-5 shadow-sm border border-slate-200">
+          <div class="bg-white rounded-[20px] p-5 shadow-[0_8px_24px_rgba(31,42,55,0.06)]">
             <p class="font-bold text-slate-800 mb-1">Progres per Fenomena</p>
             <p class="text-xs text-slate-400 mb-4">Rata-rata tahap selesai per siswa (%)</p>
             <div class="space-y-3">
@@ -66,13 +66,13 @@
                   <span class="text-slate-400">{{ f.persen }}%</span>
                 </div>
                 <div class="h-2 rounded-full bg-slate-100 overflow-hidden">
-                  <div class="h-full rounded-full bg-indigo-500 transition-all" :style="{ width: f.persen + '%' }" />
+                  <div class="h-full rounded-full transition-all" :style="{ width: f.persen + '%', backgroundColor: f.hex }" />
                 </div>
               </div>
             </div>
           </div>
           <!-- Distribusi rekomendasi -->
-          <div class="bg-white rounded-xl p-5 shadow-sm border border-slate-200">
+          <div class="bg-white rounded-[20px] p-5 shadow-[0_8px_24px_rgba(31,42,55,0.06)]">
             <p class="font-bold text-slate-800 mb-1">Kategori Siswa</p>
             <p class="text-xs text-slate-400 mb-4">Berdasarkan progres pengerjaan</p>
             <div class="space-y-3">
@@ -89,17 +89,17 @@
         </div>
 
         <!-- Kelas ringkas -->
-        <div class="bg-white rounded-xl p-5 shadow-sm border border-slate-200">
+        <div class="bg-white rounded-[20px] p-5 shadow-[0_8px_24px_rgba(31,42,55,0.06)]">
           <div class="flex items-center justify-between mb-4">
             <p class="font-bold text-slate-800">Kelas Saya</p>
-            <button @click="tab = 'kelas'" class="text-sm font-bold text-indigo-600 hover:underline">Kelola →</button>
+            <button @click="tab = 'kelas'" class="text-sm font-bold text-primary hover:underline">Kelola →</button>
           </div>
           <div v-if="!daftarKelas.length" class="text-sm text-slate-400">Belum ada kelas.</div>
           <div class="grid sm:grid-cols-2 lg:grid-cols-3 gap-3">
-            <div v-for="k in daftarKelas" :key="k.kelas.id" class="border border-slate-200 rounded-xl p-4">
+            <div v-for="k in daftarKelas" :key="k.kelas.id" class="border border-slate-100 bg-panel/60 rounded-[20px] p-4">
               <p class="font-bold text-slate-800">{{ k.kelas.nama }}</p>
               <p class="text-xs text-slate-400 mt-0.5">{{ k.siswa.length }} siswa · {{ rataKelas(k) }}% rata-rata</p>
-              <p class="font-mono text-lg font-bold text-indigo-600 tracking-widest mt-2">{{ k.kelas.kode }}</p>
+              <p class="font-mono text-lg font-bold text-primary tracking-widest mt-2">{{ k.kelas.kode }}</p>
             </div>
           </div>
         </div>
@@ -108,14 +108,14 @@
       <!-- ===== KELAS ===== -->
       <div v-if="tab === 'kelas'">
         <div class="flex items-center justify-between mb-6">
-          <h1 class="text-2xl font-extrabold text-slate-900">Kelas</h1>
-          <button @click="tampilBuat = !tampilBuat" class="bg-indigo-600 text-white px-4 py-2 rounded-lg text-sm font-bold hover:bg-indigo-700 transition">+ Buat Kelas</button>
+          <h1 class="font-display text-2xl font-extrabold text-ink">Kelas</h1>
+          <button @click="tampilBuat = !tampilBuat" class="bg-psky text-white px-4 py-2 rounded-full text-sm font-display font-bold hover:brightness-105 transition shadow-lg shadow-sky-200">+ Buat Kelas</button>
         </div>
-        <div v-if="tampilBuat" class="bg-white rounded-xl p-5 shadow-sm border border-slate-200 mb-4 flex gap-2">
-          <input v-model="namaKelas" class="flex-1 border border-slate-200 rounded-lg px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500" placeholder="Nama kelas, contoh: VII-A" />
-          <button @click="buatKelas" :disabled="!namaKelas.trim() || membuat" class="bg-indigo-600 text-white px-5 rounded-lg text-sm font-bold hover:bg-indigo-700 disabled:opacity-40">Buat</button>
+        <div v-if="tampilBuat" class="bg-white rounded-[20px] p-5 shadow-[0_8px_24px_rgba(31,42,55,0.06)] mb-4 flex gap-2">
+          <input v-model="namaKelas" class="flex-1 border border-slate-200 rounded-lg px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-sky-300" placeholder="Nama kelas, contoh: VII-A" />
+          <button @click="buatKelas" :disabled="!namaKelas.trim() || membuat" class="bg-psky text-white px-5 rounded-full text-sm font-display font-bold hover:brightness-105 disabled:opacity-40 shadow-lg shadow-sky-200">Buat</button>
         </div>
-        <div class="bg-white rounded-xl shadow-sm border border-slate-200 overflow-hidden">
+        <div class="bg-white rounded-[20px] shadow-[0_8px_24px_rgba(31,42,55,0.06)] overflow-hidden">
           <table class="w-full text-sm">
             <thead class="bg-slate-50 text-slate-500 text-xs uppercase">
               <tr>
@@ -129,11 +129,11 @@
             <tbody class="divide-y divide-slate-100">
               <tr v-for="k in daftarKelas" :key="k.kelas.id" class="hover:bg-slate-50">
                 <td class="px-5 py-3.5 font-bold text-slate-800">{{ k.kelas.nama }}</td>
-                <td class="px-5 py-3.5"><span class="font-mono font-bold text-indigo-600 tracking-widest">{{ k.kelas.kode }}</span></td>
+                <td class="px-5 py-3.5"><span class="font-mono font-bold text-primary tracking-widest">{{ k.kelas.kode }}</span></td>
                 <td class="px-5 py-3.5 text-slate-600">{{ k.siswa.length }}</td>
                 <td class="px-5 py-3.5 text-slate-600">{{ rataKelas(k) }}%</td>
                 <td class="px-5 py-3.5 text-right space-x-2">
-                  <button @click="salinKode(k.kelas.kode)" class="text-xs font-bold text-slate-500 hover:text-indigo-600">Salin</button>
+                  <button @click="salinKode(k.kelas.kode)" class="text-xs font-bold text-slate-500 hover:text-primary">Salin</button>
                   <button @click="resetKode(k.kelas.id)" class="text-xs font-bold text-slate-500 hover:text-amber-600">Reset</button>
                 </td>
               </tr>
@@ -145,15 +145,15 @@
 
       <!-- ===== SISWA ===== -->
       <div v-if="tab === 'siswa'">
-        <h1 class="text-2xl font-extrabold text-slate-900 mb-6">Siswa</h1>
-        <div class="bg-white rounded-xl p-4 shadow-sm border border-slate-200 mb-4 flex flex-wrap gap-3">
-          <input v-model="cari" class="flex-1 min-w-[200px] border border-slate-200 rounded-lg px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500" placeholder="Cari nama atau username..." />
+        <h1 class="font-display text-2xl font-extrabold text-ink mb-6">Siswa</h1>
+        <div class="bg-white rounded-[20px] p-4 shadow-[0_8px_24px_rgba(31,42,55,0.06)] mb-4 flex flex-wrap gap-3">
+          <input v-model="cari" class="flex-1 min-w-[200px] border border-slate-200 rounded-lg px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-sky-300" placeholder="Cari nama atau username..." />
           <select v-model="filterKelas" class="border border-slate-200 rounded-lg px-4 py-2.5 text-sm font-semibold text-slate-600">
             <option value="">Semua kelas</option>
             <option v-for="k in daftarKelas" :key="k.kelas.id" :value="k.kelas.id">{{ k.kelas.nama }}</option>
           </select>
         </div>
-        <div class="bg-white rounded-xl shadow-sm border border-slate-200 overflow-hidden">
+        <div class="bg-white rounded-[20px] shadow-[0_8px_24px_rgba(31,42,55,0.06)] overflow-hidden">
           <div class="overflow-x-auto">
             <table class="w-full text-sm min-w-[640px]">
               <thead class="bg-slate-50 text-slate-500 text-xs uppercase">
@@ -175,15 +175,15 @@
                   <td class="px-5 py-3.5">
                     <div class="flex items-center gap-2">
                       <div class="w-24 h-2 rounded-full bg-slate-100 overflow-hidden">
-                        <div class="h-full bg-indigo-500 rounded-full" :style="{ width: persen(s) + '%' }" />
+                        <div class="h-full bg-psky rounded-full" :style="{ width: persen(s) + '%' }" />
                       </div>
                       <span class="text-xs font-bold text-slate-500">{{ totalTahap(s) }}/40</span>
                     </div>
                   </td>
                   <td class="px-5 py-3.5"><span :class="['text-xs font-bold px-2.5 py-1 rounded-full', warnaRekom(rekom(s).k)]">{{ rekom(s).label }}</span></td>
                   <td class="px-5 py-3.5 text-right space-x-2 whitespace-nowrap">
-                    <button @click="lihatKarya(s)" class="text-xs font-bold text-slate-500 hover:text-indigo-600">Karya</button>
-                    <button @click="siswaDinilai = s" class="text-xs font-bold text-slate-500 hover:text-indigo-600">Nilai</button>
+                    <button @click="lihatKarya(s)" class="text-xs font-bold text-slate-500 hover:text-primary">Karya</button>
+                    <button @click="siswaDinilai = s" class="text-xs font-bold text-slate-500 hover:text-primary">Nilai</button>
                   </td>
                 </tr>
                 <tr v-if="!siswaTampil.length"><td colspan="5" class="px-5 py-8 text-center text-slate-400">Tidak ada siswa.</td></tr>
@@ -193,7 +193,7 @@
         </div>
 
         <!-- Karya tampil inline -->
-        <div v-if="karyaAktif" class="bg-white rounded-xl p-5 shadow-sm border border-slate-200 mt-4">
+        <div v-if="karyaAktif" class="bg-white rounded-[20px] p-5 shadow-[0_8px_24px_rgba(31,42,55,0.06)] mt-4">
           <div class="flex items-center justify-between mb-3">
             <p class="font-bold text-slate-800">Karya — {{ karyaAktif.nama }}</p>
             <button @click="karyaAktif = null" class="text-xs font-bold text-slate-400">Tutup ✕</button>
@@ -201,7 +201,7 @@
           <div v-if="!karyaAktif.list.length" class="text-sm text-slate-400">Belum ada karya.</div>
           <div class="grid md:grid-cols-2 gap-3">
             <div v-for="w in karyaAktif.list" :key="w.id" class="border border-slate-100 rounded-xl p-4 bg-slate-50">
-              <p class="text-xs font-bold text-indigo-600 mb-2">{{ namaFenomena(w.phenomenon_id) }}</p>
+              <p class="text-xs font-bold text-primary mb-2">{{ namaFenomena(w.phenomenon_id) }}</p>
               <p v-for="i in 4" :key="i" class="font-semibold text-slate-700 text-sm">{{ w['larik' + i] }}</p>
             </div>
           </div>
@@ -224,7 +224,7 @@
         <textarea v-model="formKomentar" rows="3" class="w-full border border-slate-200 rounded-lg px-3 py-2.5 text-sm mb-4" placeholder="Masukan untuk siswa..." />
         <div class="flex gap-2">
           <button @click="siswaDinilai = null" class="flex-1 border border-slate-200 rounded-lg py-2.5 text-sm font-bold text-slate-600">Batal</button>
-          <button @click="kirimNilai" :disabled="menyimpan" class="flex-1 bg-indigo-600 text-white rounded-lg py-2.5 text-sm font-bold hover:bg-indigo-700">Simpan</button>
+          <button @click="kirimNilai" :disabled="menyimpan" class="flex-1 bg-psky text-white rounded-full py-2.5 text-sm font-display font-bold hover:brightness-105">Simpan</button>
         </div>
       </div>
     </div>
@@ -233,6 +233,7 @@
 
 <script setup lang="ts">
 import { FENOMENA } from '~/data/fenomena'
+import { HEX_FENOMENA } from '~/utils/fenomena-ui'
 
 definePageMeta({ layout: 'app', middleware: 'auth-bff' })
 
@@ -291,7 +292,7 @@ const stats = computed(() => {
 const progresFenomena = computed(() => FENOMENA.map(f => {
   const vals = semuaSiswa.value.map(s => new Set((s.progres || []).filter((p: any) => p.phenomenon_id === f.id).map((p: any) => p.stage_id)).size)
   const avg = vals.length ? Math.round(vals.reduce((a, b) => a + b, 0) / vals.length / 5 * 100) : 0
-  return { id: f.id, nama: f.nama, persen: avg }
+  return { id: f.id, nama: f.nama, persen: avg, hex: HEX_FENOMENA[f.warna] || '#0EA5E9' }
 }))
 
 const distribusi = computed(() => {

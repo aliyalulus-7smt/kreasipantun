@@ -12,8 +12,8 @@
   </div>
   <div v-else class="grid md:grid-cols-2 gap-4 max-w-4xl mx-auto">
     <div v-for="w in karya" :key="w.id" class="kp-card p-5">
-      <p class="text-xs font-bold text-sky-600 mb-2">{{ namaFenomena(w.phenomenon_id) }} · {{ formatTgl(w.created_at) }}</p>
-      <div class="bg-amber-50 rounded-xl p-4 space-y-1">
+      <p class="text-xs font-bold text-primary mb-2">{{ namaFenomena(w.phenomenon_id) }} · {{ formatTgl(w.created_at) }}</p>
+      <div class="bg-panel rounded-xl p-4 space-y-1">
         <p v-for="i in 4" :key="i" class="font-display font-semibold text-slate-700">{{ w['larik' + i] }}</p>
       </div>
       <span v-if="w.is_final" class="pill bg-emerald-100 text-emerald-700 !px-3 !py-1 text-xs mt-3 inline-block">✓ Final</span>

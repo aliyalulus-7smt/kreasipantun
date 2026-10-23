@@ -8,7 +8,7 @@
 
       <div class="text-6xl mb-4">👩‍🏫</div>
       <h1 class="font-display text-3xl font-extrabold text-slate-800">
-        Dashboard <span class="text-emerald-600">Guru</span>
+        Dashboard <span class="text-primary">Guru</span>
       </h1>
       <p class="text-slate-500 font-semibold mt-3 mb-6">
         Masukkan kode guru untuk melihat karya dan progres siswa.
@@ -24,7 +24,7 @@
         <button type="submit" class="btn-primary w-full !mt-6">Masuk 🔑</button>
       </form>
 
-      <NuxtLink to="/" class="inline-block mt-5 text-sm font-bold text-slate-400 hover:text-emerald-600 transition">
+      <NuxtLink to="/" class="inline-block mt-5 text-sm font-bold text-slate-400 hover:text-primary transition">
         ← Kembali ke halaman siswa
       </NuxtLink>
     </div>

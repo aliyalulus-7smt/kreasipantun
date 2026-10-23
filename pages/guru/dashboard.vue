@@ -91,7 +91,7 @@
         <div class="hidden md:block overflow-x-auto">
           <table class="w-full text-sm min-w-[640px]">
           <thead>
-            <tr class="text-left text-xs text-slate-400 border-b border-amber-100">
+            <tr class="text-left text-xs text-slate-400 border-b border-slate-100">
               <th class="pb-2 pr-3 font-bold">SISWA</th>
               <th class="pb-2 pr-3 font-bold">KELAS</th>
               <th class="pb-2 pr-3 font-bold">APP</th>
@@ -102,7 +102,7 @@
             </tr>
           </thead>
           <tbody>
-            <tr v-for="k in karyaTampil" :key="k.id" class="border-b border-amber-50 last:border-0">
+            <tr v-for="k in karyaTampil" :key="k.id" class="border-b border-slate-50 last:border-0">
               <td class="py-2.5 pr-3 font-bold text-slate-700">{{ k.siswa?.nama_lengkap ?? '—' }}</td>
               <td class="py-2.5 pr-3 font-semibold text-slate-500">{{ k.siswa?.kelas ?? '—' }}</td>
               <td class="py-2.5 pr-3">
@@ -127,7 +127,7 @@
         <!-- Mobile: kartu karya -->
         <div class="md:hidden space-y-3">
           <NuxtLink v-for="k in karyaTampil" :key="'mk-' + k.id" :to="`/guru/karya/${k.id}`"
-            class="block rounded-2xl border border-amber-100 bg-amber-50/60 p-4 active:scale-[0.99] transition">
+            class="block rounded-2xl border border-slate-100 bg-panel p-4 active:scale-[0.99] transition">
             <div class="flex items-start justify-between gap-2">
               <div class="min-w-0">
                 <p class="font-extrabold text-slate-700 truncate">{{ k.siswa?.nama_lengkap ?? '—' }}</p>
@@ -168,7 +168,7 @@
         <div class="hidden md:block overflow-x-auto">
           <table class="w-full text-sm min-w-[560px]">
           <thead>
-            <tr class="text-left text-xs text-slate-400 border-b border-amber-100">
+            <tr class="text-left text-xs text-slate-400 border-b border-slate-100">
               <th class="pb-2 pr-3 font-bold">NAMA</th>
               <th class="pb-2 pr-3 font-bold">KELAS</th>
               <th class="pb-2 pr-3 font-bold">NO. ABSEN</th>
@@ -177,7 +177,7 @@
             </tr>
           </thead>
           <tbody>
-            <tr v-for="s in siswaTampil" :key="s.id" class="border-b border-amber-50 last:border-0">
+            <tr v-for="s in siswaTampil" :key="s.id" class="border-b border-slate-50 last:border-0">
               <td class="py-2.5 pr-3 font-bold text-slate-700">{{ s.nama_lengkap }}</td>
               <td class="py-2.5 pr-3 font-semibold text-slate-500">{{ s.kelas || '—' }}</td>
               <td class="py-2.5 pr-3 font-semibold text-slate-500">{{ s.no_absen || '—' }}</td>
@@ -189,7 +189,7 @@
         </div>
         <!-- Mobile: kartu siswa -->
         <div class="md:hidden space-y-3">
-          <div v-for="s in siswaTampil" :key="'ms-' + s.id" class="rounded-2xl border border-amber-100 bg-amber-50/60 p-4">
+          <div v-for="s in siswaTampil" :key="'ms-' + s.id" class="rounded-2xl border border-slate-100 bg-panel p-4">
             <div class="flex items-start justify-between gap-2">
               <div class="min-w-0">
                 <p class="font-extrabold text-slate-700 truncate">{{ s.nama_lengkap }}</p>

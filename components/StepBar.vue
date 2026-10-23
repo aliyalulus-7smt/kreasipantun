@@ -7,9 +7,9 @@
           :class="i < current
             ? 'bg-emerald-100 text-emerald-700'
             : i === current
-              ? 'text-white shadow-lg shadow-emerald-200'
+              ? 'text-white shadow-lg shadow-sky-200'
               : 'bg-white text-slate-400 border border-slate-200'"
-          :style="i === current ? 'background: linear-gradient(135deg,#34d399,#10b981)' : ''"
+          :style="i === current ? 'background: linear-gradient(135deg,#38BDF8,#0EA5E9)' : ''"
         >
           <span class="w-5 h-5 rounded-full flex items-center justify-center text-[11px]"
             :class="i < current ? 'bg-emerald-500 text-white' : i === current ? 'bg-white/30 text-white' : 'bg-slate-100 text-slate-400'">
@@ -17,7 +17,7 @@
           </span>
           {{ s }}
         </div>
-        <div v-if="i < steps.length - 1" class="w-4 md:w-8 h-0.5 rounded bg-amber-200"></div>
+        <div v-if="i < steps.length - 1" class="w-4 md:w-8 h-0.5 rounded bg-sky-100"></div>
       </div>
     </template>
   </div>

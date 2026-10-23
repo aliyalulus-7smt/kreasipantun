@@ -5,7 +5,7 @@
      terbuka (model kartu bolak-balik) hanya setelah semua jawaban benar. -->
 <template>
   <div class="space-y-5">
-    <div v-if="data.instruksi" class="card p-4 bg-sky-50/70">
+    <div v-if="data.instruksi" class="card p-4 bg-teal-50/70">
       <p class="font-semibold text-slate-700 text-sm">{{ data.instruksi }}</p>
     </div>
 

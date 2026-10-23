@@ -1,17 +1,17 @@
 <template>
   <div class="min-h-screen flex items-center justify-center px-4 py-10">
     <div class="card max-w-md w-full p-8 text-center">
-      <p class="text-5xl mb-3">📦</p>
-      <h1 class="font-display text-3xl font-extrabold text-slate-800">
-        Selamat Datang di<br /><span class="text-emerald-600">Kreasi Pantun</span>
+      <p class="text-5xl mb-3">🪶</p>
+      <h1 class="font-display text-3xl font-extrabold text-ink">
+        Selamat Datang di<br /><span class="text-primary">Kreasi Pantun</span> ✨
       </h1>
-      <p class="mt-2 inline-block bg-amber-100 text-amber-800 font-bold text-sm rounded-full px-4 py-1.5">
+      <p class="mt-2 inline-block bg-pfixed text-primary font-bold text-sm rounded-full px-4 py-1.5">
         Ciptakan pantunmu dengan berKREASI!
       </p>
 
       <div class="flex gap-2 mt-6 mb-5">
-        <button @click="mode = 'masuk'" :class="['flex-1 pill !py-2.5 font-bold transition', mode === 'masuk' ? '!bg-emerald-500 !text-white' : 'bg-slate-100']">Masuk</button>
-        <button @click="mode = 'daftar'" :class="['flex-1 pill !py-2.5 font-bold transition', mode === 'daftar' ? '!bg-emerald-500 !text-white' : 'bg-slate-100']">Daftar</button>
+        <button @click="mode = 'masuk'" :class="['flex-1 pill !py-2.5 font-bold transition', mode === 'masuk' ? '!bg-psky !text-white' : 'bg-slate-100']">Masuk</button>
+        <button @click="mode = 'daftar'" :class="['flex-1 pill !py-2.5 font-bold transition', mode === 'daftar' ? '!bg-psky !text-white' : 'bg-slate-100']">Daftar</button>
       </div>
 
       <!-- MASUK -->

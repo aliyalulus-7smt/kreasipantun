@@ -1,30 +1,36 @@
 <template>
-  <div class="kp-card p-4 md:p-5">
-    <div class="flex items-stretch gap-3 md:gap-4">
-      <div class="flex-1 flex items-center gap-3 bg-amber-50 rounded-2xl px-4 py-3 border border-amber-100">
-        <span class="text-3xl" aria-hidden="true">⭐</span>
-        <div>
-          <p class="font-display font-extrabold text-xl leading-none text-slate-800">{{ fenomenaSelesai }}<span class="text-slate-400 text-base">/8</span></p>
-          <p class="text-xs font-bold text-slate-500 mt-1">Fenomena selesai</p>
+  <div class="bg-panel rounded-[18px] p-4 flex flex-col gap-2">
+    <div class="flex items-center justify-between gap-2">
+      <div class="flex items-center gap-2 min-w-0">
+        <span class="w-8 h-8 rounded-full bg-primary text-white flex items-center justify-center shadow-sm shrink-0" aria-hidden="true">
+          <span class="material-symbols-outlined text-[18px]">auto_stories</span>
+        </span>
+        <div class="min-w-0">
+          <p class="font-display font-bold text-sm text-ink leading-tight">Petualangan Pantun</p>
+          <p class="text-[13px] font-semibold text-slate-500 leading-tight">{{ fenomenaSelesai }} dari 8 Fenomena Tuntas</p>
         </div>
       </div>
-      <div class="flex-1 flex items-center gap-3 bg-sky-50 rounded-2xl px-4 py-3 border border-sky-100">
-        <span class="text-3xl" aria-hidden="true">🏅</span>
-        <div>
-          <p class="font-display font-extrabold text-xl leading-none text-slate-800">{{ totalTahap }}<span class="text-slate-400 text-base">/40</span></p>
-          <p class="text-xs font-bold text-slate-500 mt-1">Tahap selesai</p>
-        </div>
-      </div>
-      <NuxtLink to="/fenomena" class="hidden md:flex flex-1 items-center justify-between gap-2 bg-emerald-50 rounded-2xl px-4 py-3 border border-emerald-100 font-display font-bold text-emerald-700 hover:bg-emerald-100 transition">
-        Lihat Detail Progres <span aria-hidden="true">→</span>
-      </NuxtLink>
+      <span class="px-2.5 py-0.5 rounded-full bg-pfixed text-primary text-xs font-extrabold shrink-0">{{ persen }}%</span>
     </div>
-    <NuxtLink to="/fenomena" class="md:hidden mt-3 flex items-center justify-center gap-2 font-display font-bold text-emerald-700 bg-emerald-50 border border-emerald-100 rounded-2xl py-2.5">
-      Lihat Detail Progres →
-    </NuxtLink>
+    <div class="w-full bg-[#E4EFFF] h-2.5 rounded-full overflow-hidden">
+      <div class="bg-emerald-500 h-full rounded-full transition-all duration-700" :style="{ width: persen + '%' }" />
+    </div>
+    <div class="flex items-center justify-between gap-2 pt-0.5">
+      <span class="text-[13px] font-semibold text-slate-500 flex items-center gap-1">
+        <span class="material-symbols-outlined text-[16px] text-amber-500">task_alt</span>
+        <strong class="text-ink">{{ totalTahap }} / 40</strong> Tahap Selesai
+      </span>
+      <span class="text-[13px] font-bold text-primary text-right">{{ teksSemangat }}</span>
+    </div>
   </div>
 </template>
 
 <script setup lang="ts">
-defineProps<{ fenomenaSelesai: number; totalTahap: number }>()
+const props = defineProps<{ fenomenaSelesai: number; totalTahap: number }>()
+const persen = computed(() => Math.round(props.totalTahap / 40 * 100))
+const teksSemangat = computed(() => {
+  if (props.totalTahap >= 40) return 'Luar biasa, semua tuntas! 🎉'
+  if (props.totalTahap > 0) return 'Hebat, lanjut terus!'
+  return 'Ayo mulai petualanganmu!'
+})
 </script>

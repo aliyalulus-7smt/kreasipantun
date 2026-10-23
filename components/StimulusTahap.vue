@@ -46,9 +46,9 @@
       </div>
     </div>
 
-    <div v-else class="card p-5 bg-amber-50/60">
+    <div v-else class="card p-5">
       <template v-if="data.artikel">
-        <p v-if="artikelJudul" class="font-display font-extrabold text-center text-slate-800 text-lg mb-3">{{ artikelJudul }}</p>
+        <p v-if="artikelJudul" class="font-display font-extrabold text-center text-ink text-lg mb-3">{{ artikelJudul }}</p>
         <p class="text-slate-700 leading-relaxed whitespace-pre-line">{{ artikelIsi }}</p>
       </template>
       <p v-else class="text-slate-500 font-semibold italic">📄 {{ data.catatan || 'Materi artikel menyusul.' }}</p>

@@ -22,6 +22,8 @@ export interface Fenomena {
   nama: string
   icon: string
   warna: string
+  ilustrasi: string
+  tagline: string
   tahap: Record<IdTahap, TahapKonten>
 }
 
@@ -37,6 +39,7 @@ export const FENOMENA: Fenomena[] = [
   // ================= 1. BIJAK BERTEKNOLOGI =================
   {
     id: 'bijak-berteknologi', nama: 'Bijak Berteknologi', icon: '📱', warna: 'sky',
+    ilustrasi: '/ilustrasi/bijak-berteknologi.png', tagline: 'Gunakan gawai dengan cerdas dan aman',
     tahap: {
       kenali: {
         judul: 'Kenali Fenomena', tipe: 'artikel',
@@ -114,6 +117,7 @@ Dengan demikian, teknologi bukan hanya alat untuk mencari hiburan, tetapi juga s
   // ================= 2. CINTA LINGKUNGAN =================
   {
     id: 'cinta-lingkungan', nama: 'Cinta Lingkungan', icon: '🌱', warna: 'emerald',
+    ilustrasi: '/ilustrasi/cinta-lingkungan.png', tagline: 'Jaga bumi lewat bait yang peduli',
     tahap: {
       kenali: {
         judul: 'Kenali Fenomena', tipe: 'video',
@@ -184,6 +188,7 @@ Dengan demikian, teknologi bukan hanya alat untuk mencari hiburan, tetapi juga s
   // ================= 3. TOLONG MENOLONG =================
   {
     id: 'tolong-menolong', nama: 'Tolong Menolong', icon: '🤝', warna: 'amber',
+    ilustrasi: '/ilustrasi/tolong-menolong.png', tagline: 'Semangat gotong royong dan peduli sesama',
     tahap: {
       kenali: {
         judul: 'Kenali Fenomena', tipe: 'artikel',
@@ -263,6 +268,7 @@ Saat pulang sekolah, Raka melihat berita tentang warga yang terdampak banjir di 
   // ================= 4. STOP PERUNDUNGAN! =================
   {
     id: 'stop-perundungan', nama: 'Stop Perundungan!', icon: '🛡️', warna: 'rose',
+    ilustrasi: '/ilustrasi/stop-perundungan.png', tagline: 'Saling jaga, hargai teman tanpa cela',
     tahap: {
       kenali: {
         judul: 'Kenali Fenomena', tipe: 'gambar',
@@ -333,6 +339,7 @@ Saat pulang sekolah, Raka melihat berita tentang warga yang terdampak banjir di 
   // ================= 5. SEMANGAT BELAJAR =================
   {
     id: 'semangat-belajar', nama: 'Semangat Belajar', icon: '📚', warna: 'violet',
+    ilustrasi: '/ilustrasi/semangat-belajar.png', tagline: 'Raih cita lewat bait pantun bernas',
     tahap: {
       kenali: {
         judul: 'Kenali Fenomena', tipe: 'gambar',
@@ -400,6 +407,7 @@ Saat pulang sekolah, Raka melihat berita tentang warga yang terdampak banjir di 
   // ================= 6. LESTARIKAN BUDAYA! =================
   {
     id: 'lestarikan-budaya', nama: 'Lestarikan Budaya!', icon: '🎭', warna: 'orange',
+    ilustrasi: '/ilustrasi/lestarikan-budaya.png', tagline: 'Kenali adat dan warisan Nusantara',
     tahap: {
       kenali: {
         judul: 'Kenali Fenomena', tipe: 'gambar',
@@ -469,6 +477,7 @@ Saat pulang sekolah, Raka melihat berita tentang warga yang terdampak banjir di 
   // ================= 7. BERBEDA ITU ISTIMEWA =================
   {
     id: 'berbeda-itu-istimewa', nama: 'Berbeda Itu Istimewa', icon: '🌈', warna: 'pink',
+    ilustrasi: '/ilustrasi/berbeda-itu-istimewa.png', tagline: 'Keberagaman warna-warni persahabatan',
     tahap: {
       kenali: {
         judul: 'Kenali Fenomena', tipe: 'video',
@@ -530,6 +539,7 @@ Saat pulang sekolah, Raka melihat berita tentang warga yang terdampak banjir di 
   // ================= 8. HIDUP SEHAT =================
   {
     id: 'hidup-sehat', nama: 'Hidup Sehat', icon: '🍎', warna: 'lime',
+    ilustrasi: '/ilustrasi/hidup-sehat.png', tagline: 'Tubuh bugar, pikiran ceria berpantun',
     tahap: {
       kenali: {
         judul: 'Kenali Fenomena', tipe: 'pilih-makanan',

@@ -1,6 +1,6 @@
 <template>
   <div>
-    <NuxtLink to="/guru/dashboard" class="inline-block mb-5 text-sm font-bold text-slate-400 hover:text-emerald-600 transition">
+    <NuxtLink to="/guru/dashboard" class="inline-block mb-5 text-sm font-bold text-slate-400 hover:text-primary transition">
       ← Kembali ke Dashboard
     </NuxtLink>
 

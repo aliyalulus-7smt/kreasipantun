@@ -1,7 +1,9 @@
 <template>
   <NuxtLink :to="`/fenomena/${item.phenomenon_id}/${item.stage_id}`"
-    class="flex items-center gap-3 py-3 px-2 -mx-2 rounded-2xl hover:bg-amber-50/70 transition">
-    <span :class="['w-11 h-11 rounded-2xl bg-gradient-to-br flex items-center justify-center text-xl shrink-0', gaya.tile]" aria-hidden="true">
+    class="flex items-center gap-3 py-3 px-2 -mx-2 rounded-2xl hover:bg-sky-50/70 transition">
+    <img v-if="fenomena" :src="fenomena.ilustrasi" :alt="`Ilustrasi ${fenomena.nama}`" loading="lazy"
+      class="w-11 h-11 rounded-2xl object-cover shrink-0" aria-hidden="true" />
+    <span v-else :class="['w-11 h-11 rounded-2xl bg-gradient-to-br flex items-center justify-center text-xl shrink-0', gaya.tile]" aria-hidden="true">
       {{ ikon }}
     </span>
     <span class="flex-1 min-w-0">

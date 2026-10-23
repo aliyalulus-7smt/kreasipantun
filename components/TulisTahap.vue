@@ -4,13 +4,13 @@
      untuk memasukkannya ke baris pantun yang aktif. -->
 <template>
   <div class="space-y-5">
-    <div class="card p-4 bg-sky-50/70">
+    <div class="card p-4 bg-amber-50/70">
       <p class="font-semibold text-slate-700 text-sm">{{ data.instruksi }}</p>
       <div v-if="data.kataKunci" class="flex flex-wrap gap-2 mt-3">
         <span v-for="k in data.kataKunci" :key="k" class="pill bg-amber-100 text-amber-700 !px-4 !py-1.5">🔑 {{ k }}</span>
       </div>
-      <p v-if="data.gagasan" class="mt-2 text-sm font-bold text-sky-700">💡 {{ data.gagasan }}</p>
-      <p v-if="data.pesan" class="mt-2 text-sm font-bold text-sky-700">📜 {{ data.pesan }}</p>
+      <p v-if="data.gagasan" class="mt-2 text-sm font-bold text-amber-700">💡 {{ data.gagasan }}</p>
+      <p v-if="data.pesan" class="mt-2 text-sm font-bold text-amber-700">📜 {{ data.pesan }}</p>
       <div v-if="data.isi" class="mt-3 bg-white rounded-xl p-3 space-y-1">
         <p class="text-xs font-bold text-slate-400">Isi yang disediakan:</p>
         <p v-for="(b, i) in data.isi" :key="i" class="font-display font-semibold text-slate-700 text-sm">{{ b }}</p>
@@ -38,7 +38,7 @@
       <p class="font-display font-bold text-slate-700 mb-3">✍️ Pantunmu</p>
       <div class="space-y-2.5">
         <div v-for="i in 4" :key="i">
-          <label class="text-xs font-bold" :class="i <= 2 ? 'text-sky-600' : 'text-emerald-600'">
+          <label class="text-xs font-bold" :class="i <= 2 ? 'text-sky-600' : 'text-amber-600'">
             Baris {{ i }} {{ i <= 2 ? '(sampiran)' : '(isi)' }}{{ barisTerkunci.has(i - 1) ? ' — dari soal 🔒' : (barisDariSoal.has(i - 1) ? ' — dari soal' : '') }}
           </label>
           <input v-model="baris[i - 1]" :disabled="barisTerkunci.has(i - 1) || tersimpan" @focus="barisFokus = i - 1" class="input-cute !py-2.5 disabled:bg-slate-100 disabled:text-slate-500" :placeholder="`Tulis baris ${i}...`" maxlength="120" />
@@ -64,8 +64,8 @@
 
       <div v-if="tampilRima" class="mt-4 grid md:grid-cols-2 gap-4">
         <div v-for="panel in panelRima" :key="panel.key" class="border-2 rounded-2xl p-4"
-          :class="panel.key === 'A' ? 'border-sky-200 bg-sky-50/50' : 'border-emerald-200 bg-emerald-50/50'">
-          <p class="font-display font-bold mb-1" :class="panel.key === 'A' ? 'text-sky-700' : 'text-emerald-700'">{{ panel.judul }}</p>
+          :class="panel.key === 'A' ? 'border-sky-200 bg-sky-50/50' : 'border-amber-200 bg-amber-50/50'">
+          <p class="font-display font-bold mb-1" :class="panel.key === 'A' ? 'text-sky-700' : 'text-amber-700'">{{ panel.judul }}</p>
           <p class="text-xs font-semibold text-slate-500 mb-3">Pilih akhiran, lalu klik kata untuk memasukkannya ke baris pantunmu.</p>
 
           <p class="text-xs font-bold text-slate-500 mb-2">Akhiran:</p>
@@ -73,7 +73,7 @@
             <button v-for="g in referensiRima" :key="g.akhiran" @click="akhiranPilihan[panel.key] = g.akhiran"
               class="pill !text-xs border-2 transition"
               :class="akhiranPilihan[panel.key] === g.akhiran
-                ? (panel.key === 'A' ? 'bg-sky-500 text-white border-sky-500' : 'bg-emerald-500 text-white border-emerald-500')
+                ? (panel.key === 'A' ? 'bg-sky-500 text-white border-sky-500' : 'bg-amber-500 text-white border-amber-500')
                 : 'bg-white text-slate-600 border-slate-200 hover:border-slate-300'">
               {{ g.akhiran }}
             </button>

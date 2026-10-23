@@ -1,11 +1,13 @@
 <template>
-  <header class="sticky top-0 z-40 bg-[#fff9ef]/85 backdrop-blur border-b border-amber-100/70">
+  <header class="sticky top-0 z-40 bg-[#FFFBF3]/90 backdrop-blur-xl shadow-[0_1px_8px_rgba(31,42,55,0.04)]">
     <div class="max-w-5xl mx-auto px-4 py-2.5 flex items-center justify-between gap-3">
       <NuxtLink to="/beranda" class="flex items-center gap-2.5 min-w-0">
-        <span class="text-3xl leading-none" aria-hidden="true">🪶</span>
+        <span class="w-10 h-10 rounded-2xl bg-pfixed text-primary flex items-center justify-center shrink-0" aria-hidden="true">
+          <span class="material-symbols-outlined text-[22px]">menu_book</span>
+        </span>
         <span class="min-w-0">
-          <span class="block font-display font-extrabold text-lg leading-tight text-[#123c2b]">
-            Kreasi <span class="text-[#1663b8]">Pantun</span>
+          <span class="block font-display font-extrabold text-lg leading-tight text-primary">
+            Kreasi Pantun
           </span>
           <span class="hidden sm:block text-[11px] font-bold text-slate-500 leading-tight truncate">
             Belajar, Berkarya, dan Ekspresikan Diri dengan Pantun
@@ -16,7 +18,7 @@
       <div class="flex items-center gap-2 shrink-0">
         <!-- Status sinkronisasi nyata dari outbox BFF -->
         <button @click="sinkronManual" :title="judulStatus" aria-label="Status sinkronisasi"
-          class="h-10 px-3 rounded-full flex items-center gap-1.5 text-xs font-display font-extrabold shadow-sm transition active:scale-95"
+          class="h-10 w-10 sm:w-auto sm:px-3 rounded-full flex items-center justify-center gap-1.5 text-xs font-display font-extrabold shadow-[0_2px_8px_rgba(31,42,55,0.06)] transition active:scale-95"
           :class="kelasStatus">
           <span v-if="status === 'menyimpan'" class="animate-spin inline-block">🔄</span>
           <span v-else-if="!daring">📴</span>
@@ -25,11 +27,11 @@
           <span v-else>🟢</span>
           <span class="hidden sm:inline">{{ labelStatus }}</span>
         </button>
-        <NuxtLink to="/profil" class="flex items-center gap-2 rounded-full bg-white border border-slate-200 pl-1 pr-3 py-1 shadow-sm active:scale-95 transition" aria-label="Profil saya">
-          <span class="w-8 h-8 rounded-full bg-gradient-to-br from-emerald-400 to-teal-600 text-white font-display font-extrabold flex items-center justify-center">
+        <NuxtLink to="/profil" class="flex items-center gap-2 rounded-full bg-white pl-1 pr-1 sm:pr-3 py-1 shadow-[0_2px_8px_rgba(31,42,55,0.06)] active:scale-95 transition" aria-label="Profil saya">
+          <span class="w-8 h-8 rounded-full bg-primary text-white font-display font-extrabold flex items-center justify-center shadow-[0_2px_6px_rgba(0,101,145,0.25)]">
             {{ inisial }}
           </span>
-          <span class="text-sm font-bold text-slate-700 max-w-[110px] truncate">{{ namaDepan }}</span>
+          <span class="hidden sm:block text-sm font-bold text-slate-700 max-w-[110px] truncate">{{ namaDepan }}</span>
         </NuxtLink>
       </div>
     </div>

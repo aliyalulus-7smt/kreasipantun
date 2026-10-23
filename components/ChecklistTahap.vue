@@ -18,7 +18,7 @@
             </span>
             <span class="flex-1">
               <span class="font-semibold text-slate-700 text-sm">{{ it }}</span>
-              <span v-if="jenisOtomatis(it)" class="ml-2 pill !px-2 !py-0.5 bg-violet-100 text-violet-700 text-[11px] font-bold align-middle">🤖 Otomatis</span>
+              <span v-if="jenisOtomatis(it)" class="ml-2 pill !px-2 !py-0.5 bg-panel text-primary text-[11px] font-bold align-middle">🤖 Otomatis</span>
               <span v-if="jenisOtomatis(it) === 'suku' && analisis" class="block mt-1.5 text-xs font-bold" :class="analisis.sukuOk ? 'text-emerald-600' : 'text-rose-500'">
                 Pantunmu: baris 1 = {{ analisis.suku[0] }}, baris 2 = {{ analisis.suku[1] }}, baris 3 = {{ analisis.suku[2] }}, baris 4 = {{ analisis.suku[3] }} suku kata {{ analisis.sukuOk ? '— semua dalam rentang 8–12 ✓' : '— masih ada baris di luar rentang 8–12' }}
               </span>

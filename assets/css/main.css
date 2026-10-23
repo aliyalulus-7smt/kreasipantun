@@ -3,21 +3,37 @@
 @tailwind utilities;
 
 body {
-  @apply font-body text-slate-800;
-  background: linear-gradient(160deg, #fef9ef 0%, #fdf3e3 40%, #eef7f0 100%);
+  @apply font-body text-[#111C29];
+  background: linear-gradient(160deg, #FFFBF3 0%, #fff6e8 45%, #eef6ff 100%);
   min-height: 100vh;
+}
+
+/* Ikon Material Symbols (dipakai header & navigasi bawah siswa) */
+.material-symbols-outlined {
+  font-family: 'Material Symbols Outlined';
+  font-weight: normal;
+  font-style: normal;
+  line-height: 1;
+  letter-spacing: normal;
+  text-transform: none;
+  display: inline-block;
+  white-space: nowrap;
+  word-wrap: normal;
+  direction: ltr;
+  -webkit-font-smoothing: antialiased;
+  font-variation-settings: 'FILL' 1, 'wght' 600, 'GRAD' 0, 'opsz' 24;
 }
 
 @layer components {
   .card {
-    @apply bg-white rounded-3xl shadow-[0_10px_30px_rgba(0,0,0,0.07)] border border-amber-100;
+    @apply bg-white rounded-3xl shadow-[0_8px_24px_rgba(31,42,55,0.06)] border border-slate-100;
   }
   .btn {
-    @apply inline-flex items-center justify-center gap-2 font-display font-bold rounded-full px-6 py-3 transition-all duration-200 active:scale-95 disabled:opacity-50 disabled:pointer-events-none;
+    @apply inline-flex items-center justify-center gap-2 font-display font-bold rounded-full px-6 py-3 min-h-[48px] transition-all duration-200 active:scale-95 disabled:opacity-50 disabled:pointer-events-none;
   }
   .btn-primary {
-    @apply btn text-white shadow-lg shadow-emerald-200;
-    background: linear-gradient(135deg, #34d399, #10b981);
+    @apply btn text-white shadow-lg shadow-sky-200;
+    background: linear-gradient(135deg, #38BDF8, #0EA5E9);
   }
   .btn-primary:hover {
     filter: brightness(1.05);
@@ -27,42 +43,42 @@ body {
     background: linear-gradient(135deg, #fbbf24, #f59e0b);
   }
   .btn-soft {
-    @apply btn bg-amber-50 text-amber-800 border-2 border-amber-200;
+    @apply btn bg-white text-[#006591] border-2 border-sky-200 hover:bg-sky-50;
   }
   .input-cute {
-    @apply w-full rounded-2xl border-2 border-amber-200 bg-amber-50/60 px-4 py-3 font-semibold text-slate-800 placeholder:text-slate-400 placeholder:font-normal focus:outline-none focus:border-emerald-400 focus:bg-white transition;
+    @apply w-full rounded-2xl border-2 border-slate-200 bg-white px-4 py-3 font-semibold text-[#111C29] placeholder:text-slate-400 placeholder:font-normal focus:outline-none focus:border-[#0EA5E9] focus:ring-4 focus:ring-sky-100 transition;
   }
   .pill {
     @apply inline-flex items-center gap-1 rounded-full px-3 py-1 text-xs font-bold;
   }
   .menu-item {
-    @apply flex items-center gap-2.5 w-full text-left px-3 py-2.5 rounded-xl font-bold text-sm text-slate-700 hover:bg-amber-50 active:bg-amber-100 transition cursor-pointer;
+    @apply flex items-center gap-2.5 w-full text-left px-3 py-2.5 rounded-xl font-bold text-sm text-slate-700 hover:bg-sky-50 active:bg-sky-100 transition cursor-pointer;
   }
   .page-title {
-    @apply font-display text-3xl md:text-4xl font-extrabold text-slate-800;
+    @apply font-display text-3xl md:text-4xl font-extrabold text-[#111C29];
   }
   .page-sub {
     @apply text-slate-500 font-semibold mt-1;
   }
 
-  /* === Design system siswa (playful learning, redesain 2026) === */
+  /* === Design system siswa "Colorful Clean" (Stitch, 2026) === */
   .kp-card {
-    @apply bg-white rounded-[1.75rem] border border-slate-100 shadow-[0_8px_24px_rgba(15,80,60,0.06)];
+    @apply bg-white rounded-[1.5rem] border border-slate-100 shadow-[0_8px_24px_rgba(31,42,55,0.06)];
   }
   .kp-btn {
     @apply inline-flex items-center justify-center gap-2 font-display font-bold rounded-full px-6 py-3 min-h-[48px] transition-all duration-200 active:scale-95 disabled:opacity-50 disabled:pointer-events-none;
   }
   .kp-btn-primary {
-    @apply kp-btn text-white bg-[#0e7a4f] shadow-lg shadow-emerald-200 hover:brightness-105;
+    @apply kp-btn text-white bg-[#0EA5E9] shadow-lg shadow-sky-200 hover:brightness-105;
   }
   .kp-btn-biru {
-    @apply kp-btn text-white bg-[#1663b8] shadow-lg shadow-sky-200 hover:brightness-105;
+    @apply kp-btn text-white bg-[#006591] shadow-lg shadow-sky-200 hover:brightness-105;
   }
   .kp-btn-soft {
-    @apply kp-btn bg-white text-[#1663b8] border-2 border-sky-200 hover:bg-sky-50;
+    @apply kp-btn bg-white text-[#006591] border-2 border-sky-200 hover:bg-sky-50;
   }
   .kp-section-title {
-    @apply font-display font-extrabold text-lg md:text-xl text-[#123c2b];
+    @apply font-display font-extrabold text-lg md:text-xl text-[#111C29];
   }
 }
 
