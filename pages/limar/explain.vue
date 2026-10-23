@@ -34,7 +34,7 @@ const games = [
   { to: '/limar/explain-susun', icon: '🔀', judul: 'Bongkar Susun Pantun', deskripsi: 'Susun baris pantun yang acak menjadi pantun yang utuh.', bg: 'bg-emerald-100' },
   { to: '/limar/explain-garis', icon: '🔗', judul: 'Tarik Garis Sampiran dan Isi', deskripsi: 'Hubungkan setiap baris pantun dengan kategori yang tepat.', bg: 'bg-sky-100' },
   { to: '/limar/explain-lengkapi', icon: '✏️', judul: 'Melengkapi Pantun', deskripsi: 'Pilih kata yang sesuai untuk melengkapi pantun.', bg: 'bg-rose-100' },
-  { to: '/limar/explain-pohon-rima', icon: '🌳', judul: 'Pohon Rima', deskripsi: 'Temukan kata yang memiliki bunyi akhir serupa.', bg: 'bg-violet-100' },
+  { to: '/limar/explain-pohon-rima', icon: '📖', judul: 'Kamus Kata Berima', deskripsi: 'Temukan kata berima & jelajahi kamus kata berima.', bg: 'bg-violet-100' },
   { to: '/limar/explain-evaluasi', icon: '🔍', judul: 'Evaluasi Pantun', deskripsi: 'Tentukan benar atau salah setiap pernyataan tentang pantun.', bg: 'bg-sky-100' },
 ]
 </script>

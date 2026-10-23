@@ -16,36 +16,54 @@
         <div class="flex gap-2">
           <button @click="jawab(i, true)" :disabled="kunciItemTerkunci(i)"
             :class="kelasPilihanBs(i, true)">
-            ✅ Benar
+            ✅ {{ labelBenar }}
           </button>
           <button @click="jawab(i, false)" :disabled="kunciItemTerkunci(i)"
             :class="kelasPilihanBs(i, false)">
-            ❌ Salah
+            ❌ {{ labelSalah }}
           </button>
         </div>
         <div v-if="tampilHasil(i)" :class="['mt-3 rounded-xl p-3 text-sm font-semibold', benarItem(i) ? 'bg-emerald-50 text-emerald-800' : 'bg-rose-50 text-rose-800']">
-          <p>{{ benarItem(i) ? '✅ Jawabanmu benar!' : `❌ Masih kurang tepat — jawaban yang benar: ${p.benar ? 'Benar' : 'Salah'}.` }}</p>
+          <p>{{ benarItem(i) ? '✅ Jawabanmu benar!' : `❌ Masih kurang tepat — jawaban yang benar: ${p.benar ? labelBenar : labelSalah}.` }}</p>
           <p v-if="p.penjelasan" class="mt-1 font-medium">💡 {{ p.penjelasan }}</p>
           <p v-if="!benarItem(i)" class="mt-1 font-medium">Silakan perbaiki jawaban ini, lalu periksa lagi ya.</p>
         </div>
       </div>
     </div>
 
-    <!-- Mode pilah kelompok (tap-to-place) -->
+    <!-- Mode pilah kelompok: wadah model tempat sampah (tap-to-place).
+         Ketuk wadah untuk memilih, ketuk barang untuk memasukkan; tutup
+         wadah beranimasi terbuka setiap ada barang masuk. Isi wadah
+         terlihat sebagai daftar dan bisa dikeluarkan lagi (ketuk item). -->
     <div v-if="tipe === 'pilah'" class="space-y-4">
-      <div class="grid grid-cols-2 gap-3">
-        <div v-for="k in data.kelompok" :key="k" @click="kelompokAktif = k"
-          :class="['card p-4 text-center cursor-pointer border-2 transition', kelompokAktif === k ? '!border-sky-400 bg-sky-50' : '']">
-          <p class="font-display font-bold text-slate-700">{{ k }}</p>
-          <p class="text-xs font-bold text-slate-400 mt-1">{{ isiKelompok(k).length }} item</p>
+      <p class="text-center text-sm font-bold text-slate-500">Ketuk satu wadah untuk memilihnya, lalu ketuk barang untuk memasukkannya.</p>
+      <div class="grid grid-cols-2 gap-3 items-start">
+        <div v-for="k in data.kelompok" :key="k" @click="kelompokAktif = k" class="wadah-pilah" :class="{ 'wadah-aktif': kelompokAktif === k }">
+          <div class="tutup-wadah" :class="[kelasTutup(k), { terbuka: tutupTerbuka === k }]">
+            <span>{{ ikonKelompok(k) }} {{ k }}</span>
+          </div>
+          <div class="badan-wadah" :class="kelasWadah(k)">
+            <p class="text-[11px] font-bold text-slate-500 text-center">{{ isiKelompok(k).length }} item di dalam</p>
+            <div v-if="isiKelompok(k).length" class="mt-2 space-y-1.5">
+              <button v-for="entri in isiKelompok(k)" :key="entri[0]" :disabled="tersimpan" @click.stop="keluarkan(Number(entri[0]))"
+                class="isi-wadah" :title="tersimpan ? '' : 'Ketuk untuk mengeluarkan dari wadah'">
+                <IkonSampah v-if="ikonUntukItem(Number(entri[0]))" :nama="ikonUntukItem(Number(entri[0]))" class="w-5 h-5 shrink-0" />
+                <span class="flex-1">{{ itemTeks(Number(entri[0])) }}</span>
+                <span v-if="!tersimpan" class="text-slate-400 font-bold">✕</span>
+              </button>
+            </div>
+            <p v-else class="mt-2 text-xs font-semibold text-slate-400 text-center">Masih kosong</p>
+          </div>
         </div>
       </div>
-      <div class="flex flex-wrap gap-2">
+      <div class="flex flex-wrap gap-2 justify-center">
         <button v-for="(it, i) in sisa" :key="i" @click="tempatkan(i)"
-          class="pill !px-4 !py-2 bg-white border-2 hover:border-sky-300 transition">
+          class="pill !px-4 !py-2 bg-white border-2 hover:border-sky-300 transition inline-flex items-center gap-2">
+          <IkonSampah v-if="ikonUntukTeks(it.teks)" :nama="ikonUntukTeks(it.teks)" class="w-6 h-6" />
           {{ it.teks }}
         </button>
       </div>
+      <p v-if="!kelompokAktif && sisa.length" class="text-center text-xs font-bold text-amber-600">Pilih dulu wadahnya, ya 👆</p>
       <p v-if="!sisa.length" class="text-center font-bold text-sm"
         :class="semuaBenar ? 'text-emerald-600' : 'text-amber-600'">
         {{ semuaBenar ? '🎉 Semua benar!' : '⚠️ Ada yang kurang tepat, coba periksa lagi.' }}
@@ -71,12 +89,11 @@
       </div>
     </div>
 
-    <!-- Aksi periksa & simpan -->
+    <!-- Aksi periksa (simpan ada di paling bawah, di bawah Kartu Fakta) -->
     <div v-if="tampilSedihKuis" class="card p-4 bg-sky-50/60">
       <AnimasiSedih />
       <p class="text-center font-bold text-slate-600 text-sm mt-1">Jawaban yang masih salah belum bisa membawamu lanjut. Ulangi sampai semuanya benar ya.</p>
     </div>
-    <button v-if="tersimpan" class="btn-soft w-full" @click="mulaiUbah">✏️ Ubah Jawaban</button>
     <button v-if="bisaPeriksa" class="btn-primary w-full" @click="periksa">
       🔍 Periksa Jawaban
     </button>
@@ -85,12 +102,8 @@
     </p>
     <div v-if="semuaTerbuktiBenar && !tersimpan" class="card p-4 bg-emerald-50 text-center">
       <p class="font-display font-bold text-emerald-700">🎉 Semua jawabanmu benar!</p>
-      <p class="text-sm font-semibold text-emerald-600 mt-1">Kartu Fakta sudah terbuka di bawah — jangan lupa simpan jawabanmu.</p>
+      <p class="text-sm font-semibold text-emerald-600 mt-1">Kartu Fakta sudah terbuka di bawah — setelah membacanya, simpan jawabanmu di paling bawah ya.</p>
     </div>
-    <button v-if="bisaSimpan" class="btn-primary w-full" @click="simpan">
-      💾 Simpan Jawaban
-    </button>
-    <p v-if="tersimpan" class="text-center text-emerald-600 font-bold text-sm">✓ Tersimpan</p>
 
     <!-- Kartu Fakta: paling bawah, kartu bolak-balik, terbuka setelah semua benar -->
     <div v-if="data.kartuFakta?.length" class="space-y-3 pt-1">
@@ -117,6 +130,13 @@
         <p class="text-xs font-semibold text-slate-400 mt-1">Selesaikan semua soal dengan benar, lalu Kartu Fakta akan muncul di sini.</p>
       </div>
     </div>
+
+    <!-- Aksi ubah & simpan: paling bawah, di bawah Kartu Fakta (arahan guru) -->
+    <button v-if="tersimpan" class="btn-soft w-full" @click="mulaiUbah">✏️ Ubah Jawaban</button>
+    <button v-if="bisaSimpan" class="btn-primary w-full" @click="simpan">
+      💾 Simpan Jawaban
+    </button>
+    <p v-if="tersimpan" class="text-center text-emerald-600 font-bold text-sm">✓ Tersimpan</p>
   </div>
 </template>
 
@@ -135,6 +155,9 @@ const terbukti = ref<Set<number>>(new Set())
 const kartuTerbuka = ref<Record<number, boolean>>({})
 
 const daftarSoal = computed(() => props.data.soal || props.data.situasi || [])
+// Label pilihan benar/salah bisa diganti per fenomena (Hidup Sehat: Fakta/Mitos).
+const labelBenar = computed(() => props.data.labelBenar || 'Benar')
+const labelSalah = computed(() => props.data.labelSalah || 'Salah')
 const jumlahItem = computed(() => props.tipe === 'benar-salah' ? (props.data.pernyataan || []).length : daftarSoal.value.length)
 const sisa = computed(() => (props.data.item || []).filter((_: any, i: number) => !(i in penempatan.value)))
 const semuaBenar = computed(() => (props.data.item || []).every((it: any, i: number) => penempatan.value[i] === it.kelompok))
@@ -203,10 +226,44 @@ function periksa() {
   for (let i = 0; i < jumlahItem.value; i++) if (benarItem(i)) terbukti.value.add(i)
 }
 function isiKelompok(k: string) { return Object.entries(penempatan.value).filter(([_, v]) => v === k) }
+function itemTeks(idx: number) { return props.data.item?.[idx]?.teks || '' }
+
+// ── Wadah pilah model tempat sampah ──────────────────────────────────
+const tutupTerbuka = ref<string>('')
+let pewaktuTutup: ReturnType<typeof setTimeout> | undefined
+const petaIkonSampah: Record<string, string> = {
+  'Kantong plastik': 'kantong-plastik', 'Kulit pisang': 'kulit-pisang', 'Sisa nasi': 'sisa-nasi',
+  'Botol plastik': 'botol-plastik', 'Daun kering': 'daun-kering', 'Kaleng bekas': 'kaleng-bekas',
+}
+function ikonUntukTeks(teks: string) { return petaIkonSampah[teks] || '' }
+function ikonUntukItem(idx: number) { return ikonUntukTeks(itemTeks(idx)) }
+function ikonKelompok(k: string) {
+  return ({ Organik: '🌿', Anorganik: '♻️', Menyakiti: '💔', 'Tidak menyakiti': '💚', Positif: '🌟', Negatif: '⚠️', Sesuai: '🤝', 'Tidak sesuai': '🚫' } as Record<string, string>)[k] || '📦'
+}
+function kelasWadah(k: string) {
+  if (['Organik', 'Tidak menyakiti', 'Positif', 'Sesuai'].includes(k)) return '!border-emerald-300 bg-emerald-50/70'
+  if (['Menyakiti', 'Negatif', 'Tidak sesuai'].includes(k)) return '!border-rose-300 bg-rose-50/70'
+  return '!border-sky-300 bg-sky-50/70'
+}
+function kelasTutup(k: string) {
+  if (['Organik', 'Tidak menyakiti', 'Positif', 'Sesuai'].includes(k)) return 'bg-emerald-400 text-white'
+  if (['Menyakiti', 'Negatif', 'Tidak sesuai'].includes(k)) return 'bg-rose-400 text-white'
+  return 'bg-sky-400 text-white'
+}
 function tempatkan(i: number) {
   if (!kelompokAktif.value) return
   const idxSisa = (props.data.item || []).map((_: any, x: number) => x).filter((x: number) => !(x in penempatan.value))[i]
   penempatan.value = { ...penempatan.value, [idxSisa]: kelompokAktif.value }
+  // Animasi: tutup wadah terbuka sebentar setiap ada barang masuk.
+  tutupTerbuka.value = kelompokAktif.value
+  clearTimeout(pewaktuTutup)
+  pewaktuTutup = setTimeout(() => { tutupTerbuka.value = '' }, 900)
+}
+function keluarkan(idx: number) {
+  if (tersimpan.value) return
+  const next = { ...penempatan.value }
+  delete next[idx]
+  penempatan.value = next
 }
 function ulangi() { penempatan.value = {}; jawaban.value = {} }
 

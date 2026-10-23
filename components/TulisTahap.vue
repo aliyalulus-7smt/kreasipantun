@@ -25,11 +25,11 @@
     <div v-if="data.tantangan" class="card p-4">
       <p class="font-display font-bold text-slate-700 mb-1 text-center">🎯 Tantanganmu Ditentukan Roda Spin</p>
       <p class="text-xs font-semibold text-slate-400 text-center mb-4">Putar rodanya — tantangan yang berhenti di jarum adalah tugasmu.</p>
-      <RodaSpin :segments="segmenTantangan" :awal-indeks="tantanganKe" :nonaktif="tersimpan" @hasil="terimaSpin" />
+      <RodaSpin :segments="segmenTantangan" :awal-indeks="tantanganKe" :nonaktif="tersimpan || sudahSpin" @hasil="terimaSpin" />
       <div v-if="tantanganDipilih" class="mt-4 bg-amber-50 rounded-xl p-3.5">
         <p class="text-xs font-bold text-amber-600 mb-1">🎯 Tantanganmu (Tantangan {{ tantanganKe + 1 }}):</p>
         <p class="font-semibold text-slate-700 text-sm">{{ data.tantangan[tantanganKe] }}</p>
-        <p v-if="!tersimpan" class="text-[11px] font-semibold text-slate-400 mt-1.5">Kurang sreg? Putar lagi sebelum menyimpan — hasil terakhir yang berlaku.</p>
+        <p v-if="!tersimpan" class="text-[11px] font-semibold text-slate-400 mt-1.5">Roda hanya bisa diputar satu kali — hasil putaran inilah tantanganmu.</p>
       </div>
       <p v-else class="text-center text-sm font-bold text-slate-400 mt-3">Putar rodanya dulu untuk mendapat tantanganmu 🎡</p>
     </div>
@@ -55,7 +55,7 @@
     <!-- Referensi Pilihan Rima (paling bawah, model /limar/elaborate) -->
     <div class="card p-4">
       <button class="w-full flex items-center justify-between" @click="tampilRima = !tampilRima">
-        <span class="font-display font-bold text-slate-700">🌳 Referensi Pilihan Rima <span class="text-xs font-semibold text-slate-400">(opsional)</span></span>
+        <span class="font-display font-bold text-slate-700">📖 Kamus Kata Berima <span class="text-xs font-semibold text-slate-400">(opsional)</span></span>
         <span class="text-xl">{{ tampilRima ? '▲' : '▼' }}</span>
       </button>
       <p v-if="!tampilRima" class="text-xs font-semibold text-slate-500 mt-1">
@@ -111,6 +111,9 @@ const { antrekan } = useOutbox()
 const baris = ref<string[]>(['', '', '', ''])
 const tantanganKe = ref<number>(0)
 const tantanganDipilih = ref(!!props.dataTersimpan)
+// Roda spin hanya boleh diputar SATU kali (arahan guru): jawaban tersimpan
+// berarti roda sudah pernah diputar; hasil putaran menguncinya.
+const sudahSpin = ref(!!props.dataTersimpan)
 const tersimpan = ref(false)
 // Baris yang sudah disediakan soal: sampiran (baris 1-2) langsung terisi;
 // isi yang disediakan (baris 3-4) terisi DAN terkunci — siswa mengisi yang kosong saja.
@@ -140,6 +143,7 @@ const segmenTantangan = computed(() =>
 function terimaSpin(seg: { indeks: number }) {
   tantanganKe.value = seg.indeks
   tantanganDipilih.value = true
+  sudahSpin.value = true
 }
 
 // ── Referensi Pilihan Rima ──────────────────────────────────────────

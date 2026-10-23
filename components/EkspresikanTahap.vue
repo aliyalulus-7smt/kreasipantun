@@ -24,15 +24,27 @@
       </p>
     </div>
 
-    <!-- Identifikasi sampiran / isi -->
+    <!-- Identifikasi sampiran / isi: urutan larik & posisi tombol diacak
+         tiap halaman dibuka; hasil benar/salah baru tampil setelah
+         SEMUA larik dijawab (arahan guru). -->
     <div v-if="tipe === 'identifikasi-sampiran-isi'" class="space-y-3">
-      <div v-for="(l, i) in data.larik" :key="i" class="card p-4">
-        <p class="font-display font-semibold text-slate-700 mb-2">"{{ l.teks }}"</p>
+      <div v-for="li in urutanLarik" :key="li" class="card p-4">
+        <p class="font-display font-semibold text-slate-700 mb-2">"{{ data.larik[li].teks }}"</p>
         <div class="flex gap-2">
-          <button @click="jawab(i, 'sampiran')" :class="klsTombol(jawaban[i] === 'sampiran', jawaban[i] !== undefined && l.kunci === 'sampiran')">Sampiran</button>
-          <button @click="jawab(i, 'isi')" :class="klsTombol(jawaban[i] === 'isi', jawaban[i] !== undefined && l.kunci === 'isi')">Isi</button>
+          <template v-if="tombolTerbalik[li]">
+            <button @click="jawab(li, 'isi')" :class="klsIdentifikasi(li, 'isi')">Isi</button>
+            <button @click="jawab(li, 'sampiran')" :class="klsIdentifikasi(li, 'sampiran')">Sampiran</button>
+          </template>
+          <template v-else>
+            <button @click="jawab(li, 'sampiran')" :class="klsIdentifikasi(li, 'sampiran')">Sampiran</button>
+            <button @click="jawab(li, 'isi')" :class="klsIdentifikasi(li, 'isi')">Isi</button>
+          </template>
         </div>
+        <p v-if="semuaTerjawab" class="mt-2 text-xs font-bold" :class="jawaban[li] === data.larik[li].kunci ? 'text-emerald-600' : 'text-rose-500'">
+          {{ jawaban[li] === data.larik[li].kunci ? '✓ Benar' : '✗ Belum tepat' }}
+        </p>
       </div>
+      <p v-if="!semuaTerjawab" class="text-center text-xs font-bold text-slate-400">Hasil benar/salah tampil setelah semua larik kamu jawab, ya.</p>
     </div>
 
     <!-- Pasang rima: dua kolom papan kayu, disambung tali rami -->
@@ -153,6 +165,11 @@ const { antrekan } = useOutbox()
 const jawaban = ref<Record<number, any>>({ ...(props.dataTersimpan?.jawaban || {}) })
 const tersimpan = ref(!!props.dataTersimpan)
 const dicek = ref(!!props.dataTersimpan && Object.keys(props.dataTersimpan?.jawaban || {}).length > 0)
+// identifikasi: urutan tampil larik diacak & posisi tombol Sampiran/Isi
+// ditukar secara acak per larik, setiap halaman dibuka.
+const urutanLarik = ref<number[]>(acakArray((props.data.larik || []).map((_: any, i: number) => i)))
+const tombolTerbalik = ref<Record<number, boolean>>(
+  Object.fromEntries(urutanLarik.value.map(i => [i, Math.random() < 0.5])))
 // susun-larik
 const urutan = ref<string[]>([...(props.dataTersimpan?.urutan || [])])
 const acakDipakai = ref<number[]>([])
@@ -318,9 +335,17 @@ const bisaSimpan = computed(() => {
   return semuaBenarEkspresi.value
 })
 
-function klsTombol(aktif: boolean, benar: boolean) {
-  return ['pill !px-5 !py-2 border-2 transition text-sm',
-    aktif ? (benar ? '!bg-emerald-100 !border-emerald-400' : '!bg-rose-100 !border-rose-400') : 'hover:border-violet-300']
+// Identifikasi: jawaban yang dipilih tampil netral (ungu) sampai semua
+// larik terjawab — baru sesudah itu warna benar/salah muncul.
+function klsIdentifikasi(i: number, nilai: string) {
+  const dasar = 'pill !px-5 !py-2 border-2 transition text-sm'
+  if (jawaban.value[i] !== nilai) return [dasar, 'hover:border-violet-300']
+  const semua = (props.data.larik || []).length > 0
+    && Object.keys(jawaban.value).length === (props.data.larik || []).length
+  if (semua || tersimpan.value) {
+    return [dasar, jawaban.value[i] === props.data.larik[i]?.kunci ? '!bg-emerald-100 !border-emerald-400' : '!bg-rose-100 !border-rose-400']
+  }
+  return [dasar, '!bg-violet-100 !border-violet-400']
 }
 function jawab(i: number, v: any) { jawaban.value = { ...jawaban.value, [i]: v } }
 function pilih(i: number) {

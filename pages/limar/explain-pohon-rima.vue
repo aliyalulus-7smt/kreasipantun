@@ -5,8 +5,8 @@
   </div>
 
   <div class="text-center mb-6">
-    <h1 class="page-title">🌳 Pohon Rima</h1>
-    <p class="page-sub">Temukan kata yang memiliki bunyi akhir serupa dengan kata acuan!</p>
+    <h1 class="page-title">📖 Kamus Kata Berima</h1>
+    <p class="page-sub">Temukan kata yang memiliki bunyi akhir serupa dengan kata acuan, lalu jelajahi kamusnya di bawah!</p>
   </div>
 
   <div class="grid md:grid-cols-2 gap-6 max-w-4xl mx-auto items-start">
@@ -14,12 +14,12 @@
       <div class="grid grid-cols-2 gap-4 items-center">
         <div class="bg-emerald-50 rounded-2xl p-5">
           <p class="text-xs font-bold text-emerald-600 mb-1">KATA ACUAN</p>
-          <p class="font-display text-3xl font-extrabold text-emerald-700">melati</p>
+          <p class="font-display text-3xl font-extrabold text-emerald-700">hati</p>
           <p class="text-2xl mt-1">🔊</p>
         </div>
-        <div class="text-7xl">🌳</div>
+        <div class="text-7xl">📖</div>
       </div>
-      <p class="font-bold text-slate-500 text-sm mt-4 mb-3">Klik kata di pohon yang berima sama dengan "melati":</p>
+      <p class="font-bold text-slate-500 text-sm mt-4 mb-3">Klik kata yang berima sama dengan "hati":</p>
       <div class="flex flex-wrap justify-center gap-2">
         <button v-for="k in daftarKata" :key="k"
           @click="toggle(k)"
@@ -46,19 +46,45 @@
       <p class="font-display font-bold text-slate-700 mb-2">🔑 Kunci Jawaban dan Pembahasan</p>
       <p class="text-sm font-semibold text-slate-600"><b>Kata yang memiliki bunyi akhir serupa:</b></p>
       <ul class="text-sm font-semibold text-slate-600 list-disc list-inside mt-1">
-        <li>hati, melati</li>
-        <li>jamu, melati → <i>bukan</i>, bunyi akhirnya berbeda</li>
+        <li>hati, pagi — sama-sama berakhiran <b>-i</b></li>
+        <li>buku, guru → berakhiran -u; awan → -an; malam → -am</li>
       </ul>
-      <p class="text-sm font-semibold text-slate-600 mt-2"><b>Pembahasan:</b> Kata-kata tersebut memiliki bunyi akhir yang sama, yaitu <b>-ati</b>.</p>
+      <p class="text-sm font-semibold text-slate-600 mt-2"><b>Pembahasan:</b> Kata-kata dalam satu kelompok Kamus Kata Berima memiliki bunyi akhir yang sama. "hati" dan "pagi" sama-sama ada di kelompok akhiran <b>-i</b>.</p>
+    </div>
+  </div>
+
+  <!-- Kamus Kata Berima: 30 kelompok akhiran dari data/rima -->
+  <div class="card p-6 max-w-4xl mx-auto mt-6">
+    <p class="font-display font-bold text-slate-700 text-lg mb-1">📖 Jelajahi Kamus Kata Berima</p>
+    <p class="text-sm font-semibold text-slate-500 mb-4">Pilih akhiran, lalu lihat kata-kata yang berima dengan akhiran itu — bekal menyusun pantunmu.</p>
+    <div class="flex flex-wrap gap-1.5 mb-4">
+      <button v-for="g in referensiRima" :key="g.akhiran" @click="akhiranAktif = g.akhiran"
+        class="pill !text-xs border-2 transition"
+        :class="akhiranAktif === g.akhiran ? 'bg-violet-500 text-white border-violet-500' : 'bg-white text-slate-600 border-slate-200 hover:border-violet-300'">
+        {{ g.akhiran }}
+      </button>
+    </div>
+    <div v-if="kelompokAktif">
+      <div v-for="kat in urutanKategori" :key="kat" class="mb-3">
+        <template v-if="kataKategori(kat).length">
+          <p class="text-xs font-bold text-slate-400 mb-1.5">{{ labelKategori[kat] }}</p>
+          <div class="flex flex-wrap gap-1.5">
+            <span v-for="w in kataKategori(kat)" :key="w.teks" class="pill bg-violet-50 text-slate-700 border border-violet-100 !text-xs">{{ w.teks }}</span>
+          </div>
+        </template>
+      </div>
     </div>
   </div>
 </template>
 
 <script setup lang="ts">
+import { referensiRima, labelKategori, type KataRimaRef } from '~/data/rima'
+
 definePageMeta({ layout: 'app', middleware: 'auth' })
 
-const daftarKata = ['hati', 'buku', 'pagi', 'melati', 'jamu', 'awan']
-const benarList = ['hati', 'melati']
+// Permainan: kata berima dengan acuan "hati" (kelompok akhiran -i).
+const daftarKata = ['hati', 'pagi', 'buku', 'awan', 'guru', 'malam']
+const benarList = ['hati', 'pagi']
 const dipilih = ref<string[]>([])
 const hasil = ref<{ benar: boolean; pesan: string } | null>(null)
 
@@ -77,12 +103,20 @@ function periksa() {
   const benarCount = dipilih.value.filter(k => benarList.includes(k)).length
   hasil.value = ok
     ? { benar: true, pesan: '🎉 Hebat! Kamu menemukan semua kata berima!' }
-    : { benar: false, pesan: `💪 ${benarCount} kata tepat. Cari yang berakhiran "-ati"!` }
+    : { benar: false, pesan: `💪 ${benarCount} kata tepat. Cari yang berakhiran "-i"!` }
   ok ? sfx.success() : sfx.error()
 }
 
 function ulangi() {
   dipilih.value = []
   hasil.value = null
+}
+
+// Penjelajah kamus
+const akhiranAktif = ref<string>('-i')
+const kelompokAktif = computed(() => referensiRima.find(g => g.akhiran === akhiranAktif.value) || null)
+const urutanKategori: KataRimaRef['kategori'][] = ['benda', 'sifat', 'kerja']
+function kataKategori(kat: KataRimaRef['kategori']) {
+  return (kelompokAktif.value?.kata || []).filter(w => w.kategori === kat)
 }
 </script>

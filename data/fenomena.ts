@@ -242,7 +242,7 @@ Saat pulang sekolah, Raka melihat berita tentang warga yang terdampak banjir di 
       asah: {
         judul: 'Asah Kreativitas', tipe: 'lengkapi-isi',
         data: {
-          instruksi: 'Lengkapi isi pantun dari sampiran berikut. Gunakan kata "menolong" dan "sesama".',
+          instruksi: 'Lengkapi isi pantun dari sampiran berikut.',
           sampiran: ['Di atas meja ada gelas kosong', 'Gelas bunga milik mama'],
         },
       },
@@ -551,6 +551,7 @@ Saat pulang sekolah, Raka melihat berita tentang warga yang terdampak banjir di 
       eksplorasi: {
         judul: 'Eksplorasi Fenomena', tipe: 'benar-salah',
         data: {
+          labelBenar: 'Fakta', labelSalah: 'Mitos',
           pernyataan: [
             { teks: 'Melewatkan sarapan dapat membantu tubuh menjadi lebih sehat dan bugar.', benar: false, penjelasan: 'Sarapan memberi energi untuk beraktivitas dan belajar, jadi melewatkannya justru membuat tubuh lemas.' },
             { teks: 'Tidur yang cukup membantu tubuh memulihkan energi dan menjaga konsentrasi saat belajar.', benar: true, penjelasan: 'Saat tidur, tubuh memulihkan energi dan memperbaiki diri, sehingga kita lebih fokus saat belajar.' },
@@ -576,7 +577,7 @@ Saat pulang sekolah, Raka melihat berita tentang warga yang terdampak banjir di 
           soal: [
             {
               tanya: 'Baris manakah yang menunjukkan ketidaksesuaian pola rima pantun tersebut?',
-              pilihan: ['Baris pertama', 'Baris kedua', 'Baris ketiga'], kunci: 1,
+              pilihan: ['Baris pertama', 'Baris kedua', 'Baris ketiga'], kunci: 2,
             },
             {
               tanya: 'Apa alasan pola rima pada baris tersebut perlu diperbaiki?',

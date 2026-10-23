@@ -1,7 +1,7 @@
-// Referensi pilihan rima untuk kartu bantuan menyusun pantun (tahap Asah),
-// model panel Rima A / Rima B seperti /limar/elaborate v1.
-// Satu kelompok akhiran dipakai untuk baris 1 & 3 (rima A),
-// kelompok lain untuk baris 2 & 4 (rima B) — pola sajak a-b-a-b.
+// Kamus Kata Berima — data dari dokumen revisi guru (23 Okt 2026):
+// 30 kelompok akhiran, kata dikelompokkan kata benda / kata sifat / kata kerja.
+// Dipakai kartu bantuan "Kamus Kata Berima" di tahap Asah (panel Rima A & B,
+// pola sajak a-b-a-b) dan halaman /limar/explain-pohon-rima.
 export interface KataRimaRef { teks: string; kategori: 'benda' | 'sifat' | 'kerja' }
 export interface KelompokRima { akhiran: string; kata: KataRimaRef[] }
 
@@ -10,16 +10,36 @@ const s = (teks: string): KataRimaRef => ({ teks, kategori: 'sifat' })
 const k = (teks: string): KataRimaRef => ({ teks, kategori: 'kerja' })
 
 export const referensiRima: KelompokRima[] = [
-  { akhiran: '-a', kata: [b('cahaya'), s('bahagia'), s('ceria'), s('nyata'), b('dunia'), b('senja')] },
-  { akhiran: '-i', kata: [b('hati'), b('melati'), s('sejati'), b('pagi'), b('budi'), k('pergi')] },
-  { akhiran: '-an', kata: [b('awan'), b('kawan'), b('jalan'), b('bulan'), b('taman'), b('teman')] },
-  { akhiran: '-ang', kata: [k('pulang'), s('senang'), k('datang'), k('kenang'), k('terbang'), s('sayang')] },
-  { akhiran: '-ar', kata: [k('belajar'), s('segar'), s('sabar'), s('mekar'), s('benar'), s('sadar')] },
-  { akhiran: '-u', kata: [b('ilmu'), b('jamu'), s('malu'), s('baru'), b('guru'), s('rindu')] },
-  { akhiran: '-ai', kata: [s('damai'), s('ramai'), s('pandai'), s('santai'), k('capai'), b('sungai')] },
-  { akhiran: '-ih', kata: [s('bersih'), s('jernih'), s('gigih'), s('pedih'), k('latih'), s('putih')] },
-  { akhiran: '-ah', kata: [s('indah'), s('mudah'), s('ramah'), s('cerah'), s('megah'), b('sekolah')] },
-  { akhiran: '-at', kata: [s('sehat'), s('hebat'), b('sahabat'), s('taat'), s('lebat'), b('semangat')] },
+  { akhiran: '-a', kata: [b('mata'), b('cinta'), b('bunga'), b('budaya'), b('cerita'), b('negara'), b('keluarga'), b('dunia'), b('bahasa'), b('udara'), b('senja'), b('kepala'), b('suara'), b('saudara'), b('bangsa'), b('angkasa'), b('mahkota'), b('rahasia'), s('bahagia'), s('mulia'), s('sederhana'), s('biasa'), s('ceria'), s('gembira'), s('tua'), s('muda'), s('kaya'), s('sentosa'), s('perkasa'), s('merdeka'), s('dewasa'), s('sempurna'), s('berbahaya'), k('membaca'), k('bertanya'), k('bercanda'), k('berkata'), k('mencoba'), k('merasa'), k('menyapa'), k('bercerita'), k('berkarya'), k('berdoa'), k('berbicara'), k('berlomba'), k('bekerja'), k('membela')] },
+  { akhiran: '-i', kata: [b('hati'), b('pagi'), b('mimpi'), b('diri'), b('bumi'), b('negeri'), b('hari'), b('kaki'), b('gigi'), b('api'), b('padi'), b('matahari'), b('tepi'), b('kunci'), b('sapi'), s('sunyi'), s('rapi'), s('murni'), s('abadi'), s('sejati'), s('suci'), s('tinggi'), s('berani'), s('sepi'), s('mandiri'), s('terpuji'), k('menari'), k('bernyanyi'), k('bermimpi'), k('mengerti'), k('berlari'), k('mencuci'), k('memberi'), k('mengabdi'), k('berdiri'), k('berbagi')] },
+  { akhiran: '-u', kata: [b('batu'), b('buku'), b('guru'), b('susu'), b('ilmu'), b('kayu'), b('waktu'), b('kartu'), b('tamu'), b('madu'), b('lagu'), b('kuku'), b('debu'), b('ratu'), b('kutu'), b('bambu'), s('rindu'), s('sendu'), s('malu'), s('layu'), s('kelabu'), s('syahdu'), s('merdu'), s('lucu'), s('seru'), s('biru'), s('kaku'), s('jitu'), s('lugu'), k('menunggu'), k('bertemu'), k('membantu'), k('berlalu'), k('berlaku'), k('bertamu'), k('memburu'), k('menyatu'), k('mengadu'), k('menyusu')] },
+  { akhiran: '-an', kata: [b('jalan'), b('teman'), b('taman'), b('harapan'), b('impian'), b('makanan'), b('pelajaran'), b('perjuangan'), b('kehidupan'), b('tujuan'), b('kenangan'), b('persahabatan'), b('pendidikan'), b('hutan'), b('awan'), b('badan'), b('zaman'), s('tampan'), s('sopan'), s('rupawan'), s('budiman'), s('beriman'), s('aman'), s('nyaman'), s('setiakawan'), s('menawan'), s('dermawan'), k('makan'), k('berjalan'), k('bertahan'), k('mengucapkan'), k('memaafkan'), k('mendoakan'), k('mengajarkan'), k('menyampaikan'), k('menghormati'), k('menyenangkan')] },
+  { akhiran: '-am', kata: [b('malam'), b('ayam'), b('kolam'), b('garam'), b('macam'), b('ragam'), b('dendam'), b('salam'), b('jam'), b('kacamata'), s('dalam'), s('hitam'), s('kelam'), s('kejam'), s('tajam'), s('suram'), s('asam'), k('diam'), k('tenggelam'), k('menanam'), k('mendendam'), k('mengancam'), k('memadam')] },
+  { akhiran: '-ang', kata: [b('bintang'), b('ruang'), b('gudang'), b('ladang'), b('pedang'), b('uang'), b('cabang'), b('gelang'), b('tulang'), b('lubang'), s('sayang'), s('senang'), s('terang'), s('panjang'), s('riang'), s('tenang'), s('lantang'), s('garang'), s('cemerlang'), s('malang'), k('pulang'), k('terbang'), k('datang'), k('berjuang'), k('menantang'), k('memandang'), k('menerjang'), k('berdagang'), k('melenggang')] },
+  { akhiran: '-at', kata: [b('sahabat'), b('semangat'), b('obat'), b('alat'), b('kalimat'), b('syarat'), b('adat'), b('rakyat'), b('martabat'), b('masyarakat'), b('zakat'), s('hebat'), s('kuat'), s('dekat'), s('selamat'), s('cepat'), s('tepat'), s('hemat'), s('sehat'), s('nikmat'), s('berat'), s('sesat'), s('padat'), k('membuat'), k('merawat'), k('mengingat'), k('mengangkat'), k('mendapat'), k('berangkat'), k('mencatat'), k('melihat')] },
+  { akhiran: '-ak', kata: [b('anak'), b('jarak'), b('sajak'), b('otak'), b('kotak'), b('gerak'), b('ombak'), b('bajak'), b('jejak'), b('telapak'), s('banyak'), s('bijak'), s('enak'), s('tegak'), s('layak'), s('marak'), s('jinak'), s('cekak'), k('bergerak'), k('mengajak'), k('menembak'), k('menabrak'), k('bertindak'), k('menolak'), k('menginjak'), k('memasak'), k('menyimak'), k('merusak')] },
+  { akhiran: '-ah', kata: [b('rumah'), b('sekolah'), b('wajah'), b('tanah'), b('sejarah'), b('buah'), b('darah'), b('sampah'), b('langkah'), b('sawah'), b('sumpah'), b('arah'), b('wilayah'), s('ramah'), s('indah'), s('mudah'), s('marah'), s('susah'), s('murah'), s('gagah'), s('lelah'), s('cerah'), s('megah'), s('rendah'), s('patah'), s('salah'), k('berubah'), k('menyerah'), k('berserah'), k('menikah'), k('bertambah'), k('singgah'), k('berpisah'), k('menyalah')] },
+  { akhiran: '-ar', kata: [b('pasar'), b('kabar'), b('dasar'), b('kamar'), b('sinar'), b('gambar'), b('fajar'), b('akar'), b('layar'), b('gelar'), b('mahar'), s('pintar'), s('sabar'), s('benar'), s('besar'), s('kasar'), s('segar'), s('lancar'), s('wajar'), s('lapar'), s('tegar'), k('belajar'), k('mengejar'), k('mendengar'), k('membakar'), k('menggambar'), k('menyebar'), k('menawar'), k('mengajar'), k('mengecat')] },
+  { akhiran: '-ai', kata: [b('pantai'), b('sungai'), b('balai'), b('nilai'), b('petai'), b('kedai'), b('damai'), s('pandai'), s('santai'), s('damai'), s('ramai'), s('sesuai'), s('lalai'), s('abai'), k('sampai'), k('memakai'), k('mencapai'), k('menilai'), k('melerai'), k('menggapai'), k('menamai'), k('merangkai')] },
+  { akhiran: '-au', kata: [b('pulau'), b('kerbau'), b('harimau'), b('danau'), b('pisau'), b('tembakau'), b('limau'), s('hijau'), s('silau'), s('kacau'), s('risau'), s('galau'), s('rancau'), k('memantau'), k('mengejar'), k('mengimbau')] },
+  { akhiran: '-in', kata: [b('mesin'), b('angin'), b('vitamin'), b('disiplin'), b('izin'), b('pemimpin'), b('kain'), b('piring'), b('cermin'), s('rajin'), s('dingin'), s('miskin'), s('yakin'), s('mungkin'), s('licin'), s('asin'), s('ingin'), k('menjamin'), k('mengizinkan'), k('menyaring'), k('mengirim'), k('menyimpan'), k('menyusun')] },
+  { akhiran: '-it', kata: [b('langit'), b('kulit'), b('bukit'), b('rakit'), b('rumit'), b('parit'), b('sabit'), s('sulit'), s('sedikit'), s('sakit'), s('rumit'), s('pahit'), s('sempit'), s('sipit'), s('pelit'), k('menjahit'), k('mencubit'), k('merakit'), k('mengait'), k('mengikuti'), k('menitip')] },
+  { akhiran: '-ik', kata: [b('adik'), b('musik'), b('taktik'), b('praktik'), b('plastik'), b('listrik'), b('batik'), b('publik'), b('fisik'), s('cantik'), s('unik'), s('asyik'), s('apik'), s('baik'), s('antik'), s('panik'), k('menarik'), k('mendidik'), k('naik'), k('membidik'), k('mengetik'), k('mengusik')] },
+  { akhiran: '-is', kata: [b('garis'), b('keris'), b('krisis'), b('basis'), b('jenis'), s('manis'), s('gratis'), s('tipis'), s('kritis'), s('praktis'), s('habis'), s('optimis'), k('menulis'), k('mengiris'), k('mengemis'), k('menangis')] },
+  { akhiran: '-ih', kata: [b('kasih'), b('benih'), b('selisih'), b('perih'), s('putih'), s('bersih'), s('sedih'), s('letih'), s('jernih'), s('gigih'), s('perih'), k('memilih'), k('beralih'), k('mengasih')] },
+  { akhiran: '-ir', kata: [b('akhir'), b('hilir'), b('takdir'), b('bibir'), b('syair'), b('tafsir'), b('lahir'), s('mahir'), s('zahir'), s('hadir'), k('berpikir'), k('mengukir'), k('mengalir'), k('lahir')] },
+  { akhiran: '-im', kata: [b('hakim'), b('musim'), b('karim'), s('alim'), k('mengirim'), k('menyimpan')] },
+  { akhiran: '-un', kata: [b('daun'), b('racun'), b('tahun'), b('pantun'), b('kebun'), b('sabun'), b('ampun'), b('bangun'), s('santun'), s('rukun'), s('tekun'), s('anggun'), k('menurun'), k('turun'), k('menyusun'), k('berkebun'), k('melamun'), k('berpantun')] },
+  { akhiran: '-ut', kata: [b('laut'), b('mulut'), b('sudut'), b('rambut'), b('semut'), b('lutut'), b('perut'), s('lembut'), s('patut'), s('takut'), s('kusut'), s('imut'), k('ikut'), k('lanjut'), k('menyebut'), k('menjemput'), k('merebut'), k('mengikuti')] },
+  { akhiran: '-uk', kata: [b('induk'), b('bentuk'), b('petunjuk'), b('pupuk'), b('kakak'), b('batuk'), s('busuk'), s('buruk'), s('mabuk'), s('gemuk'), k('duduk'), k('tunduk'), k('masuk'), k('menunjuk'), k('memeluk'), k('menyambuk')] },
+  { akhiran: '-ul', kata: [b('judul'), b('rasul'), b('betul'), s('betul'), s('gaul'), k('pukul'), k('muncul'), k('menyusul')] },
+  { akhiran: '-um', kata: [b('hukum'), b('kaum'), b('jarum'), b('album'), b('forum'), s('umum'), s('maklum'), s('harum'), k('minum'), k('tersenyum'), k('menghukum')] },
+  { akhiran: '-ung', kata: [b('gunung'), b('burung'), b('hidung'), b('kampung'), b('payung'), b('jantung'), b('ujung'), b('tabung'), b('lumbung'), s('bingung'), s('untung'), s('agung'), s('langsung'), s('murung'), s('gantung'), k('mendukung'), k('menanggung'), k('berkunjung'), k('menghitung'), k('menyambung'), k('menghubung')] },
+  { akhiran: '-us', kata: [b('virus'), b('kursus'), b('bonus'), b('fokus'), b('status'), s('fokus'), s('khusus'), s('mulus'), s('tulus'), s('bagus'), s('rakus'), s('lurus'), s('halus'), k('lulus'), k('putus'), k('mengurus'), k('mengekspos')] },
+  { akhiran: '-or', kata: [b('motor'), b('kantor'), b('faktor'), b('doktor'), b('aktor'), b('sensor'), b('skor'), b('honor'), b('traktor'), s('kotor'), s('molor'), k('mengebor'), k('menyetor'), k('mengimpor')] },
+  { akhiran: '-ap', kata: [b('atap'), b('tahap'), b('sikap'), b('suap'), b('asap'), s('siap'), s('gelap'), s('lengkap'), s('tetap'), s('sedap'), s('cakap'), s('mantap'), k('berharap'), k('menangkap'), k('menghadap'), k('menyerap'), k('mengucap')] },
+  { akhiran: '-ong', kata: [b('lorong'), b('terong'), b('gong'), b('tong'), b('kantong'), s('kosong'), s('sombong'), s('bolong'), s('dong'), k('menolong'), k('memotong'), k('mendorong'), k('berbohong'), k('menggonggong')] },
+  { akhiran: '-o', kata: [b('toko'), b('foto'), b('radio'), b('logo'), b('video'), b('biro'), b('domino'), b('piano'), b('sepeda'), s('jago'), s('loyo'), s('ceroboh'), k('foto'), k('video'), k('moto')] },
 ]
 
 export const labelKategori: Record<KataRimaRef['kategori'], string> = {

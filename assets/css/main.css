@@ -89,22 +89,38 @@ body {
 .kartu-belakang { background: #fffbeb; border: 2px solid #fcd34d; transform: rotateY(180deg); }
 @media (prefers-reduced-motion: reduce) { .kartu-dalam { transition: none; } }
 
-/* Papan kayu untuk pasang-rima */
-.papan-kayu { position: relative; width: 100%; padding: .7rem 1.4rem; border-radius: .55rem; border: 2px solid #7c4f24;
+/* Papan kayu untuk pasang-rima — warna CERAH (bukan coklat tua, arahan guru) */
+.papan-kayu { position: relative; width: 100%; padding: .7rem 1.4rem; border-radius: .55rem; border: 2px solid #d9b77c;
   background:
-    radial-gradient(circle 4px at 10px 50%, #e8ddc8 60%, #8d8577 100%),
-    radial-gradient(circle 4px at calc(100% - 10px) 50%, #e8ddc8 60%, #8d8577 100%),
-    repeating-linear-gradient(93deg, rgba(90, 55, 20, .14) 0 2px, transparent 2px 9px),
-    linear-gradient(180deg, #bd8a52, #a06a35);
-  color: #fff7ea; font-family: 'Baloo 2', ui-rounded, system-ui, sans-serif; font-weight: 700; font-size: .95rem;
-  text-shadow: 0 1px 2px rgba(60, 35, 5, .45);
-  box-shadow: inset 0 1px 0 rgba(255, 240, 210, .45), inset 0 -2px 0 rgba(70, 42, 10, .35), 0 2px 5px rgba(60, 35, 5, .3);
+    radial-gradient(circle 4px at 10px 50%, #fff8ea 60%, #cbb890 100%),
+    radial-gradient(circle 4px at calc(100% - 10px) 50%, #fff8ea 60%, #cbb890 100%),
+    repeating-linear-gradient(93deg, rgba(166, 124, 58, .12) 0 2px, transparent 2px 9px),
+    linear-gradient(180deg, #f6ddab, #eecf95);
+  color: #6d4c1e; font-family: 'Baloo 2', ui-rounded, system-ui, sans-serif; font-weight: 700; font-size: .95rem;
+  text-shadow: 0 1px 0 rgba(255, 250, 235, .7);
+  box-shadow: inset 0 1px 0 rgba(255, 252, 240, .8), inset 0 -2px 0 rgba(166, 124, 58, .25), 0 2px 5px rgba(120, 84, 30, .18);
   transition: transform .15s ease, outline-color .15s ease; outline: 3px solid transparent; outline-offset: 2px; }
 .papan-kayu:hover { transform: translateY(-1px); }
 .papan-kayu.papan-aktif { outline-color: #38bdf8; transform: scale(1.04); }
 .papan-kayu.papan-terikat { outline-color: #fbbf24; }
 .papan-kayu.papan-benar { outline-color: #34d399; }
 .papan-kayu.papan-putus { outline-color: #fb7185; }
+
+/* Wadah pilah model tempat sampah (Eksplorasi tipe pilah) */
+.wadah-pilah { position: relative; cursor: pointer; transition: transform .15s ease; }
+.wadah-pilah.wadah-aktif { transform: translateY(-2px); }
+.wadah-pilah.wadah-aktif .badan-wadah { box-shadow: 0 0 0 3px rgba(56, 189, 248, .5); }
+.tutup-wadah { border-radius: .9rem .9rem .3rem .3rem; padding: .5rem .6rem; text-align: center;
+  font-family: 'Baloo 2', ui-rounded, system-ui, sans-serif; font-weight: 700; font-size: .92rem;
+  box-shadow: inset 0 2px 0 rgba(255, 255, 255, .35), 0 2px 4px rgba(30, 41, 59, .18);
+  transform-origin: 10% 100%; transition: transform .45s cubic-bezier(.34, 1.56, .64, 1); position: relative; z-index: 1; }
+.tutup-wadah.terbuka { transform: rotate(-24deg) translateY(-4px); }
+.badan-wadah { border: 2px solid; border-top-width: 0; border-radius: 0 0 1rem 1rem; padding: .7rem; min-height: 5.5rem; }
+.isi-wadah { display: flex; align-items: center; gap: .45rem; width: 100%; text-align: left; background: #fff;
+  border: 1.5px solid rgba(100, 116, 139, .25); border-radius: .65rem; padding: .35rem .55rem;
+  font-size: .78rem; font-weight: 600; color: #334155; }
+.isi-wadah:not(:disabled):hover { border-color: rgba(244, 63, 94, .5); }
+@media (prefers-reduced-motion: reduce) { .tutup-wadah { transition: none; } }
 
 /* Animasi sedih (jawaban salah): wajah bergoyang + hujan rintik */
 .animasi-sedih { position: relative; width: 7rem; height: 5.5rem; margin: 0 auto; overflow: visible; }
