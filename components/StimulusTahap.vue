@@ -23,7 +23,10 @@
       </p>
     </figure>
     <div v-else class="card p-5 bg-amber-50/60">
-      <p v-if="data.artikel" class="text-slate-700 leading-relaxed whitespace-pre-line">{{ data.artikel }}</p>
+      <template v-if="data.artikel">
+        <p v-if="artikelJudul" class="font-display font-extrabold text-center text-slate-800 text-lg mb-3">{{ artikelJudul }}</p>
+        <p class="text-slate-700 leading-relaxed whitespace-pre-line">{{ artikelIsi }}</p>
+      </template>
       <p v-else class="text-slate-500 font-semibold italic">📄 {{ data.catatan || 'Materi artikel menyusul.' }}</p>
     </div>
 
@@ -50,6 +53,12 @@ const emit = defineEmits(['selesai'])
 const { antrekan } = useOutbox()
 
 const respons = ref(props.dataTersimpan?.tanggapan || '')
+
+// Artikel diawali judul cerita pada blok pertamanya (dipisah baris kosong);
+// judul ditampilkan di tengah & tebal, sisanya jadi isi cerita.
+const blokArtikel = computed(() => (props.data.artikel || '').split(/\n\s*\n/))
+const artikelJudul = computed(() => (blokArtikel.value.length > 1 ? blokArtikel.value[0].trim() : ''))
+const artikelIsi = computed(() => (blokArtikel.value.length > 1 ? blokArtikel.value.slice(1).join('\n\n') : (props.data.artikel || '')))
 const tersimpan = ref(!!props.dataTersimpan?.tanggapan)
 const gambarGagal = ref(false)
 const bisaSimpan = computed(() => respons.value.trim().length > 0 && !tersimpan.value)

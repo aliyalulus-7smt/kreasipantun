@@ -35,12 +35,19 @@
     </div>
 
     <div class="card p-5">
-      <label class="block font-bold text-slate-700 mb-1.5 text-sm">💭 Refleksimu (opsional)</label>
+      <label class="block font-bold text-slate-700 mb-1.5 text-sm">💭 Refleksimu (wajib diisi)</label>
       <textarea v-model="refleksi" rows="3" class="input-cute disabled:bg-slate-100" :disabled="tersimpan" placeholder="Apa yang sudah bagus dan apa yang ingin kamu perbaiki?" />
     </div>
 
+    <div v-if="!tersimpan && daftarKurang.length" class="card p-5 border-2 !border-rose-300 bg-rose-50/70">
+      <p class="font-display font-bold text-rose-600 mb-2">⚠️ Belum bisa lanjut — masih ada yang kurang:</p>
+      <ul class="list-disc list-inside space-y-1.5 text-sm font-semibold text-rose-500">
+        <li v-for="(k, i) in daftarKurang" :key="i">{{ k }}</li>
+      </ul>
+    </div>
+
     <button v-if="tersimpan" class="btn-soft w-full" @click="tersimpan = false">✏️ Ubah Evaluasi</button>
-    <button v-else class="btn-primary w-full" @click="simpan">
+    <button v-else class="btn-primary w-full" :disabled="!bisaSimpan" @click="simpan">
       💾 Simpan Evaluasi
     </button>
     <p v-if="tersimpan" class="text-center text-emerald-600 font-bold text-sm">✓ Tersimpan</p>
@@ -101,7 +108,47 @@ function toggle(i: number) {
   centang.value = { ...centang.value, [i]: !centang.value[i] }
 }
 
+// ── Gerbang kelengkapan: semua item harus tercentang & refleksi terisi ──
+// Item otomatis hanya dihitung terpenuhi dari hasil analisis pantun Asah
+// (bukan dari centang manual), supaya evaluasi tidak bisa diloloskan
+// sebelum pantunnya memenuhi ketentuan suku kata & sajak.
+function itemTerpenuhi(i: number): boolean {
+  const jenis = jenisOtomatis(props.data.item?.[i] || '')
+  if (jenis) return !!analisis.value && nilaiItem(i)
+  return !!centang.value[i]
+}
+const semuaTercentang = computed(() => (props.data.item || []).every((_: string, i: number) => itemTerpenuhi(i)))
+const refleksiTerisi = computed(() => refleksi.value.trim().length > 0)
+const bisaSimpan = computed(() => semuaTercentang.value && refleksiTerisi.value)
+
+/** Rincian kekurangan dalam bahasa siswa, ditampilkan selama belum lengkap. */
+const daftarKurang = computed(() => {
+  const kurang: string[] = []
+  const a = analisis.value
+  if (!a) {
+    kurang.push('Pantunmu di tahap Asah Kreativitas belum tersimpan — selesaikan tahap Asah dulu, ya.')
+  } else {
+    if (!a.sukuOk) {
+      a.suku.forEach((n, i) => {
+        if (n < 8 || n > 12) kurang.push(`Baris ${i + 1} pantunmu ${n} suku kata — harusnya 8 sampai 12 suku kata.`)
+      })
+    }
+    if (!a.sajakOk) {
+      kurang.push(`Sajak pantunmu belum a-b-a-b: bunyi akhir baris 1 harus sama dengan baris 3, dan baris 2 sama dengan baris 4 (sekarang: ${a.akhir.join(' · ')}).`)
+    }
+    if (!a.sukuOk || !a.sajakOk) {
+      kurang.push('Perbaiki pantunmu lewat tombol ✏️ Ubah Karya di tahap Asah Kreativitas, lalu kembali ke sini.')
+    }
+  }
+  ;(props.data.item || []).forEach((it: string, i: number) => {
+    if (!jenisOtomatis(it) && !centang.value[i]) kurang.push(`Pernyataan "${it}" belum kamu centang.`)
+  })
+  if (!refleksiTerisi.value) kurang.push('Refleksimu belum diisi.')
+  return kurang
+})
+
 function simpan() {
+  if (!bisaSimpan.value) return
   antrekan({
     phenomenon_id: props.fenomenaId, stage_id: 'evaluasi', content_version: 'v1', base_version: 0,
     response_payload: {

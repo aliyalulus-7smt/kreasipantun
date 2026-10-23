@@ -93,7 +93,7 @@ Dengan demikian, teknologi bukan hanya alat untuk mencari hiburan, tetapi juga s
       asah: {
         judul: 'Asah Kreativitas', tipe: 'tulis-kata-kunci',
         data: {
-          instruksi: 'Tulis isi pantun (baris 3-4) berdasarkan kata kunci berikut.',
+          instruksi: 'Tuliskan sebuah pantun berdasarkan kata kunci berikut.',
           kataKunci: ['Becak', 'Kayutangan', 'Bijak', 'Kecanduan'],
         },
       },
