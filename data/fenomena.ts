@@ -135,13 +135,17 @@ Dengan demikian, teknologi bukan hanya alat untuk mencari hiburan, tetapi juga s
         data: {
           instruksi: 'Kelompokkan jenis sampah menjadi organik dan anorganik.',
           kelompok: ['Organik', 'Anorganik'],
+          wadah: {
+            'Organik': '/sampah/wadah_organik.png',
+            'Anorganik': '/sampah/wadah_anorganik.png',
+          },
           item: [
-            { teks: 'Kantong plastik', kelompok: 'Anorganik' },
-            { teks: 'Kulit pisang', kelompok: 'Organik' },
-            { teks: 'Sisa nasi', kelompok: 'Organik' },
-            { teks: 'Botol plastik', kelompok: 'Anorganik' },
-            { teks: 'Daun kering', kelompok: 'Organik' },
-            { teks: 'Kaleng bekas', kelompok: 'Anorganik' },
+            { teks: 'Kantong plastik', kelompok: 'Anorganik', gambar: '/sampah/kartu_kantong_plastik.png' },
+            { teks: 'Kulit pisang', kelompok: 'Organik', gambar: '/sampah/kartu_kulit_pisang.png' },
+            { teks: 'Sisa nasi', kelompok: 'Organik', gambar: '/sampah/kartu_sisa_nasi.png' },
+            { teks: 'Botol plastik', kelompok: 'Anorganik', gambar: '/sampah/kartu_botol_plastik.png' },
+            { teks: 'Daun kering', kelompok: 'Organik', gambar: '/sampah/kartu_daun_kering.png' },
+            { teks: 'Kaleng bekas', kelompok: 'Anorganik', gambar: '/sampah/kartu_kaleng_bekas.png' },
           ],
           kartuFakta: [
             'Sampah plastik membutuhkan waktu sangat lama untuk terurai secara alami, bahkan dapat bertahan di lingkungan selama ratusan tahun.',
@@ -287,13 +291,17 @@ Saat pulang sekolah, Raka melihat berita tentang warga yang terdampak banjir di 
         data: {
           instruksi: 'Kelompokkan kalimat berdasarkan sifatnya.',
           kelompok: ['Menyakiti', 'Tidak menyakiti'],
+          wadah: {
+            'Menyakiti': '/pelajar/keranjang_negatif.png',
+            'Tidak menyakiti': '/pelajar/peti_positif.png',
+          },
           item: [
-            { teks: 'Kamu tidak boleh ikut bermain bersama kami!', kelompok: 'Menyakiti' },
-            { teks: 'Ayo, aku bantu kamu memahami soal yang sulit itu.', kelompok: 'Tidak menyakiti' },
-            { teks: 'Dasar jelek! Wajahmu aneh sekali!', kelompok: 'Menyakiti' },
-            { teks: 'Tidak apa-apa kalau pendapatmu berbeda denganku.', kelompok: 'Tidak menyakiti' },
-            { teks: 'Ayo, bergabung dengan kelompok kami agar kita bisa mengerjakan tugas bersama.', kelompok: 'Tidak menyakiti' },
-            { teks: 'Kalau kamu melaporkan aku, awas saja nanti!', kelompok: 'Menyakiti' },
+            { teks: 'Kamu tidak boleh ikut bermain bersama kami!', kelompok: 'Menyakiti', gambar: '/perilaku/dikucilkan_teman.png' },
+            { teks: 'Ayo, aku bantu kamu memahami soal yang sulit itu.', kelompok: 'Tidak menyakiti', gambar: '/perilaku/membantu_teman_belajar.png' },
+            { teks: 'Dasar jelek! Wajahmu aneh sekali!', kelompok: 'Menyakiti', gambar: '/perilaku/mengejek_teman.png' },
+            { teks: 'Tidak apa-apa kalau pendapatmu berbeda denganku.', kelompok: 'Tidak menyakiti', gambar: '/perilaku/menghargai_pendapat.png' },
+            { teks: 'Ayo, bergabung dengan kelompok kami agar kita bisa mengerjakan tugas bersama.', kelompok: 'Tidak menyakiti', gambar: '/perilaku/kerja_sama_kelompok.png' },
+            { teks: 'Kalau kamu melaporkan aku, awas saja nanti!', kelompok: 'Menyakiti', gambar: '/perilaku/mengintimidasi_teman.png' },
           ],
           kartuFakta: [
             'Perundungan (bullying) dapat terjadi secara langsung maupun melalui media digital, seperti pesan pribadi dan komentar di media sosial.',
@@ -374,8 +382,8 @@ Saat pulang sekolah, Raka melihat berita tentang warga yang terdampak banjir di 
         data: {
           instruksi: 'Hitung jumlah suku kata pada tiap larik berikut.',
           larik: [
-            { teks: 'Gi-at be-la-jar se-ti-ap ha-ri', kunci: 8 },
-            { teks: 'Un-tuk-me-ra-ih-ci-ta-ci-ta', kunci: 8 },
+            { teks: 'Gi-at be-la-jar se-ti-ap ha-ri', kunci: 10 },
+            { teks: 'Un-tuk-me-ra-ih-ci-ta-ci-ta', kunci: 9 },
           ],
         },
       },
@@ -384,7 +392,7 @@ Saat pulang sekolah, Raka melihat berita tentang warga yang terdampak banjir di 
         data: {
           instruksi: 'Pilih satu tantangan, lalu tulis pantunmu.',
           tantangan: [
-            'Gunakan kata "keterbatasan" dan "impian"; pesan: keterbatasan bukan halangan berprestasi.',
+            'Gunakan kata "keterbatasan" dan "cita-cita"; pesan: keterbatasan bukan halangan berprestasi.',
             'Gunakan kata "tekun" dan "cita"; pesan: ketekunan membuat kita juara.',
             'Gunakan kata "ilmu" dan "semangat"; pesan: ajak teman rajin belajar.',
           ],
@@ -492,12 +500,16 @@ Saat pulang sekolah, Raka melihat berita tentang warga yang terdampak banjir di 
         data: {
           instruksi: 'Tentukan sikap yang sesuai dengan keberagaman.',
           kelompok: ['Sesuai', 'Tidak sesuai'],
+          wadah: {
+            'Sesuai': '/keberagaman/wadah_sesuai.png',
+            'Tidak sesuai': '/keberagaman/wadah_tidak_sesuai.png',
+          },
           item: [
-            { teks: 'Berteman dengan siapa saja', kelompok: 'Sesuai' },
-            { teks: 'Mengejek logat teman', kelompok: 'Tidak sesuai' },
-            { teks: 'Ikut merayakan hari besar teman', kelompok: 'Sesuai' },
-            { teks: 'Tidak mau sebangku karena beda suku', kelompok: 'Tidak sesuai' },
-            { teks: 'Belajar lagu daerah teman', kelompok: 'Sesuai' },
+            { teks: 'Berteman dengan siapa saja', kelompok: 'Sesuai', gambar: '/keberagaman/berteman_dengan_siapa_saja.png' },
+            { teks: 'Mengejek logat teman', kelompok: 'Tidak sesuai', gambar: '/keberagaman/mengejek_logat_teman.png' },
+            { teks: 'Ikut merayakan hari besar teman', kelompok: 'Sesuai', gambar: '/keberagaman/merayakan_hari_besar_teman.png' },
+            { teks: 'Tidak mau sebangku karena beda suku', kelompok: 'Tidak sesuai', gambar: '/keberagaman/tidak_mau_sebangku.png' },
+            { teks: 'Belajar lagu daerah teman', kelompok: 'Sesuai', gambar: '/keberagaman/belajar_budaya_teman.png' },
             // Catatan PRD: kunci sumber "tidak sesuai" untuk kerja kelompok perlu ditinjau; dinonaktifkan sementara
           ],
           kartuFakta: [],

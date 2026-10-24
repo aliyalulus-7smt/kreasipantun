@@ -31,36 +31,68 @@
       </div>
     </div>
 
-    <!-- Mode pilah kelompok: wadah model tempat sampah (tap-to-place).
-         Ketuk wadah untuk memilih, ketuk barang untuk memasukkan; tutup
-         wadah beranimasi terbuka setiap ada barang masuk. Isi wadah
-         terlihat sebagai daftar dan bisa dikeluarkan lagi (ketuk item). -->
+    <!-- Mode pilah kelompok (tap-to-place).
+         Ketuk wadah untuk memilih, ketuk barang untuk memasukkan. Isi wadah
+         terlihat sebagai daftar dan bisa dikeluarkan lagi (ketuk item).
+         Bila data menyediakan data.wadah (gambar per kelompok) dan gambar per
+         item, wadah tampil sebagai gambar + label HTML dan kartu barang
+         tampil bergambar; tanpa itu, tampil wadah model tempat sampah lama. -->
     <div v-if="tipe === 'pilah'" class="space-y-4">
       <p class="text-center text-sm font-bold text-slate-500">Ketuk satu wadah untuk memilihnya, lalu ketuk barang untuk memasukkannya.</p>
       <div class="grid grid-cols-2 gap-3 items-start">
-        <div v-for="k in data.kelompok" :key="k" @click="kelompokAktif = k" class="wadah-pilah" :class="{ 'wadah-aktif': kelompokAktif === k }">
-          <div class="tutup-wadah" :class="[kelasTutup(k), { terbuka: tutupTerbuka === k }]">
-            <span>{{ ikonKelompok(k) }} {{ k }}</span>
-          </div>
-          <div class="badan-wadah" :class="kelasWadah(k)">
+        <div v-for="k in data.kelompok" :key="k" @click="kelompokAktif = k" class="wadah-pilah" :class="{ 'wadah-aktif': kelompokAktif === k, 'wadah-reaksi': wadahReaksi === k }" :ref="(el: any) => { wadahEls[k] = el }">
+          <!-- Wadah bergambar: gambar + label HTML di bawahnya -->
+          <template v-if="data.wadah && data.wadah[k]">
+            <div class="relative rounded-2xl overflow-hidden" :class="kelompokAktif === k ? 'ring-4 ring-sky-400' : 'ring-2 ring-slate-200'">
+              <img :src="data.wadah[k]" :alt="k" class="w-full block" />
+            </div>
+            <p class="mt-2 text-center font-bold text-sm" :class="kelasLabelWadah(k)">{{ k }}</p>
             <p class="text-[11px] font-bold text-slate-500 text-center">{{ isiKelompok(k).length }} item di dalam</p>
             <div v-if="isiKelompok(k).length" class="mt-2 space-y-1.5">
               <button v-for="entri in isiKelompok(k)" :key="entri[0]" :disabled="tersimpan" @click.stop="keluarkan(Number(entri[0]))"
                 class="isi-wadah" :title="tersimpan ? '' : 'Ketuk untuk mengeluarkan dari wadah'">
-                <IkonSampah v-if="ikonUntukItem(Number(entri[0]))" :nama="ikonUntukItem(Number(entri[0]))" class="w-5 h-5 shrink-0" />
+                <img v-if="gambarItem(Number(entri[0]))" :src="gambarItem(Number(entri[0]))" class="w-10 h-10 rounded-lg object-cover shrink-0" alt="" />
+                <IkonSampah v-else-if="ikonUntukItem(Number(entri[0]))" :nama="ikonUntukItem(Number(entri[0]))" class="w-5 h-5 shrink-0" />
                 <span class="flex-1">{{ itemTeks(Number(entri[0])) }}</span>
                 <span v-if="!tersimpan" class="text-slate-400 font-bold">✕</span>
               </button>
             </div>
             <p v-else class="mt-2 text-xs font-semibold text-slate-400 text-center">Masih kosong</p>
-          </div>
+          </template>
+          <!-- Wadah model tempat sampah (fallback) -->
+          <template v-else>
+            <div class="tutup-wadah" :class="[kelasTutup(k), { terbuka: tutupTerbuka === k }]">
+              <span>{{ ikonKelompok(k) }} {{ k }}</span>
+            </div>
+            <div class="badan-wadah" :class="kelasWadah(k)">
+              <p class="text-[11px] font-bold text-slate-500 text-center">{{ isiKelompok(k).length }} item di dalam</p>
+              <div v-if="isiKelompok(k).length" class="mt-2 space-y-1.5">
+                <button v-for="entri in isiKelompok(k)" :key="entri[0]" :disabled="tersimpan" @click.stop="keluarkan(Number(entri[0]))"
+                  class="isi-wadah" :title="tersimpan ? '' : 'Ketuk untuk mengeluarkan dari wadah'">
+                  <img v-if="gambarItem(Number(entri[0]))" :src="gambarItem(Number(entri[0]))" class="w-10 h-10 rounded-lg object-cover shrink-0" alt="" />
+                  <IkonSampah v-else-if="ikonUntukItem(Number(entri[0]))" :nama="ikonUntukItem(Number(entri[0]))" class="w-5 h-5 shrink-0" />
+                  <span class="flex-1">{{ itemTeks(Number(entri[0])) }}</span>
+                  <span v-if="!tersimpan" class="text-slate-400 font-bold">✕</span>
+                </button>
+              </div>
+              <p v-else class="mt-2 text-xs font-semibold text-slate-400 text-center">Masih kosong</p>
+            </div>
+          </template>
         </div>
       </div>
       <div class="flex flex-wrap gap-2 justify-center">
-        <button v-for="(it, i) in sisa" :key="i" @click="tempatkan(i)"
-          class="pill !px-4 !py-2 bg-white border-2 hover:border-sky-300 transition inline-flex items-center gap-2">
-          <IkonSampah v-if="ikonUntukTeks(it.teks)" :nama="ikonUntukTeks(it.teks)" class="w-6 h-6" />
-          {{ it.teks }}
+        <button v-for="(it, i) in sisa" :key="i" @click="tempatkan(i, $event)"
+          :class="it.gambar
+            ? 'card overflow-hidden !p-0 text-left basis-[46%] max-w-[260px] border-2 hover:border-sky-300 transition'
+            : 'pill !px-4 !py-2 bg-white border-2 hover:border-sky-300 transition inline-flex items-center gap-2'">
+          <template v-if="it.gambar">
+            <img :src="it.gambar" class="w-full block" :alt="it.teks" />
+            <span class="block p-3 text-sm font-semibold text-slate-700">{{ it.teks }}</span>
+          </template>
+          <template v-else>
+            <IkonSampah v-if="ikonUntukTeks(it.teks)" :nama="ikonUntukTeks(it.teks)" class="w-6 h-6" />
+            {{ it.teks }}
+          </template>
         </button>
       </div>
       <p v-if="!kelompokAktif && sisa.length" class="text-center text-xs font-bold text-amber-600">Pilih dulu wadahnya, ya 👆</p>
@@ -69,6 +101,11 @@
         {{ semuaBenar ? '🎉 Semua benar!' : '⚠️ Ada yang kurang tepat, coba periksa lagi.' }}
       </p>
       <button v-if="!sisa.length && !semuaBenar" class="btn-soft w-full" @click="ulangi">🔄 Ulangi</button>
+      <!-- Hantu kartu: kartu membesar lalu meluncur ke wadah saat ditempatkan -->
+      <div v-if="hantu" class="hantu-terbang" :style="gayaHantu">
+        <img v-if="hantu.gambar" :src="hantu.gambar" class="w-full block rounded-xl" alt="" />
+        <span v-else class="block bg-white border-2 border-sky-300 rounded-xl px-3 py-2 text-sm font-semibold text-slate-700 shadow-lg">{{ hantu.teks }}</span>
+      </div>
     </div>
 
     <!-- Mode kuis / pilih-tindakan -->
@@ -228,6 +265,12 @@ function periksa() {
 }
 function isiKelompok(k: string) { return Object.entries(penempatan.value).filter(([_, v]) => v === k) }
 function itemTeks(idx: number) { return props.data.item?.[idx]?.teks || '' }
+function gambarItem(idx: number) { return props.data.item?.[idx]?.gambar || '' }
+function kelasLabelWadah(k: string) {
+  if (['Menyakiti', 'Negatif', 'Tidak sesuai'].includes(k)) return 'text-rose-600'
+  if (['Tidak menyakiti', 'Positif', 'Sesuai'].includes(k)) return 'text-emerald-600'
+  return 'text-slate-700'
+}
 
 // ── Wadah pilah model tempat sampah ──────────────────────────────────
 const tutupTerbuka = ref<string>('')
@@ -251,9 +294,44 @@ function kelasTutup(k: string) {
   if (['Menyakiti', 'Negatif', 'Tidak sesuai'].includes(k)) return 'bg-rose-400 text-white'
   return 'bg-sky-400 text-white'
 }
-function tempatkan(i: number) {
+// Animasi penempatan: kartu membesar lalu meluncur ke wadah, wadah
+// bereaksi (melompat) saat menerima kartu. State ditempatkan langsung
+// (hantu hanya visual); tanpa gerak bila prefers-reduced-motion.
+const wadahEls: Record<string, HTMLElement | null> = {}
+const wadahReaksi = ref('')
+const hantu = ref<null | { teks: string; gambar: string; x: number; y: number; w: number; dx: number; dy: number; jalan: boolean }>(null)
+const gayaHantu = computed(() => {
+  if (!hantu.value) return {}
+  return {
+    position: 'fixed' as const, left: `${hantu.value.x}px`, top: `${hantu.value.y}px`, width: `${hantu.value.w}px`,
+    zIndex: 60, pointerEvents: 'none' as const,
+    transform: hantu.value.jalan ? `translate(${hantu.value.dx}px, ${hantu.value.dy}px) scale(0.25)` : 'scale(1.15)',
+    opacity: hantu.value.jalan ? 0.3 : 1,
+    transition: 'transform 0.6s ease-in, opacity 0.6s ease-in', transformOrigin: 'center',
+  }
+})
+function tempatkan(i: number, ev?: MouseEvent) {
   if (!kelompokAktif.value) return
   const idxSisa = (props.data.item || []).map((_: any, x: number) => x).filter((x: number) => !(x in penempatan.value))[i]
+  const item = props.data.item?.[idxSisa]
+  const wadahEl = wadahEls[kelompokAktif.value]
+  const kartuEl = (ev?.currentTarget as HTMLElement | null) || null
+  const gerak = typeof window !== 'undefined' && !window.matchMedia('(prefers-reduced-motion: reduce)').matches
+  if (gerak && wadahEl && kartuEl && item) {
+    const a = kartuEl.getBoundingClientRect()
+    const b = wadahEl.getBoundingClientRect()
+    hantu.value = {
+      teks: item.teks || '', gambar: item.gambar || '',
+      x: a.left, y: a.top, w: a.width,
+      dx: (b.left + b.width / 2) - (a.left + a.width / 2),
+      dy: (b.top + b.height / 2) - (a.top + a.height / 2),
+      jalan: false,
+    }
+    requestAnimationFrame(() => requestAnimationFrame(() => { if (hantu.value) hantu.value.jalan = true }))
+    wadahReaksi.value = kelompokAktif.value
+    setTimeout(() => { wadahReaksi.value = '' }, 700)
+    setTimeout(() => { hantu.value = null }, 650)
+  }
   penempatan.value = { ...penempatan.value, [idxSisa]: kelompokAktif.value }
   // Animasi: tutup wadah terbuka sebentar setiap ada barang masuk.
   tutupTerbuka.value = kelompokAktif.value

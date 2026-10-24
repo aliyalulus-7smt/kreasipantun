@@ -82,20 +82,21 @@
       <p v-else class="text-center font-bold text-rose-500">Ada tali yang putus ✂️ — pasangan itu belum tepat. Ketuk papannya untuk melepas, lalu pasangkan lagi.</p>
     </div>
 
-    <!-- Hitung suku kata -->
+    <!-- Hitung suku kata dengan tepuk: sekali tekan = 1 suku kata -->
     <div v-if="tipe === 'hitung-suku-kata'" class="space-y-3">
       <div v-for="(l, i) in data.larik" :key="i" class="card !rounded-2xl p-4">
         <p class="font-display font-semibold text-slate-700 mb-2">{{ l.teks }}</p>
-        <div class="flex items-center gap-2">
-          <input v-model.number="jawaban[i]" type="number" min="1" max="20" class="w-24 bg-conlow rounded-xl px-3 py-2.5 font-semibold text-ink text-center focus:bg-white focus:outline-none focus:shadow-md transition" placeholder="?" />
+        <div class="flex items-center gap-2 flex-wrap">
+          <button :disabled="tersimpan" class="pill !px-4 !py-2 bg-white border-2 hover:border-violet-300 transition text-sm font-bold disabled:opacity-50" @click="tepuk(i)">👏 Tepuk</button>
+          <span class="bg-conlow rounded-xl px-3 py-2.5 font-semibold text-ink text-center min-w-14">{{ jawaban[i] ?? 0 }}</span>
           <span class="text-sm font-bold text-slate-500">suku kata</span>
-          <span class="pill !px-2 !py-0.5 bg-con text-onvariant text-[11px]">target 8–12</span>
-          <span v-if="dicek" class="text-sm font-bold" :class="jawaban[i] === l.kunci ? 'text-emerald-600' : 'text-rose-500'">
-            {{ jawaban[i] === l.kunci ? '✓' : `✗ (jawaban: ${l.kunci})` }}
+          <span v-if="dicek" class="text-sm font-bold" :class="Number(jawaban[i]) === l.kunci ? 'text-emerald-600' : 'text-rose-500'">
+            {{ Number(jawaban[i]) === l.kunci ? '✓ Benar' : '✗ Belum tepat' }}
           </span>
         </div>
       </div>
       <button v-if="!dicek" class="btn-soft w-full" @click="dicek = true">🔍 Cek Jawaban</button>
+      <button v-if="dicek && !semuaBenarEkspresi" class="btn-soft w-full" @click="ulangiHitung">🔄 Ulangi</button>
     </div>
 
     <!-- Lengkapi rumpang / pilih kata -->
@@ -350,6 +351,16 @@ function klsIdentifikasi(i: number, nilai: string) {
   return [dasar, nilai === 'sampiran' ? '!bg-sky-100 !border-sky-400' : '!bg-amber-100 !border-amber-400']
 }
 function jawab(i: number, v: any) { jawaban.value = { ...jawaban.value, [i]: v } }
+// Hitung suku kata: sekali tepuk = 1 suku kata; hitungan per larik.
+// Ulangi mengosongkan semua hitungan dan kembali ke mode menghitung.
+function tepuk(i: number) {
+  if (tersimpan.value) return
+  jawaban.value = { ...jawaban.value, [i]: (Number(jawaban.value[i]) || 0) + 1 }
+}
+function ulangiHitung() {
+  jawaban.value = {}
+  dicek.value = false
+}
 function pilih(i: number) {
   const idxAsli = acakTampil.value.map((_: string, x: number) => x).filter((x: number) => !acakDipakai.value.includes(x))[i]
   acakDipakai.value.push(idxAsli)
