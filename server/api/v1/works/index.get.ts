@@ -1,5 +1,6 @@
 import { useServiceDb } from '../../../utils/db'
 import { getSessionUser } from '../../../utils/session'
+import { cekPantunBenar } from '../../../../utils/validatePantun'
 
 /** GET /api/v1/works — daftar karya privat (pemilik / guru kelasnya). */
 export default defineEventHandler(async (event) => {
@@ -34,5 +35,9 @@ export default defineEventHandler(async (event) => {
 
   const { data, error } = await query
   if (error) throw createError({ statusCode: 500, message: 'Gagal memuat karya.' })
-  return { data: { items: data || [], next_cursor: null, has_more: false } }
+  // Hanya karya yang benar yang ditampilkan — di /karya maupun panel
+  // guru (keduanya memakai endpoint ini). Karya lama yang tidak valid
+  // disembunyikan, bukan dihapus.
+  const items = (data || []).filter(w => cekPantunBenar([w.larik1, w.larik2, w.larik3, w.larik4]).valid)
+  return { data: { items, next_cursor: null, has_more: false } }
 })

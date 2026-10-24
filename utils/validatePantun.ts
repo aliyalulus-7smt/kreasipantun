@@ -258,3 +258,32 @@ export function validatePantun({ lines, rima, pola }: ValidateInput): ValidateRe
     polaRule,
   }
 }
+
+// ── Cek "pantun benar" (dipakai Asah + API works) ───────────────
+// Aturan ini SAMA dengan penilaian otomatis tahap Evaluasi: 4 baris
+// terisi, tiap baris 8–12 suku kata, dan sajak a-b-a-b (bunyi akhir
+// baris 1 = 3 dan 2 = 4). Satu-satunya sumber aturan — jangan duplikasi.
+export function bunyiAkhir(line: string): string {
+  const kata = (line || '').trim().split(/\s+/).pop()?.toLowerCase().replace(/[^a-z]/g, '') || ''
+  const m = kata.match(/[aiueo]+[^aiueo]*$/)
+  return m ? m[0] : kata.slice(-2)
+}
+
+export interface CekPantunBenar {
+  valid: boolean
+  semuaTerisi: boolean
+  suku: number[]
+  akhir: string[]
+  sukuOk: boolean
+  sajakOk: boolean
+}
+
+export function cekPantunBenar(lines: (string | null | undefined)[]): CekPantunBenar {
+  const arr = [...(lines || [])].map(l => (l || '').trim()).slice(0, 4)
+  const semuaTerisi = arr.length === 4 && arr.every(l => l.length > 0)
+  const suku = arr.map(countLineSyllables)
+  const akhir = arr.map(bunyiAkhir)
+  const sukuOk = semuaTerisi && suku.every(n => n >= 8 && n <= 12)
+  const sajakOk = semuaTerisi && akhir[0] === akhir[2] && akhir[1] === akhir[3]
+  return { valid: !!(semuaTerisi && sukuOk && sajakOk), semuaTerisi, suku, akhir, sukuOk, sajakOk }
+}

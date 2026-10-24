@@ -55,7 +55,7 @@
 </template>
 
 <script setup lang="ts">
-import { countLineSyllables } from '~/utils/validatePantun'
+import { countLineSyllables, bunyiAkhir } from '~/utils/validatePantun'
 
 const props = defineProps<{ data: Record<string, any>; fenomenaId: string; dataTersimpan?: Record<string, any> | null; pantunAsah?: string[] | null }>()
 const { antrekan } = useOutbox()
@@ -70,11 +70,6 @@ if (Array.isArray(props.dataTersimpan?.checklist)) {
 }
 
 // ── Penilaian otomatis dari pantun Asah ─────────────────────────────
-function bunyiAkhir(line: string): string {
-  const kata = (line || '').trim().split(/\s+/).pop()?.toLowerCase().replace(/[^a-z]/g, '') || ''
-  const m = kata.match(/[aiueo]+[^aiueo]*$/)
-  return m ? m[0] : kata.slice(-2)
-}
 const analisis = computed(() => {
   const b = props.pantunAsah
   if (!b || b.length < 4 || b.some(x => !x?.trim())) return null

@@ -49,6 +49,22 @@
       </div>
     </div>
 
+    <!-- Cek pantun benar: tampil saat siswa mulai menulis -->
+    <div v-if="adaIsian && !tersimpan" class="card !rounded-2xl p-4">
+      <p class="font-display font-bold text-slate-700 text-sm mb-2">🔍 Cek Pantunmu</p>
+      <div class="space-y-1 text-sm font-semibold">
+        <p v-for="i in 4" :key="i" :class="(cekKarya.suku[i - 1] >= 8 && cekKarya.suku[i - 1] <= 12) ? 'text-emerald-600' : 'text-rose-500'">
+          Baris {{ i }}: {{ cekKarya.suku[i - 1] }} suku kata
+          {{ (cekKarya.suku[i - 1] >= 8 && cekKarya.suku[i - 1] <= 12) ? '✓ (8–12)' : '✗ (harus 8–12)' }}
+        </p>
+        <p :class="cekKarya.sajakOk ? 'text-emerald-600' : 'text-rose-500'">
+          Sajak a-b-a-b: {{ cekKarya.sajakOk ? '✓ cocok' : '✗ akhir baris 1 & 3 harus sama, begitu pula 2 & 4' }}
+        </p>
+      </div>
+      <p v-if="!cekKarya.valid" class="text-xs font-semibold text-slate-400 mt-2">Perbaiki pantunmu hingga semua cek hijau — tombol Simpan aktif setelah itu.</p>
+      <p v-else class="text-xs font-bold text-emerald-600 mt-2">Pantunmu sudah benar dan siap disimpan ✓</p>
+    </div>
+
     <button v-if="tersimpan" class="btn-soft w-full" @click="tersimpan = false">✏️ Ubah Karya</button>
     <button v-else class="btn-primary w-full" :disabled="!bisaSimpan" @click="simpan">
       💾 Simpan Karya
@@ -103,6 +119,7 @@
 
 <script setup lang="ts">
 import { referensiRima, labelKategori, type KataRimaRef } from '~/data/rima'
+import { cekPantunBenar } from '~/utils/validatePantun'
 
 const props = defineProps<{ tipe: string; data: Record<string, any>; fenomenaId: string; dataTersimpan?: Record<string, any> | null }>()
 const { antrekan } = useOutbox()
@@ -133,8 +150,14 @@ if (Array.isArray(props.dataTersimpan?.baris)) {
     if (idx >= 0) tantanganKe.value = idx
   }
 }
+// ── Cek pantun benar (suku kata + sajak) ────────────────────────────
+// Hanya pantun yang lolos cek ini yang bisa disimpan sebagai karya —
+// pantun yang salah tidak tersimpan dan tidak tampil di /karya maupun
+// panel guru. Aturan sama dengan penilaian otomatis tahap Evaluasi.
+const cekKarya = computed(() => cekPantunBenar(baris.value))
+const adaIsian = computed(() => baris.value.some(b => b.trim().length > 0))
 const bisaSimpan = computed(() =>
-  !tersimpan.value && baris.value.every(b => b.trim().length > 0) && (!props.data.tantangan || tantanganDipilih.value))
+  !tersimpan.value && cekKarya.value.valid && (!props.data.tantangan || tantanganDipilih.value))
 
 // ── Roda spin tantangan ─────────────────────────────────────────────
 const segmenTantangan = computed(() =>
@@ -190,7 +213,8 @@ async function simpan() {
         phenomenon_id: props.fenomenaId,
         larik1: baris.value[0].trim(), larik2: baris.value[1].trim(),
         larik3: baris.value[2].trim(), larik4: baris.value[3].trim(),
-        is_final: false,
+        // Hanya pantun yang lolos cek yang sampai ke sini → final.
+        is_final: true,
       },
     })
   } catch {}
