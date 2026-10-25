@@ -62,7 +62,8 @@
           <!-- Wadah model tempat sampah (fallback) -->
           <template v-else>
             <div class="tutup-wadah" :class="[kelasTutup(k), { terbuka: tutupTerbuka === k }]">
-              <span>{{ ikonKelompok(k) }} {{ k }}</span>
+              <!-- Wadah bereaksi tanpa gambar: wajah tersenyum saat menerima kartu -->
+              <span>{{ wadahReaksi === k ? '😊' : ikonKelompok(k) }} {{ k }}</span>
             </div>
             <div class="badan-wadah" :class="kelasWadah(k)">
               <p class="text-[11px] font-bold text-slate-500 text-center">{{ isiKelompok(k).length }} item di dalam</p>
