@@ -407,7 +407,7 @@ Saat pulang sekolah, Raka melihat berita tentang warga yang terdampak banjir di 
   // ================= 6. LESTARIKAN BUDAYA! =================
   {
     id: 'lestarikan-budaya', nama: 'Lestarikan Budaya!', icon: '🎭', warna: 'orange',
-    ilustrasi: '/ilustrasi/lestarikan-budaya.png', tagline: 'Kenali adat dan warisan Nusantara',
+    ilustrasi: '/ilustrasi/lestarikan-budaya-reog.jpg', tagline: 'Kenali adat dan warisan Nusantara',
     tahap: {
       kenali: {
         judul: 'Kenali Fenomena', tipe: 'gambar',
