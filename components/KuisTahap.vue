@@ -40,7 +40,12 @@
     <div v-if="tipe === 'pilah'" class="space-y-4">
       <p class="text-center text-sm font-bold text-slate-500">Ketuk satu wadah untuk memilihnya, lalu ketuk barang untuk memasukkannya.</p>
       <div class="grid grid-cols-2 gap-3 items-start">
-        <div v-for="k in data.kelompok" :key="k" @click="kelompokAktif = k" class="wadah-pilah" :class="{ 'wadah-aktif': kelompokAktif === k, 'wadah-reaksi': wadahReaksi === k }" :ref="(el: any) => { wadahEls[k] = el }">
+        <div v-for="k in data.kelompok" :key="k" @click="kelompokAktif = k" class="wadah-pilah" :class="[{ 'wadah-aktif': kelompokAktif === k, 'wadah-reaksi': wadahReaksi === k }, skinPilah]" :ref="(el: any) => { wadahEls[k] = el }">
+          <!-- Semburan bintang mini (netral: muncul di setiap penempatan,
+               bukan penanda benar/salah — kunci tidak boleh bocor per item) -->
+          <span v-if="bintangWadah === k" class="bintang-mini-wrap" aria-hidden="true">
+            <span v-for="(sudut, j) in [-50, -18, 18, 50]" :key="j" class="bintang-mini" :style="{ '--sudut': `${sudut}deg` }">✨</span>
+          </span>
           <!-- Wadah bergambar: gambar + label HTML di bawahnya -->
           <template v-if="data.wadah && data.wadah[k]">
             <div class="relative rounded-2xl overflow-hidden" :class="kelompokAktif === k ? 'ring-4 ring-sky-400' : 'ring-2 ring-slate-200'">
@@ -273,6 +278,16 @@ function kelasLabelWadah(k: string) {
   return 'text-slate-700'
 }
 
+// ── Kulit wadah pilah per fenomena (CSS saja; logika pilah tidak berubah).
+// Cinta-lingkungan tanpa kelas tambahan = tetap model tempat sampah.
+// Warna kelompok (kelasWadah/kelasTutup) tetap jadi identitas kelompok;
+// kulit hanya mengubah bentuk & dekorasi tutup/badan.
+const skinPilah = computed(() => ({
+  'stop-perundungan': 'skin-peti',
+  'berbeda-itu-istimewa': 'skin-kotak-warna',
+  'semangat-belajar': 'skin-semangat',
+}[props.fenomenaId] || ''))
+
 // ── Wadah pilah model tempat sampah ──────────────────────────────────
 const tutupTerbuka = ref<string>('')
 let pewaktuTutup: ReturnType<typeof setTimeout> | undefined
@@ -300,6 +315,9 @@ function kelasTutup(k: string) {
 // (hantu hanya visual); tanpa gerak bila prefers-reduced-motion.
 const wadahEls: Record<string, HTMLElement | null> = {}
 const wadahReaksi = ref('')
+// Semburan bintang mini netral saat kartu masuk (bukan penanda benar/salah).
+const bintangWadah = ref('')
+let pewaktuBintang: ReturnType<typeof setTimeout> | undefined
 const hantu = ref<null | { teks: string; gambar: string; x: number; y: number; w: number; dx: number; dy: number; jalan: boolean }>(null)
 const gayaHantu = computed(() => {
   if (!hantu.value) return {}
@@ -332,6 +350,9 @@ function tempatkan(i: number, ev?: MouseEvent) {
     wadahReaksi.value = kelompokAktif.value
     setTimeout(() => { wadahReaksi.value = '' }, 700)
     setTimeout(() => { hantu.value = null }, 650)
+    bintangWadah.value = kelompokAktif.value
+    clearTimeout(pewaktuBintang)
+    pewaktuBintang = setTimeout(() => { bintangWadah.value = '' }, 850)
   }
   penempatan.value = { ...penempatan.value, [idxSisa]: kelompokAktif.value }
   // Animasi: tutup wadah terbuka sebentar setiap ada barang masuk.

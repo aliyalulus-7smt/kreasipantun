@@ -67,8 +67,19 @@
       </template>
     </div>
 
-    <!-- Panel perayaan: muncul begitu tahap ini selesai -->
-    <div v-if="sudahSelesai" ref="panelSelesai" class="max-w-2xl mx-auto mt-8 kp-card p-5 md:p-6 text-center border-2 !border-emerald-200 bg-gradient-to-br from-emerald-50 to-sky-50">
+    <!-- Kotak hadiah: hanya untuk penyelesaian fenomena (evaluasi) yang baru
+         saja tuntas di kunjungan ini. Kotak dibuka dulu, panel perayaan
+         menyusul setelah kotak terbuka; kunjungan ulang tahap yang sudah
+         selesai langsung menampilkan panel tanpa kotak. -->
+    <div v-if="tahapId === 'evaluasi' && sudahSelesai && baruSelesai && !kotakTerbuka" ref="panelKotak" class="max-w-2xl mx-auto mt-8 kp-card p-5 md:p-6 text-center border-2 !border-amber-200 bg-gradient-to-br from-amber-50 to-yellow-50">
+      <p class="font-display font-extrabold text-lg text-ink">Fenomena selesai! Kerja bagus! 🎉</p>
+      <p class="text-sm font-semibold text-slate-500 mt-1">Buka kotak hadiahmu dulu, yuk!</p>
+      <KotakAnimasi @terbuka="kotakTerbuka = true" />
+    </div>
+
+    <!-- Panel perayaan: muncul begitu tahap ini selesai (untuk evaluasi,
+         setelah kotak hadiah dibuka) -->
+    <div v-if="sudahSelesai && !(tahapId === 'evaluasi' && baruSelesai && !kotakTerbuka)" ref="panelSelesai" class="max-w-2xl mx-auto mt-8 kp-card p-5 md:p-6 text-center border-2 !border-emerald-200 bg-gradient-to-br from-emerald-50 to-sky-50">
       <p class="text-4xl mb-2" aria-hidden="true">🎉</p>
       <p class="font-display font-extrabold text-lg text-ink">
         {{ tahapId === 'evaluasi' ? 'Fenomena selesai! Kerja bagus!' : 'Tahap selesai! Hebat!' }}
@@ -92,6 +103,7 @@
 import { DAFTAR_TAHAP, FENOMENA, cariFenomena, type IdTahap } from '~/data/fenomena'
 import { WARNA_TAHAP, WARNA_TAHAP_DEFAULT } from '~/utils/fenomena-ui'
 import ConfettiLetus from '~/components/ConfettiLetus.vue'
+import KotakAnimasi from '~/components/KotakAnimasi.vue'
 import { bacaPayloadLokal } from '~/composables/useOutbox'
 
 definePageMeta({ layout: 'app', middleware: 'auth-bff' })
@@ -175,6 +187,8 @@ const teksPanel = computed(() => {
 
 const confetti = ref<InstanceType<typeof ConfettiLetus> | null>(null)
 const panelSelesai = ref<HTMLElement | null>(null)
+const panelKotak = ref<HTMLElement | null>(null)
+const kotakTerbuka = ref(false)
 const baruSelesai = ref(false)
 let timerLanjut: ReturnType<typeof setTimeout> | null = null
 // Keadaan tahap SAAT data progres pertama kali termuat di halaman ini.
@@ -188,14 +202,34 @@ watch(pernahMuat, (v) => {
 watch(sudahSelesai, (baru) => {
   if (baru && keadaanAwal.value === false && !baruSelesai.value) {
     baruSelesai.value = true
-    confetti.value?.letus(tahapId.value === 'evaluasi')
-    nextTick(() => {
-      try { panelSelesai.value?.scrollIntoView({ behavior: 'smooth', block: 'center' }) } catch {}
-    })
-    timerLanjut = setTimeout(() => {
-      void navigateTo(tombolLanjut.value.to)
-    }, tahapId.value === 'evaluasi' ? 3200 : 2600)
+    if (tahapId.value !== 'evaluasi') {
+      confetti.value?.letus(false)
+      nextTick(() => {
+        try { panelSelesai.value?.scrollIntoView({ behavior: 'smooth', block: 'center' }) } catch {}
+      })
+      timerLanjut = setTimeout(() => {
+        void navigateTo(tombolLanjut.value.to)
+      }, 2600)
+    } else {
+      // Fenomena selesai: kotak hadiah tampil dulu. Confetti + lanjut
+      // otomatis dimulai setelah kotak dibuka (watch kotakTerbuka).
+      nextTick(() => {
+        try { panelKotak.value?.scrollIntoView({ behavior: 'smooth', block: 'center' }) } catch {}
+      })
+    }
   }
+})
+// Setelah kotak hadiah dibuka: panel perayaan muncul, confetti meletus,
+// lalu lanjut otomatis seperti biasa.
+watch(kotakTerbuka, (v) => {
+  if (!v) return
+  confetti.value?.letus(true)
+  nextTick(() => {
+    try { panelSelesai.value?.scrollIntoView({ behavior: 'smooth', block: 'center' }) } catch {}
+  })
+  timerLanjut = setTimeout(() => {
+    void navigateTo(tombolLanjut.value.to)
+  }, 3200)
 })
 onUnmounted(() => { if (timerLanjut) clearTimeout(timerLanjut) })
 
