@@ -73,6 +73,19 @@ export function useProgresSiswa() {
     DAFTAR_TAHAP.filter(t => selesai.value[`${fid}:${t.id}`]).length
 
   /**
+   * Saklar mode demo (sementara, untuk demo ke dosen): bila env
+   * NUXT_PUBLIC_DEMO_BEBAS=true, semua kunci urutan dibuka — semua fenomena
+   * dan semua tahap bisa dibuka tanpa menyelesaikan yang sebelumnya.
+   * Default mati: nilai env apa pun selain 'true' berarti kunci berlaku
+   * normal. Mengunci lagi cukup deploy ulang TANPA env ini (tanpa ubah kode).
+   * Nilai diterima sebagai string ('true' dari env) maupun boolean.
+   */
+  const demoBebas = (() => {
+    const v = useRuntimeConfig().public.demoBebas
+    return v === true || v === 'true'
+  })()
+
+  /**
    * Aturan urutan wajib (revisi 21 Okt 2026): fenomena dikerjakan berurutan
    * dari nomor 1 (Bijak Berteknologi) sampai 8 (Hidup Sehat); fenomena
    * berikutnya hanya terbuka bila SEMUA tahap fenomena sebelumnya selesai.
@@ -80,12 +93,14 @@ export function useProgresSiswa() {
    * bila tahap sebelumnya selesai.
    */
   const fenomenaTerbuka = (fid: string) => {
+    if (demoBebas) return true
     const idx = FENOMENA.findIndex(f => f.id === fid)
     if (idx <= 0) return idx === 0
     return progresFenomena(FENOMENA[idx - 1].id) === DAFTAR_TAHAP.length
   }
 
   const tahapTerbuka = (fid: string, tahapId: string) => {
+    if (demoBebas) return true
     if (!fenomenaTerbuka(fid)) return false
     const idx = DAFTAR_TAHAP.findIndex(t => t.id === tahapId)
     if (idx <= 0) return idx === 0

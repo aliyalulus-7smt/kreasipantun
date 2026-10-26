@@ -76,6 +76,9 @@ export default defineNuxtConfig({
       // NUXT_PUBLIC_SUPABASE_URL dan NUXT_PUBLIC_SUPABASE_ANON_KEY
       supabaseUrl: '',
       supabaseAnonKey: '',
+      // Mode demo: bila env NUXT_PUBLIC_DEMO_BEBAS=true, semua kunci
+      // urutan dibuka sementara (lihat useProgresSiswa). Default mati.
+      demoBebas: '',
       // Kode akses dashboard guru (env NUXT_PUBLIC_GURU_CODE).
       // Obfuskasi sederhana, bukan keamanan serius — cukup untuk
       // membedakan guru dari siswa di lingkungan sekolah.
